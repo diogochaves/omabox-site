@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en" data-theme="tokyo-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>omabox</title>
+<meta name="description" content="A desktop of their own, for your agents. omabox gives an AI agent a whole Omarchy desktop, invisible and apart from yours.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15' shape-rendering='crispEdges'%3E%3Cpath fill='%239ece6a' d='M0 0h8v1H0zM13 0h2v1h-2zM0 1h1v13H0zM14 1h1v13h-1zM0 14h2v1H0zM7 14h8v1H7zM4 4h7v2H4zM4 6h1v4H4zM10 6h1v4h-1zM4 10h7v1H4z'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/silkscreen-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Silkscreen"; font-weight: 400; font-display: swap; src: url(fonts/silkscreen-400.woff2) format("woff2"); }
+@font-face { font-family: "Silkscreen"; font-weight: 700; font-display: swap; src: url(fonts/silkscreen-700.woff2) format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400 700; font-display: swap; src: url(fonts/jetbrains-mono.woff2) format("woff2"); }
+
+/* Colours come straight from Omarchy's themes (colors.toml). --brand is the theme's green: the logo. */
+:root, [data-theme="tokyo-night"] {
+  --bg: #1a1b26; --bg-dark: #13141c; --bg-darker: #0e0e14; --bg-hi: #24283b; --line: #292e42;
+  --fg: #a9b1d6; --fg-hi: #c0caf5; --muted: #565f89;
+  --brand: #9ece6a; --accent: #7aa2f7; --red: #f7768e; --yellow: #e0af68;
+}
+[data-theme="catppuccin"] {
+  --bg: #1e1e2e; --bg-dark: #161622; --bg-darker: #101019; --bg-hi: #313244; --line: #45475a;
+  --fg: #bac2de; --fg-hi: #cdd6f4; --muted: #6c7086;
+  --brand: #a6e3a1; --accent: #89b4fa; --red: #f38ba8; --yellow: #f9e2af;
+}
+[data-theme="gruvbox"] {
+  --bg: #282828; --bg-dark: #1e1e1e; --bg-darker: #161616; --bg-hi: #3c3836; --line: #504945;
+  --fg: #bdae93; --fg-hi: #d4be98; --muted: #7c6f64;
+  --brand: #a9b665; --accent: #7daea3; --red: #ea6962; --yellow: #d8a657;
+}
+[data-theme="retro-82"] {
+  --bg: #05182e; --bg-dark: #031222; --bg-darker: #020c17; --bg-hi: #0a2540; --line: #134e5a;
+  --fg: #a7c9c6; --fg-hi: #f6dcac; --muted: #3f8f8a;
+  --brand: #028391; --accent: #faa968; --red: #f85525; --yellow: #e97b3c;
+}
+
+/* One pixel unit for everything: the lockup is drawn at 4x. */
+:root {
+  --u: 4px;
+  --topbar: 40px;
+  --g: 16px;                 /* page gutter */
+  --e: var(--u);             /* frame edge */
+  --bh: 32px;                /* frame bar */
+  --pixel: "Silkscreen", ui-monospace, monospace;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (min-width: 760px) { :root { --g: 24px; } }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.6 var(--mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+/* A static dither, drawn once: no animation. */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 200; opacity: .35;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgb(0 0 0 / .18) 3px 4px);
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, kbd { font-family: var(--mono); }
+h1, h2, h3 { font-family: var(--pixel); font-weight: 400; color: var(--fg-hi); letter-spacing: .01em; line-height: 1.15; margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* ── the bar across the top: Omarchy's, in spirit ───────────────────── */
+.topbar {
+  position: fixed; inset: 0 0 auto; height: var(--topbar); z-index: 100;
+  display: flex; align-items: center; gap: 16px; padding: 0 var(--g);
+  background: var(--bg-darker); border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.brand { display: flex; align-items: center; gap: 8px; color: var(--fg-hi); font-family: var(--pixel); font-size: 14px; }
+.brand svg { width: 15px; height: 15px; }
+.crumbs { flex: 1; min-width: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crumbs b { color: var(--brand); font-weight: 400; }
+.themes { display: flex; gap: 6px; }
+.themes button {
+  width: 14px; height: 14px; padding: 0; cursor: pointer; border: 2px solid var(--bg-darker);
+  outline: 1px solid var(--line); background: var(--c);
+}
+.themes button[aria-pressed="true"] { outline: 2px solid var(--fg-hi); }
+.topbar nav { display: none; gap: 16px; }
+@media (min-width: 760px) { .topbar nav { display: flex; } }
+.topbar nav a { color: var(--fg); }
+
+/* ── the box: a frame with a bar, like the logo's inner square ──────── */
+.frame {
+  position: absolute; inset: calc(var(--topbar) + var(--g)) var(--g) var(--g);
+  border: var(--e) solid var(--brand); pointer-events: none;
+}
+.fbar {
+  position: absolute; top: calc(-1 * var(--e)); left: calc(-1 * var(--e)); right: calc(-1 * var(--e)); height: var(--bh);
+  background: var(--brand); color: var(--bg-darker);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 12px;
+  font-family: var(--pixel); font-size: 12px; white-space: nowrap; overflow: hidden;
+}
+.fbar .dim { opacity: .7; }
+.content {
+  position: relative; min-height: 100svh;
+  padding: calc(var(--topbar) + var(--g) + var(--bh) + 16px) calc(var(--g) + var(--e) + 12px) calc(var(--g) + var(--e) + 16px);
+  display: flex; flex-direction: column; justify-content: center; gap: 20px;
+}
+
+/* ── hero (host): plain flow, any height ──────────────────────────── */
+.hero {
+  position: relative; z-index: 40; background: var(--bg);
+  min-height: 100svh; padding: calc(var(--topbar) + 40px) var(--g) 56px;
+  display: grid; gap: 40px; align-items: center;
+  max-width: 1240px; margin: 0 auto;
+}
+.hero > * { min-width: 0; }
+@media (min-width: 980px) { .hero { grid-template-columns: 1fr 1.1fr; gap: 56px; } }
+.eyebrow { font-family: var(--pixel); font-size: 12px; color: var(--brand); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tag { border: 1px solid currentColor; padding: 0 6px; }
+.hero h1 { font-size: clamp(30px, 5.2vw, 54px); margin: 18px 0; }
+.hero h1 em { font-style: normal; color: var(--brand); }
+.lead { max-width: 56ch; margin: 0 0 24px; color: var(--fg); }
+.install {
+  display: flex; align-items: stretch; border: 1px solid var(--line); background: var(--bg-darker); max-width: 100%;
+}
+.install code { flex: 1; min-width: 0; padding: 12px 14px; overflow-x: auto; white-space: nowrap; color: var(--fg-hi); font-size: 13px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.install code::before { content: "$ "; color: var(--brand); }
+.install button {
+  border: 0; border-left: 1px solid var(--line); background: var(--bg-hi); color: var(--fg-hi);
+  font: 12px var(--pixel); padding: 0 14px; cursor: pointer;
+}
+.install button:hover { background: var(--brand); color: var(--bg-darker); }
+.reqs { font-size: 12px; color: var(--muted); margin: 10px 0 24px; }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; font: 12px var(--pixel);
+  border: 2px solid var(--brand); color: var(--brand);
+}
+.btn.solid { background: var(--brand); color: var(--bg-darker); }
+.btn:hover { text-decoration: none; filter: brightness(1.1); }
+
+/* windows in the hero: a terminal driving a box, and a peek at it */
+.demo { position: relative; min-width: 0; }
+.win { background: var(--bg-darker); border: 2px solid var(--line); min-width: 0; }
+.win-t {
+  height: 26px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px;
+  background: var(--bg-hi); color: var(--fg); font-size: 11px; white-space: nowrap; overflow: hidden;
+}
+.win-t .live { color: var(--brand); }
+.term { font-size: 12.5px; line-height: 1.55; }
+.term pre {
+  margin: 0; padding: 12px 14px; height: 272px; overflow: hidden; white-space: pre-wrap; word-break: break-word;
+  font: inherit; color: var(--fg);
+}
+.term .p { color: var(--brand); }
+.term .c { color: var(--fg-hi); }
+.term .o { color: var(--muted); }
+.term .ok { color: var(--brand); }
+.term .new { color: var(--bg-darker); background: var(--yellow); font: 10px var(--pixel); padding: 0 4px; margin-left: 6px; }
+.cursor { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--fg-hi); }
+.typing .cursor { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.peek { margin-top: 16px; }
+.peek .screen { position: relative; aspect-ratio: 16 / 9; background: var(--bg-darker); overflow: hidden; }
+.peek img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s; }
+.peek img.on { opacity: 1; }
+.peek .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font: 12px var(--pixel); }
+.mark {
+  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; opacity: 0; transform: scale(.4);
+  transition: opacity .2s, transform .2s;
+  background:
+    linear-gradient(var(--yellow), var(--yellow)) center / 100% 2px no-repeat,
+    linear-gradient(var(--yellow), var(--yellow)) center / 2px 100% no-repeat;
+  outline: 2px solid var(--yellow); outline-offset: 4px;
+}
+.mark.on { opacity: 1; transform: none; }
+.replay { background: none; border: 0; color: var(--muted); font: 11px var(--mono); cursor: pointer; padding: 0; }
+.replay:hover { color: var(--fg-hi); }
+@media (min-width: 980px) {
+  .demo { padding-bottom: 150px; }
+  .peek { position: absolute; width: 64%; right: -8px; bottom: 0; margin: 0; box-shadow: 0 0 0 6px var(--bg); }
+  .term { width: 86%; }
+}
+
+/* ── the stages: sticky screens that zoom into the next box ────────── */
+.stage-wrap { position: relative; }
+.stage { position: relative; min-height: 100svh; overflow: hidden; background: var(--bg); }
+
+/* the logo, big: a box whose inner square is itself a box */
+.enter .stage { display: grid; place-items: center; }
+.logo {
+  --px: 12px;                                  /* set from the viewport by the script, whole pixels */
+  position: relative; width: calc(15 * var(--px)); height: calc(15 * var(--px));
+}
+.logo svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; shape-rendering: crispEdges; }
+.logo .lid { transform-box: fill-box; transform-origin: 0 100%; }
+.logo .inner {
+  position: absolute; left: calc(4 * var(--px)); top: calc(4 * var(--px));
+  width: calc(7 * var(--px)); height: calc(7 * var(--px));
+  border: var(--px) solid var(--brand); border-top: 0;
+}
+.logo .inner::before {
+  content: ""; position: absolute; top: 0; left: calc(-1 * var(--px)); right: calc(-1 * var(--px)); height: calc(2 * var(--px));
+  background: var(--brand);
+}
+.enter .hint {
+  position: absolute; left: 0; right: 0; bottom: calc(var(--g) + 12px); text-align: center;
+  font: 12px var(--pixel); color: var(--muted);
+}
+
+/* the portal: four solid bars that grow from a small box into the next frame. Solid rectangles
+   scale without distortion, so this is transform only: the compositor does the work. */
+.portal { position: absolute; inset: 0; pointer-events: none; display: none; }
+.portal i { position: absolute; left: 0; top: 0; background: var(--brand); transform-origin: 0 0; }
+
+/* ── box 1: why ──────────────────────────────────────────────────── */
+.why h2, .inside h2 { font-size: clamp(18px, 3.2vw, 32px); max-width: 30ch; }
+.panes { display: grid; gap: 16px; }
+@media (min-width: 760px) { .panes { grid-template-columns: 1fr 1fr; gap: 24px; } }
+.pane-l { font: 11px var(--pixel); margin-bottom: 6px; color: var(--muted); display: flex; justify-content: space-between; }
+.pane-l.bad b { color: var(--red); font-weight: 400; }
+.pane-l.good b { color: var(--brand); font-weight: 400; }
+.desk {
+  position: relative; aspect-ratio: 16 / 9; max-height: 34svh; width: 100%; background: var(--bg-darker);
+  border: 2px solid var(--line); overflow: hidden;
+}
+.desk .dbar { position: absolute; inset: 0 0 auto; height: 8%; background: var(--bg-dark); border-bottom: 1px solid var(--line); }
+.desk .dbar::before { content: ""; position: absolute; left: 3%; top: 35%; width: 14%; height: 30%;
+  background: repeating-linear-gradient(to right, var(--muted) 0 8%, transparent 8% 22%); }
+.tile {
+  position: absolute; top: 12%; bottom: 4%; border: 2px solid var(--line); background: var(--bg);
+  padding: 3%; overflow: hidden; transform-origin: 0 0;
+}
+.tile .tt { font: 9px var(--mono); color: var(--muted); white-space: nowrap; margin-bottom: 6%; }
+.tile .code { height: 70%; background:
+  repeating-linear-gradient(to bottom, transparent 0 7px, var(--bg) 7px 11px),
+  linear-gradient(to right, var(--accent) 0 12%, transparent 12% 16%, var(--fg) 16% 58%, transparent 58%) 0 0 / 100% 22px,
+  linear-gradient(to right, transparent 0 8%, var(--brand) 8% 30%, transparent 30% 34%, var(--muted) 34% 76%, transparent 76%) 0 11px / 100% 22px;
+  opacity: .55; }
+.tile.mine { left: 2%; right: 2%; border-color: var(--accent); }
+.tile.agent { left: 51%; right: 2%; border-color: var(--red); }
+.tile.agent .code { opacity: .3; }
+.toast {
+  position: absolute; right: 3%; top: 12%; width: 38%; padding: 2% 3%; background: var(--bg-hi); border: 2px solid var(--red);
+  font: 9px var(--mono); color: var(--fg-hi);
+}
+.stolen { position: absolute; left: 4%; bottom: 8%; font: 10px var(--pixel); color: var(--bg-darker); background: var(--red); padding: 1px 6px; }
+.mini {                                      /* the agent's box: where the next zoom starts */
+  position: absolute; right: 3%; bottom: 7%; width: 30%; aspect-ratio: 16 / 10;
+  border: 3px solid var(--brand); border-top: 0; background: var(--bg-darker);
+}
+.mini::before { content: ""; position: absolute; top: 0; left: -3px; right: -3px; height: 9px; background: var(--brand); }
+.mini .w { position: absolute; top: 18px; bottom: 6px; border: 1px solid var(--muted); background: var(--bg-hi); }
+.mini .w1 { left: 6px; right: 52%; }
+.mini .w2 { left: 52%; right: 6px; }
+.facts { list-style: none; margin: 8px 0 0; padding: 0; font-size: 12px; display: grid; gap: 2px; }
+.facts li::before { font-family: var(--pixel); margin-right: 8px; }
+.facts.bad li::before { content: "x"; color: var(--red); }
+.facts.good li::before { content: "+"; color: var(--brand); }
+.enter-next { font: 11px var(--pixel); color: var(--muted); }
+
+/* ── box 2: inside ───────────────────────────────────────────────── */
+.inside .cols { display: grid; gap: 20px; align-items: center; }
+@media (min-width: 900px) { .inside .cols { grid-template-columns: 1.3fr 1fr; gap: 32px; } }
+.shotwin img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.shotwin { max-width: min(100%, calc(40svh * 16 / 9)); }
+.inside .facts { font-size: 13px; gap: 10px; }
+.inside .facts li::before { content: "■"; color: var(--brand); }
+.inside .facts b { color: var(--fg-hi); font-weight: 400; }
+.proto-note { font-size: 11px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; }
+
+/* ── after the boxes: contributors, footer ───────────────────────── */
+.after { position: relative; z-index: 5; background: var(--bg); padding: 72px var(--g) 40px; max-width: 1240px; margin: 0 auto; }
+.after h2 { font-size: clamp(20px, 3vw, 30px); margin-bottom: 8px; }
+.after .sub { color: var(--muted); font-size: 13px; margin: 0 0 24px; }
+.people { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.people a { display: block; border: 2px solid var(--line); padding: 12px; text-align: center; color: var(--fg-hi); font-size: 12px; }
+.people a:hover { border-color: var(--brand); text-decoration: none; }
+.av { width: 64px; height: 64px; margin: 0 auto 10px; background: var(--lo) center / cover; image-rendering: pixelated; }
+.people a:hover .av, .people a:focus-visible .av { background-image: var(--hi); image-rendering: auto; }
+.bye { margin-top: 72px; border-top: 1px solid var(--line); padding-top: 24px; display: grid; gap: 16px; font-size: 12px; color: var(--muted); }
+.bye pre { margin: 0; font: 13px var(--mono); color: var(--fg); white-space: pre-wrap; }
+.bye .links { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* ── the zoom, only where the browser has scroll-driven animations and motion is welcome ── */
+/* Without it (or with reduced motion) every box above is a plain, static screen: nothing hides. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .zoom .stage-wrap { height: var(--len, 300svh); }
+    .zoom .stage { position: sticky; top: 0; height: 100svh; min-height: 0; }
+    .zoom .portal { display: block; }
+    .zoom .content { position: absolute; min-height: 0; padding: 0;
+      inset: calc(var(--topbar) + var(--g) + var(--bh) + 8px) calc(var(--g) + var(--e) + 12px) calc(var(--g) + var(--e) + 8px); }
+    /* each box lies under the one before it and fades in the instant that one's portal fills the
+       screen, so the hand-off is invisible (same frame, same place) */
+    .zoom .enter  { z-index: 30; view-timeline: --enter block; --len: 320svh; }
+    .zoom .why    { z-index: 20; view-timeline: --why block;   --len: 420svh; margin-top: -100svh; }
+    .zoom .inside { z-index: 10; view-timeline: --inside block; --len: 180svh; margin-top: -100svh; }
+
+    .zoom .enter .stage, .zoom .why .stage { animation: gone linear both; animation-range: contain 99.5% contain 100%; }
+    .zoom .enter .stage { animation-timeline: --enter; }
+    .zoom .why .stage   { animation-timeline: --why; }
+    @keyframes gone { to { opacity: 0; } }
+
+    /* enter: the logo arrives, the lid lifts, the inner box grows into box 1 */
+    .zoom .enter .logo { animation: logo-in linear both, fly linear both; animation-timeline: --enter, --enter;
+      animation-range: entry 20% entry 90%, contain 55% contain 100%; }
+    @keyframes logo-in { from { transform: scale(.55); opacity: 0; } }
+    @keyframes fly { to { transform: var(--fly, scale(4)); opacity: 0; } }
+    .zoom .enter .lid { animation: lid linear both; animation-timeline: --enter; animation-range: contain 28% contain 50%; }
+    @keyframes lid { to { transform: translate(-.6px, -2.4px) rotate(-24deg); } }
+    .zoom .enter .logo .inner { animation: hide steps(1, end) both; animation-timeline: --enter; animation-range: contain 55% contain 55.1%; }
+    @keyframes hide { to { visibility: hidden; } }
+    .zoom .enter .hint { animation: fade linear both; animation-timeline: --enter; animation-range: contain 18% contain 30%; }
+    @keyframes fade { to { opacity: 0; } }
+
+    .zoom .portal i { animation: grow linear forwards; animation-range: contain 55% contain 99%; transform: var(--t0); }
+    .zoom .enter .portal i { animation-timeline: --enter; }
+    .zoom .why .portal i   { animation-timeline: --why; animation-range: contain 64% contain 99%; }
+    .zoom .portal i { opacity: 0; }
+    @keyframes grow { 0% { opacity: 1; transform: var(--t0); } 100% { opacity: 1; transform: none; } }
+
+    /* box 1 settles in: its name types itself into the bar, then the content */
+    .zoom .why .fbar > *, .zoom .inside .fbar > * { animation: type steps(18, end) both; animation-range: contain 0% contain 6%; }
+    .zoom .why .fbar > *    { animation-timeline: --why; }
+    .zoom .inside .fbar > * { animation-timeline: --inside; animation-range: contain 0% contain 14%; }
+    @keyframes type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+    .zoom .why .content { animation: rise linear both, fly linear both; animation-timeline: --why, --why;
+      animation-range: contain 3% contain 12%, contain 64% contain 97%; transform-origin: var(--origin, 80% 80%); }
+    .zoom .inside .content { animation: rise linear both; animation-timeline: --inside; animation-range: contain 6% contain 26%; }
+    @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+
+    /* before/after: the agent's work lands on your screen on the left, in its own box on the right */
+    .zoom .why .tile.mine.squeezed { animation: squeeze linear both; animation-timeline: --why; animation-range: contain 16% contain 24%; }
+    @keyframes squeeze { to { transform: scaleX(.5); } }
+    .zoom .why .tile.agent { animation: pop linear both; animation-timeline: --why; animation-range: contain 16% contain 24%; }
+    .zoom .why .toast      { animation: pop linear both; animation-timeline: --why; animation-range: contain 28% contain 34%; }
+    .zoom .why .stolen     { animation: pop linear both; animation-timeline: --why; animation-range: contain 38% contain 42%; }
+    .zoom .why .mini .w1   { animation: pop linear both; animation-timeline: --why; animation-range: contain 16% contain 24%; }
+    .zoom .why .mini .w2   { animation: pop linear both; animation-timeline: --why; animation-range: contain 28% contain 34%; }
+    @keyframes pop { from { opacity: 0; transform: scale(.85); } }
+    .zoom .why .facts li { animation: pop linear both; animation-timeline: --why; }
+    .zoom .why .facts li:nth-child(1) { animation-range: contain 20% contain 24%; }
+    .zoom .why .facts li:nth-child(2) { animation-range: contain 30% contain 34%; }
+    .zoom .why .facts li:nth-child(3) { animation-range: contain 40% contain 44%; }
+    .zoom .why .enter-next { animation: pop linear both; animation-timeline: --why; animation-range: contain 50% contain 56%; }
+    .zoom .why .mini { animation: hide steps(1, end) both; animation-timeline: --why; animation-range: contain 64% contain 64.1%; }
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="omabox home">
+    <svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true"><path fill="var(--brand)" d="M0 0h8v1H0zM13 0h2v1h-2zM0 1h1v13H0zM14 1h1v13h-1zM0 14h2v1H0zM7 14h8v1H7zM4 4h7v2H4zM4 6h1v4H4zM10 6h1v4h-1zM4 10h7v1H4z"/></svg>
+    omabox
+  </a>
+  <div class="crumbs" aria-live="polite"><b>host</b></div>
+  <nav><a href="#">docs</a><a href="#">changelog</a><a href="https://github.com/diogochaves/omabox">github</a></nav>
+  <div class="themes" role="group" aria-label="Theme">
+    <button style="--c:#9ece6a" data-t="tokyo-night" title="Tokyo Night" aria-pressed="true"></button>
+    <button style="--c:#a6e3a1" data-t="catppuccin" title="Catppuccin" aria-pressed="false"></button>
+    <button style="--c:#a9b665" data-t="gruvbox" title="Gruvbox" aria-pressed="false"></button>
+    <button style="--c:#028391" data-t="retro-82" title="Retro 82" aria-pressed="false"></button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero" data-crumb="host">
+  <div>
+    <div class="eyebrow"><span class="tag">0.2.0</span> for Omarchy · Hyprland</div>
+    <h1>A desktop of their own, <em>for your agents.</em></h1>
+    <p class="lead">omabox gives an AI agent a whole Omarchy desktop to launch, drive and screenshot apps in,
+      invisible and apart from yours. No windows on your screen, no stolen focus, no cursor jumps, nothing
+      left in your session.</p>
+    <div class="install">
+      <code id="cmd">git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code>
+      <button type="button" id="copy">copy</button>
+    </div>
+    <p class="reqs">Omarchy 4 · Hyprland 0.56+ · a GPU render node · MIT</p>
+    <div class="ctas">
+      <a class="btn solid" href="https://github.com/diogochaves/omabox">GitHub</a>
+      <a class="btn" href="https://diogochaves.github.io/omabox/docs/media/demo.mp4">Watch the demo · 55 s</a>
+    </div>
+  </div>
+
+  <div class="demo" aria-label="An agent driving a box from its terminal, and a peek at that box">
+    <div class="win term">
+      <div class="win-t"><span>agent · ~/code/app</span><button class="replay" id="replay" type="button">replay</button></div>
+      <pre id="tty" aria-live="off"></pre>
+    </div>
+    <div class="win peek">
+      <div class="win-t"><span>peek · app-5cc72cdc</span><span class="live" id="live">○ no box</span></div>
+      <div class="screen">
+        <div class="empty" id="empty">no box up</div>
+        <img id="p-desk" src="media/desktop.webp" alt="" width="1280" height="720" decoding="async">
+        <img id="p-term" data-themed src="media/term-tokyo-night.webp" alt="" width="1280" height="720" decoding="async">
+        <span class="mark" id="mark" style="left:25%;top:22%"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- the logo opens and we step into it -->
+<section class="stage-wrap enter" data-crumb="host">
+  <div class="stage">
+    <div class="logo" id="logo">
+      <svg viewBox="0 0 15 15" aria-hidden="true">
+        <path class="lid" fill="var(--brand)" d="M0 0h8v1H0z"/>
+        <path fill="var(--brand)" d="M13 0h2v1h-2zM0 1h1v13H0zM14 1h1v13h-1zM0 14h2v1H0zM7 14h8v1H7z"/>
+      </svg>
+      <div class="inner" id="src-enter"></div>
+    </div>
+    <p class="hint">every part of omabox is a box · step inside ↓</p>
+    <div class="portal" data-from="src-enter"><i data-edge="bar"></i><i data-edge="left"></i><i data-edge="right"></i><i data-edge="bottom"></i></div>
+  </div>
+</section>
+
+<!-- box 1 -->
+<section class="stage-wrap why" data-crumb="host › <b>why</b>">
+  <div class="stage">
+    <div class="frame" id="frame-ref"><div class="fbar"><span>■ box 1 · why</span><span class="dim">host › why</span></div></div>
+    <div class="content">
+      <h2>Your agent opens apps. Your desktop shouldn't notice.</h2>
+      <div class="panes">
+        <div>
+          <div class="pane-l bad"><span>without omabox</span><b>your screen</b></div>
+          <div class="desk" aria-hidden="true">
+            <div class="dbar"></div>
+            <div class="tile mine squeezed"><div class="tt">~/code/app — nvim</div><div class="code"></div></div>
+            <div class="tile agent"><div class="tt">chromium · agent</div><div class="code"></div></div>
+            <div class="toast">Build finished · app</div>
+            <span class="stolen">focus stolen</span>
+          </div>
+          <ul class="facts bad">
+            <li>a window tiles into your workspace</li>
+            <li>a notification lands in your session</li>
+            <li>your keystrokes go to the agent's app</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pane-l good"><span>with omabox</span><b>your screen</b></div>
+          <div class="desk" aria-hidden="true">
+            <div class="dbar"></div>
+            <div class="tile mine"><div class="tt">~/code/app — nvim</div><div class="code"></div></div>
+            <div class="mini" id="src-why"><span class="w w1"></span><span class="w w2"></span></div>
+          </div>
+          <ul class="facts good">
+            <li>the agent's windows open in its own box</li>
+            <li>its notifications stay in there too</li>
+            <li>your focus, cursor and workspace don't move</li>
+          </ul>
+        </div>
+      </div>
+      <p class="enter-next">↓ step into the agent's box</p>
+    </div>
+    <div class="portal" data-from="src-why"><i data-edge="bar"></i><i data-edge="left"></i><i data-edge="right"></i><i data-edge="bottom"></i></div>
+  </div>
+</section>
+
+<!-- box 2 -->
+<section class="stage-wrap inside" data-crumb="host › why › <b>inside</b>">
+  <div class="stage">
+    <div class="frame"><div class="fbar"><span>■ box 2 · inside</span><span class="dim">host › why › inside</span></div></div>
+    <div class="content">
+      <h2>A real Omarchy. Just not on your screen.</h2>
+      <div class="cols">
+        <div class="win shotwin">
+          <div class="win-t"><span>omabox shot</span><span>1920x1080</span></div>
+          <img data-themed src="media/term-tokyo-night.webp" alt="A box running Omarchy with a terminal open, in the selected theme" width="1280" height="720" loading="lazy" decoding="async">
+        </div>
+        <ul class="facts">
+          <li><b>Omarchy's own</b> Hyprland config, bar, menu, tray and notifications</li>
+          <li><b>your theme</b>, bar layout and terminal settings; not your ~/.config/hypr</li>
+          <li><b>private</b> screen, D-Bus session bus and keyring</li>
+          <li><b>3–4 s</b> to start, about 500 MB</li>
+        </ul>
+      </div>
+      <p class="proto-note">Prototype: the full site goes on through more boxes (agents · the widget you can play · safety · install).</p>
+    </div>
+  </div>
+</section>
+
+<section class="after" data-crumb="host">
+  <h2>Built by</h2>
+  <p class="sub">Everyone who has shipped code to omabox. Same size, in alphabetical order, no counts.</p>
+  <ul class="people">
+    <li><a href="https://github.com/btsouth"><div class="av" style="--lo:url(media/avatar-btsouth-16.png);--hi:url(media/avatar-btsouth.jpg)"></div>btsouth</a></li>
+    <li><a href="https://github.com/diogochaves"><div class="av" style="--lo:url(media/avatar-diogochaves-16.png);--hi:url(media/avatar-diogochaves.jpg)"></div>diogochaves</a></li>
+  </ul>
+
+  <footer class="bye">
+    <pre><span style="color:var(--brand)">$</span> omabox down --all
+omabox: box 'omabox.com' down</pre>
+    <div class="links">
+      <a href="https://github.com/diogochaves/omabox">GitHub</a>
+      <a href="https://github.com/diogochaves/omabox/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT</a>
+    </div>
+    <p>An unofficial community project for Omarchy. Every screenshot here was taken by omabox, in a box.</p>
+  </footer>
+</section>
+
+</main>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+                  set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+
+  /* theme: the page's colours and the screenshots that show a box in that theme */
+  const setTheme = t => {
+    document.documentElement.dataset.theme = t;
+    document.querySelectorAll(".themes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
+    document.querySelectorAll("img[data-themed]").forEach(i => { i.src = `media/term-${t}.webp`; });
+    store.set("theme", t);
+  };
+  document.querySelectorAll(".themes button").forEach(b => b.addEventListener("click", () => setTheme(b.dataset.t)));
+  const saved = store.get("theme");
+  if (saved && document.querySelector(`.themes [data-t="${saved}"]`)) setTheme(saved);
+
+  $("#copy").addEventListener("click", async e => {
+    try { await navigator.clipboard.writeText($("#cmd").textContent); e.target.textContent = "copied"; }
+    catch { e.target.textContent = "select it"; }
+    setTimeout(() => { e.target.textContent = "copy"; }, 1500);
+  });
+
+  /* where you are: host › why › inside */
+  const crumbs = $(".crumbs");
+  const io = new IntersectionObserver(es => {
+    for (const e of es) if (e.isIntersecting) crumbs.innerHTML = e.target.dataset.crumb.replace(/^host(?= |$)/, "<b>host</b>").replace(/<b>host<\/b>(?= ›)/, "host");
+  }, { rootMargin: "-50% 0px -50% 0px" });
+  document.querySelectorAll("[data-crumb]").forEach(s => io.observe(s));
+
+  /* the zoom: only with scroll-driven animations and no reduced motion; the CSS does the animating,
+     this only measures, on load and on resize */
+  const motion = CSS.supports("animation-timeline: view()") && matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  if (motion) document.documentElement.classList.add("zoom");
+
+  const measure = () => {
+    const root = document.documentElement;
+    // whole-pixel logo unit, so the pixel art stays crisp
+    const px = Math.max(8, Math.min(30, Math.floor(Math.min(innerWidth, innerHeight) * 0.56 / 15)));
+    $("#logo").style.setProperty("--px", px + "px");
+    if (!motion) return;
+    root.classList.add("measuring");                     // no animations while measuring
+    const frame = $("#frame-ref"), fs = getComputedStyle(frame);
+    const e1 = parseFloat(fs.borderLeftWidth), bh1 = frame.querySelector(".fbar").offsetHeight;
+    document.querySelectorAll(".portal").forEach(p => {
+      const stage = p.closest(".stage"), src = document.getElementById(p.dataset.from);
+      const S = stage.getBoundingClientRect(), r = src.getBoundingClientRect(), f = frame.getBoundingClientRect();
+      const ss = getComputedStyle(src), e0 = parseFloat(ss.borderLeftWidth);
+      const bh0 = parseFloat(getComputedStyle(src, "::before").height) || e0 * 2;
+      const box = (x, y, w, h, e, bh) => ({
+        bar: [x, y, w, bh], left: [x, y + bh, e, h - bh], right: [x + w - e, y + bh, e, h - bh], bottom: [x, y + h - e, w, e] });
+      // the source box's outer rect: its bar reaches over its side borders
+      const a = box(r.left - S.left, r.top - S.top, r.width, r.height, e0, bh0);
+      const F = frame.closest(".stage").getBoundingClientRect();   // every stage is the same screen
+      const b = box(f.left - F.left, f.top - F.top, f.width, f.height, e1, bh1);
+      p.querySelectorAll("i").forEach(i => {
+        const [x0, y0, w0, h0] = a[i.dataset.edge], [x1, y1, w1, h1] = b[i.dataset.edge];
+        Object.assign(i.style, { left: x1 + "px", top: y1 + "px", width: w1 + "px", height: h1 + "px" });
+        i.style.setProperty("--t0", `translate(${x0 - x1}px, ${y0 - y1}px) scale(${w0 / w1}, ${h0 / h1})`);
+      });
+      // what flies past is scaled around the source box, as if the camera went through it
+      const cx = r.left - S.left + r.width / 2, cy = r.top - S.top + r.height / 2;
+      const k = Math.max(S.width / r.width, S.height / r.height) * 1.1;
+      const layer = p.previousElementSibling?.classList.contains("content") ? p.previousElementSibling : null;
+      if (layer) {
+        const L = layer.getBoundingClientRect();
+        layer.style.setProperty("--origin", `${cx - (L.left - S.left)}px ${cy - (L.top - S.top)}px`);
+        layer.style.setProperty("--fly", `scale(${k})`);
+      } else {
+        const lg = $("#logo"), G = lg.getBoundingClientRect();
+        lg.style.transformOrigin = `${cx - (G.left - S.left)}px ${cy - (G.top - S.top)}px`;
+        lg.style.setProperty("--fly", `scale(${k})`);
+      }
+    });
+    root.classList.remove("measuring");
+  };
+  const st = document.createElement("style");
+  st.textContent = ".measuring * { animation: none !important; }";
+  document.head.append(st);
+  let raf = 0;
+  addEventListener("resize", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(measure); });
+  document.fonts?.ready.then(measure);
+  measure();
+
+  /* the terminal: types once when it is in view, then stops (no loop) */
+  const tty = $("#tty"), live = $("#live"), empty = $("#empty"), mark = $("#mark");
+  const show = id => { ["p-desk", "p-term"].forEach(x => $("#" + x).classList.toggle("on", x === id)); empty.hidden = !!id; };
+  const script = [
+    { cmd: "omabox up", out: "omabox: box 'app-5cc72cdc' up (1920x1080@60) in 3.4s", then: () => { show("p-desk"); live.textContent = "● live"; } },
+    { cmd: "omabox keys super+return" },
+    { cmd: "omabox wait window foot --focused", out: "satisfied: window foot focused after 0.21s", ok: true, isNew: true, then: () => show("p-term") },
+    { cmd: "omabox click --window foot 320 160", out: "", isNew: true, then: () => mark.classList.add("on") },
+    { cmd: "omabox shot --window foot -o foot.png", out: "foot.png", isNew: true },
+  ];
+  const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let run = 0;
+  const play = async () => {
+    const me = ++run, fast = !motion;
+    tty.innerHTML = ""; show(null); mark.classList.remove("on"); live.textContent = "○ no box";
+    let done = "";
+    const paint = (typing, cur = "") => { tty.innerHTML = done + (typing ? `<span class="p">❯</span> <span class="c">${esc(cur)}</span><span class="cursor"></span>` : ""); };
+    tty.parentElement.classList.add("typing");
+    for (const s of script) {
+      if (fast) { done += `<span class="p">❯</span> <span class="c">${esc(s.cmd)}</span>\n`; }
+      else {
+        for (let i = 1; i <= s.cmd.length; i++) { if (me !== run) return; paint(true, s.cmd.slice(0, i)); await sleep(26 + Math.random() * 40); }
+        await sleep(260);
+        done += `<span class="p">❯</span> <span class="c">${esc(s.cmd)}</span>\n`;
+      }
+      if (s.out) done += `<span class="${s.ok ? "ok" : "o"}">${esc(s.out)}</span>${s.isNew ? '<span class="new">new in 0.2.0</span>' : ""}\n`;
+      else if (s.isNew) done += `<span class="o"></span><span class="new">new in 0.2.0</span>\n`;
+      paint(false); s.then?.();
+      if (!fast) await sleep(520);
+    }
+    paint(true);
+    tty.parentElement.classList.remove("typing");
+  };
+  $("#replay").addEventListener("click", play);
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); play(); } }, { threshold: .4 }).observe(tty);
+})();
+</script>
+</body>
+</html>

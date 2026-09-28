@@ -1,0 +1,868 @@
+<title>omabox parallel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* A dark, neon Omarchy: Tokyo Night by default (the theme the omabox mark is drawn in), other Omarchy
+   themes on the swatches. Frames are cut at the top right and bottom left, where the mark has its gaps. */
+:root {
+  --bg: #0b0c13; --bg-2: #10111a; --panel: #151724; --panel-2: #1a1d2e; --line: #252941; --line-2: #343a5c;
+  --ink: #d6dcff; --ink-2: #a9b1d6; --muted: #6f769b;
+  --brand: #9ece6a; --on-brand: #0b0c13; --glow: rgb(158 206 106 / .38);
+  --accent: #7aa2f7; --cyan: #7dcfff; --magenta: #bb9af7; --red: #f7768e; --yellow: #e0af68;
+  --display: "Chakra Petch", "Instrument Sans", system-ui, sans-serif;
+  --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --cut: 14px; --g: 16px;
+  color-scheme: dark;
+}
+:root[data-omarchy="catppuccin"] {
+  --bg: #0f0f18; --bg-2: #141421; --panel: #1b1b2b; --panel-2: #222236; --line: #2e2e45; --line-2: #45475a;
+  --ink: #cdd6f4; --ink-2: #bac2de; --muted: #7f849c;
+  --brand: #a6e3a1; --on-brand: #0f0f18; --glow: rgb(166 227 161 / .35);
+  --accent: #89b4fa; --cyan: #89dceb; --magenta: #cba6f7; --red: #f38ba8; --yellow: #f9e2af;
+}
+:root[data-omarchy="gruvbox"] {
+  --bg: #141414; --bg-2: #1b1b1b; --panel: #222120; --panel-2: #2a2827; --line: #3a3634; --line-2: #504945;
+  --ink: #ebdbb2; --ink-2: #d4be98; --muted: #928374;
+  --brand: #a9b665; --on-brand: #141414; --glow: rgb(169 182 101 / .35);
+  --accent: #7daea3; --cyan: #89b482; --magenta: #d3869b; --red: #ea6962; --yellow: #d8a657;
+}
+:root[data-omarchy="retro-82"] {
+  --bg: #020a14; --bg-2: #031222; --panel: #06192e; --panel-2: #0a2540; --line: #0f3a4f; --line-2: #134e5a;
+  --ink: #f6dcac; --ink-2: #c9d3c4; --muted: #5f9a97;
+  --brand: #faa968; --on-brand: #020a14; --glow: rgb(250 169 104 / .38);
+  --accent: #8cbfb8; --cyan: #3fb8b0; --magenta: #f85525; --red: #f85525; --yellow: #e97b3c;
+}
+@media (min-width: 760px) { :root { --g: 28px; } }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body {
+  margin: 0; color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: clip;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    radial-gradient(900px 500px at -10% 30%, color-mix(in srgb, var(--magenta) 7%, transparent), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+/* a faint grid, like a HUD; drawn once */
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .5;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%); mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%); }
+a { color: var(--cyan); text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); color: var(--ink); margin: 0; text-wrap: balance; font-weight: 600; }
+h1 { font-size: clamp(34px, 4.3vw, 58px); line-height: 1.04; letter-spacing: -.01em; }
+h2 { font-size: clamp(26px, 3vw, 40px); line-height: 1.1; letter-spacing: -.005em; }
+h3 { font-size: 18.5px; line-height: 1.25; letter-spacing: .01em; }
+.hl { color: var(--brand); text-shadow: 0 0 22px var(--glow); }
+p { margin: 0; }
+code, kbd, pre { font-family: var(--mono); }
+:not(pre) > code { font-size: .86em; background: var(--panel-2); border: 1px solid var(--line); padding: .05em .35em; white-space: nowrap; }
+kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px; padding: 0 .35em; background: var(--panel); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: var(--g); }
+.tag { font: 500 11.5px/1.4 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); display: flex; gap: 10px; align-items: center; }
+.tag::before { content: ""; width: 18px; height: 2px; background: currentColor; box-shadow: 0 0 10px currentColor; }
+.lead { font-size: clamp(16.5px, 1.35vw, 18.5px); color: var(--ink-2); max-width: 40em; }
+.new { font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--on-brand); background: var(--brand); padding: 3px 6px; white-space: nowrap; vertical-align: 2px; box-shadow: 0 0 12px var(--glow); }
+
+/* the cut frame: the mark's two gaps, as corners */
+.cut { position: relative; isolation: isolate; clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))); background: var(--fc, var(--line-2)); padding: 1px; }
+.cut > .in { clip-path: polygon(0 0, calc(100% - var(--cut) + .5px) 0, 100% calc(var(--cut) - .5px), 100% 100%, calc(var(--cut) - .5px) 100%, 0 calc(100% - var(--cut) + .5px)); background: var(--fb, var(--panel)); height: 100%; }
+.card > .in { padding: 22px; display: grid; gap: 12px; align-content: start; }
+.card p { color: var(--ink-2); font-size: 15.5px; }
+
+/* ── header ─────────────────────────────────────────────────────────────────── */
+.top { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 20px; height: 60px; }
+.lockup { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--ink); font: 700 22px/1 var(--display); letter-spacing: .02em; }
+.lockup svg { width: 26px; height: 26px; color: var(--brand); filter: drop-shadow(0 0 8px var(--glow)); }
+.top nav { display: none; gap: 2px; margin-left: auto; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.top nav a { color: var(--ink-2); text-decoration: none; padding: 8px 11px; }
+.top nav a:hover { color: var(--brand); }
+@media (min-width: 1000px) { .top nav { display: flex; } }
+.themes { display: flex; gap: 7px; margin-left: auto; }
+@media (min-width: 1000px) { .themes { margin-left: 8px; } }
+.themes button { width: 14px; height: 14px; padding: 0; cursor: pointer; background: var(--c); border: 0; clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 30% 100%, 0 70%); opacity: .55; }
+.themes button[aria-pressed="true"] { opacity: 1; box-shadow: 0 0 10px var(--c); }
+
+/* ── hero ───────────────────────────────────────────────────────────────────── */
+.hero { display: grid; gap: 44px; padding-block: 48px 72px; align-items: center; }
+.hero > * { min-width: 0; }
+@media (min-width: 1080px) { .hero { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 56px; padding-block: 64px 96px; } }
+.mark { display: flex; align-items: center; gap: 20px; margin-bottom: 26px; }
+.mark button { background: none; border: 0; padding: 0; cursor: pointer; }
+.mark svg { width: clamp(72px, 8vw, 104px); height: auto; display: block; filter: drop-shadow(0 0 18px var(--glow)); }
+.mark rect { fill: var(--brand); }
+.mark.boot rect { animation: px .45s steps(2, end) both; animation-delay: calc(var(--i) * 28ms); }
+@keyframes px { from { opacity: 0; } 50% { opacity: 1; fill: #fff; } }
+.mark .word { display: grid; gap: 4px; }
+.mark .word b { font: 700 clamp(30px, 3.4vw, 44px)/1 var(--display); letter-spacing: .02em; color: var(--ink); }
+.mark .word span { font: 500 11.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.hero h1 { margin: 16px 0 18px; }
+.never { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 8px 22px; font-size: 15px; color: var(--ink-2); }
+@media (min-width: 560px) { .never { grid-template-columns: 1fr 1fr; } }
+.never li { display: flex; gap: 10px; align-items: baseline; }
+.never li::before { content: "×"; font: 500 15px var(--mono); color: var(--red); text-shadow: 0 0 10px color-mix(in srgb, var(--red) 60%, transparent); }
+.install { margin-top: 30px; --cut: 10px; --fc: var(--line-2); --fb: var(--bg-2); }
+.install .in { display: flex; align-items: center; }
+.install code { flex: 1; min-width: 0; padding: 14px 16px; overflow-x: auto; white-space: nowrap; font-size: 13.5px; scrollbar-width: none; }
+.install code::before { content: "$ "; color: var(--brand); }
+.copy { align-self: stretch; border: 0; border-left: 1px solid var(--line); background: var(--panel); padding: 0 18px; cursor: pointer; font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.copy:hover { background: var(--brand); color: var(--on-brand); }
+.reqs { margin-top: 10px; font: 12px var(--mono); color: var(--muted); }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+.btn { --cut: 10px; display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; font: 600 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; cursor: pointer; border: 0;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))); background: var(--panel-2); color: var(--ink); }
+.btn:hover { background: var(--line-2); }
+.btn.solid { background: var(--brand); color: var(--on-brand); box-shadow: 0 0 24px var(--glow); }
+.btn.solid:hover { filter: brightness(1.08); }
+.btn .play { width: 0; height: 0; border-left: 8px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+/* the live view: your desktop, still; three boxes, busy */
+.live { display: grid; gap: 14px; }
+.screen { position: relative; aspect-ratio: 16 / 10; background: var(--bg-2); overflow: hidden; font: 10.5px/1.3 var(--mono); color: var(--muted); }
+.sbar { position: absolute; inset: 0 0 auto; height: 7.5%; display: flex; align-items: center; gap: 8px; padding: 0 3%; background: var(--panel); border-bottom: 1px solid var(--line); }
+.sbar .ws { display: flex; gap: 6px; }
+.sbar .ws i { font-style: normal; }
+.sbar .ws i:first-child { color: var(--ink); }
+.sbar .clk { margin: 0 auto; }
+.sbar .tray { display: flex; gap: 5px; align-items: center; }
+.sbar .tray s { width: 6px; height: 6px; background: var(--muted); display: block; text-decoration: none; }
+.you-label { position: absolute; left: 10px; top: 11%; z-index: 3; font: 500 10.5px var(--mono); letter-spacing: .14em; color: var(--brand); text-transform: uppercase; }
+.editor { position: absolute; left: 4%; right: 4%; top: 17%; bottom: 17%; border: 1.5px solid var(--accent); background: var(--panel); padding: 2.4% 3%; }
+.editor .tt { color: var(--muted); margin-bottom: 3%; }
+.editor .ln { height: 7px; margin: 0 0 9px; background: linear-gradient(90deg, var(--magenta) 0 9%, transparent 9% 12%, var(--ink-2) 12% var(--w, 60%), transparent 0); opacity: .55; }
+.editor .typ { display: flex; align-items: center; height: 9px; }
+.editor .typ span { height: 7px; width: 46%; background: linear-gradient(90deg, var(--cyan) 0 20%, transparent 20% 24%, var(--ink) 24%); opacity: .8; transform-origin: 0 50%; animation: type 7s steps(14, end) infinite; }
+.editor .typ i { width: 2px; height: 11px; background: var(--ink); margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes type { 0% { transform: scaleX(.05); } 70%, 100% { transform: scaleX(1); } }
+@keyframes blink { 50% { opacity: 0; } }
+.mycursor { position: absolute; left: 70%; top: 58%; width: 16px; z-index: 3; color: var(--ink); filter: drop-shadow(0 1px 1px #000); }
+.mycursor em { position: absolute; left: 16px; top: 16px; font: 500 10px var(--mono); font-style: normal; color: var(--on-brand); background: var(--brand); padding: 1px 5px; white-space: nowrap; }
+.counters { position: absolute; left: 0; right: 0; bottom: 0; height: 12%; display: flex; align-items: center; justify-content: space-around; gap: 6px; padding: 0 2%; background: color-mix(in srgb, var(--bg) 80%, transparent); border-top: 1px solid var(--line); font-size: 10.5px; }
+.counters b { color: var(--brand); font-weight: 500; font-size: 13px; margin-right: 4px; text-shadow: 0 0 10px var(--glow); }
+.boxrow-h { display: flex; justify-content: space-between; align-items: baseline; font: 500 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.boxrow-h b { color: var(--brand); font-weight: 500; }
+.boxrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.tile { --cut: 10px; --fc: color-mix(in srgb, var(--brand) 70%, transparent); --fb: var(--bg-2); padding: 1.5px; cursor: zoom-in; border: 0; text-align: left; color: inherit; background: var(--fc); display: block; width: 100%; }
+.tile:hover { --fc: var(--brand); filter: drop-shadow(0 0 10px var(--glow)); }
+.tile .in { display: grid; }
+.tile .th { display: flex; justify-content: space-between; gap: 6px; padding: 4px 7px; background: color-mix(in srgb, var(--brand) 16%, var(--panel)); font: 500 9.5px var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; }
+.tile .th span:last-child { color: var(--muted); }
+.tile .screen { aspect-ratio: 16 / 10; }
+.tile .tf { padding: 4px 7px; font: 9.5px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-top: 1px solid var(--line); }
+.tile .tf b { color: var(--cyan); font-weight: 500; }
+/* what each box is doing: transforms and opacity only, paused when out of view */
+.paused .tile *, .paused .editor * { animation-play-state: paused !important; }
+.w { position: absolute; border: 1.5px solid var(--accent); background: var(--panel); }
+.a1 .w { left: 8%; top: 16%; width: 60%; height: 62%; animation: winpop 9s ease-out infinite; }
+@keyframes winpop { 0%, 8% { opacity: 0; transform: scale(.85); } 14%, 92% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.a1 .w::after { content: ""; position: absolute; left: 10%; right: 30%; top: 25%; bottom: 20%; background: repeating-linear-gradient(to bottom, var(--muted) 0 2px, transparent 2px 7px); opacity: .6; }
+.cur { position: absolute; width: 9px; z-index: 2; color: var(--yellow); animation: agentcur 9s ease-in-out infinite; }
+@keyframes agentcur { 0%, 18% { transform: translate(0, 0); } 42%, 100% { transform: translate(210%, -330%); } }
+.a1 .cur { left: 18%; top: 78%; }
+.ring { position: absolute; left: calc(18% + 18px); top: calc(78% - 30px); width: 14px; height: 14px; margin: -7px; border: 1.5px solid var(--yellow); border-radius: 50%; opacity: 0; animation: ring 9s ease-out infinite; }
+@keyframes ring { 0%, 43% { opacity: 0; transform: scale(.3); } 45% { opacity: 1; } 56%, 100% { opacity: 0; transform: scale(2.2); } }
+.a1 .tray s:first-child { animation: trayin 9s steps(1) infinite; background: var(--brand); }
+@keyframes trayin { 0%, 55% { opacity: 0; } 56%, 94% { opacity: 1; } 95% { opacity: 0; } }
+.menu { position: absolute; left: 30%; top: 16%; width: 40%; height: 70%; border: 1.5px solid var(--accent); background: var(--panel); padding: 4% 3%; display: grid; gap: 6%; align-content: start; animation: winpop 9s ease-out infinite; animation-delay: -2s; }
+.menu i { height: 5px; background: var(--muted); opacity: .6; display: block; }
+.menu .sel { position: absolute; left: 3%; right: 3%; top: 12%; height: 11%; background: color-mix(in srgb, var(--accent) 35%, transparent); animation: sel 9s steps(1) infinite; }
+@keyframes sel { 0%, 30% { transform: translateY(0); } 31%, 45% { transform: translateY(125%); } 46%, 60% { transform: translateY(250%); } 61%, 100% { transform: translateY(375%); } }
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; animation: flash 9s linear infinite; }
+@keyframes flash { 0%, 66% { opacity: 0; } 67% { opacity: .55; } 72%, 100% { opacity: 0; } }
+.toast { position: absolute; right: 4%; top: 11%; width: 44%; padding: 3% 4%; background: var(--panel-2); border: 1.5px solid var(--magenta); color: var(--ink); font-size: 8.5px; opacity: 0; animation: toast 9s ease-out infinite; }
+@keyframes toast { 0%, 72% { opacity: 0; transform: translateY(-30%); } 76%, 94% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.log { position: absolute; left: 5%; right: 5%; top: 12%; height: 56%; overflow: hidden; color: var(--muted); font-size: 8.5px; line-height: 1.5; }
+.log .l { display: block; animation: scroll 9s steps(6, end) infinite; }
+@keyframes scroll { to { transform: translateY(-54%); } }
+.log .ok { color: var(--brand); }
+.bar { position: absolute; left: 5%; right: 5%; bottom: 14%; height: 5px; background: var(--line); }
+.bar i { position: absolute; inset: 0; background: var(--brand); transform-origin: 0 50%; animation: prog 9s linear infinite; box-shadow: 0 0 8px var(--glow); }
+@keyframes prog { from { transform: scaleX(0); } 80%, to { transform: scaleX(1); } }
+.pass { position: absolute; left: 5%; bottom: 3%; color: var(--brand); font-size: 9px; opacity: 0; animation: pass 9s steps(1) infinite; }
+@keyframes pass { 0%, 80% { opacity: 0; } 81%, 100% { opacity: 1; } }
+
+/* ── sections ───────────────────────────────────────────────────────────────── */
+.sec { padding-block: clamp(64px, 9vw, 120px); border-top: 1px solid var(--line); scroll-margin-top: 60px; }
+.head { display: grid; gap: 16px; max-width: 50em; margin-bottom: 44px; }
+.grid2, .grid3 { display: grid; gap: 14px; }
+@media (min-width: 860px) { .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.span2 { grid-column: 1 / -1; }
+
+/* parallel: worktrees and their boxes */
+.lanes { display: grid; gap: 10px; }
+.lane { --cut: 12px; }
+.lane .in { display: grid; gap: 10px 18px; align-items: center; padding: 14px 16px; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .lane .in { grid-template-columns: minmax(0, 1.1fr) auto minmax(0, .8fr) auto minmax(0, 1.2fr) auto; } }
+.lane .wt { font: 500 13.5px var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lane .wt small { display: block; color: var(--muted); font-size: 11.5px; }
+.lane .arrow { color: var(--muted); font-family: var(--mono); display: none; }
+@media (min-width: 900px) { .lane .arrow { display: block; } }
+.agent { justify-self: start; font: 500 12px var(--mono); padding: 5px 9px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); white-space: nowrap; }
+.lane .bx { display: flex; gap: 10px; align-items: center; min-width: 0; font: 500 13px var(--mono); }
+.lane .bx svg { width: 16px; height: 16px; color: var(--brand); flex: none; }
+.lane .bx span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--brand); }
+.lane .st { font: 11.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.lane .st b { color: var(--brand); font-weight: 500; }
+.lane.booting .st b { color: var(--yellow); }
+.lane .down { justify-self: start; background: none; border: 1px solid var(--line-2); color: var(--muted); padding: 4px 9px; cursor: pointer; font: 11.5px var(--mono); }
+.lane .down:hover { color: var(--red); border-color: var(--red); }
+.lanebar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 14px; }
+.ls { --cut: 12px; margin-top: 18px; --fb: var(--bg-2); }
+.ls .th { padding: 8px 14px; border-bottom: 1px solid var(--line); font: 11.5px var(--mono); color: var(--muted); }
+.ls pre { margin: 0; padding: 12px 14px; font: 12.5px/1.65 var(--mono); color: var(--ink); overflow-x: auto; }
+.ls pre .p { color: var(--brand); }
+.ls pre .h { color: var(--muted); }
+
+/* never: what can't reach your desktop */
+.nevergrid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (min-width: 760px) { .nevergrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .nevergrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.nv { background: var(--bg-2); padding: 24px; display: grid; gap: 10px; align-content: start; }
+.nv .what { font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.nv h3 { font-size: 19px; }
+.nv p { color: var(--ink-2); font-size: 15px; }
+.note { margin-top: 22px; border-left: 2px solid var(--yellow); padding: 4px 0 4px 16px; color: var(--ink-2); max-width: 52em; font-size: 15px; }
+
+/* drive: terminal + peek */
+.drive { display: grid; gap: 22px; align-items: start; }
+@media (min-width: 1000px) { .drive { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.win { --cut: 12px; --fb: var(--bg-2); }
+.win .th { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 12px; border-bottom: 1px solid var(--line); font: 11.5px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; }
+.win .th button { background: none; border: 0; color: var(--muted); cursor: pointer; font: inherit; padding: 0; }
+.win .th button:hover { color: var(--ink); }
+.win.box { --fc: var(--brand); }
+.win.box .th { background: color-mix(in srgb, var(--brand) 16%, var(--panel)); color: var(--ink); }
+.tty { margin: 0; padding: 14px 16px; height: 290px; overflow: hidden; font: 12.5px/1.65 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--ink); }
+.tty .p { color: var(--brand); }
+.tty .o { color: var(--muted); }
+.tty .ok { color: var(--brand); }
+.tty .t { font: 500 9.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--on-brand); background: var(--yellow); padding: 2px 5px; margin-left: 6px; }
+.cursor { display: inline-block; width: .6em; height: 1.15em; vertical-align: -.22em; background: var(--ink); }
+.typing .cursor { animation: blink 1s steps(1) infinite; }
+.pk { position: relative; aspect-ratio: 16 / 9; background: var(--bg); }
+.pk img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pk .empty { position: absolute; inset: 0; display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
+.pk .mk { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border: 2px solid var(--yellow); border-radius: 50%; box-shadow: 0 0 12px var(--yellow); }
+.pk .mk::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; background: var(--yellow); border-radius: 50%; }
+.newlist { display: grid; gap: 10px; margin-top: 18px; }
+.newlist div { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: baseline; font-size: 15px; color: var(--ink-2); }
+.code { margin: 0; background: var(--bg-2); border: 1px solid var(--line); padding: 12px 14px; font: 12.5px/1.65 var(--mono); color: var(--ink); overflow-x: auto; white-space: pre; }
+.code .p { color: var(--brand); user-select: none; }
+.code .o { color: var(--muted); }
+
+/* watch: peek, interactive, the widget */
+.watch { display: grid; gap: 22px; }
+@media (min-width: 1080px) { .watch { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; } }
+.ways { display: grid; gap: 14px; }
+.shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+.caption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.desk { position: relative; min-height: 440px; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; font: 12px/1.4 var(--mono); }
+.dbar { height: 30px; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: var(--panel); border-bottom: 1px solid var(--line); color: var(--muted); }
+.dbar .ws { display: flex; gap: 9px; }
+.dbar .ws b { color: var(--ink); font-weight: 500; }
+.dbar .clock { margin: 0 auto; }
+.wbtn { display: flex; align-items: center; gap: 5px; background: none; border: 0; padding: 3px 6px; color: var(--brand); cursor: pointer; font: inherit; }
+.wbtn[aria-expanded="true"] { background: var(--panel-2); }
+.wbtn svg { width: 14px; height: 14px; }
+.panel { position: absolute; right: 10px; top: 40px; width: min(410px, calc(100% - 20px)); background: var(--panel); border: 2px solid var(--accent); padding: 14px; display: grid; gap: 12px; z-index: 2; }
+.panel:focus { outline: none; }
+.panel:focus-visible { box-shadow: 0 0 0 2px var(--yellow); }
+.phead { display: flex; align-items: center; gap: 10px; }
+.phead svg { width: 26px; height: 26px; color: var(--ink); }
+.phead h4 { margin: 0; font: 600 14px var(--sans); color: var(--ink); }
+.phead small { display: block; font: 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.phead .sp { margin-left: auto; }
+.ib { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; padding: 3px 7px; }
+.ib:hover { color: var(--ink); border-color: var(--line-2); }
+.rows { display: grid; gap: 4px; }
+.row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid transparent; cursor: pointer; }
+.row[aria-selected="true"] { background: var(--panel-2); border-color: var(--line-2); }
+.row .nm { color: var(--ink); }
+.row .meta { color: var(--muted); font-size: 11px; }
+.row .acts { margin-left: auto; display: flex; gap: 2px; }
+.row .armed { color: var(--red); border-color: var(--red); }
+.newbtn { width: 100%; background: none; border: 1px solid var(--line-2); padding: 8px; cursor: pointer; }
+.newbtn:hover { border-color: var(--accent); }
+.keys { color: var(--muted); font-size: 11px; text-align: center; }
+.status { min-height: 1.4em; color: var(--brand); font-size: 11.5px; word-break: break-word; }
+.setting { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding-block: 6px; border-bottom: 1px solid var(--line); }
+.setting b { color: var(--ink); font-weight: 500; }
+.setting span { color: var(--muted); font-size: 11px; grid-column: 1; }
+.setting select, .toggle { grid-row: 1 / span 2; grid-column: 2; }
+.setting select { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-2); font: inherit; padding: 4px; }
+.toggle { width: 38px; height: 20px; border: 1px solid var(--line-2); background: var(--bg-2); position: relative; cursor: pointer; padding: 0; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; background: var(--muted); transition: transform .15s; }
+.toggle[aria-checked="true"]::after { transform: translateX(18px); background: var(--brand); }
+.pwin { position: absolute; left: 10px; bottom: 10px; width: min(320px, 56%); border: 2px solid var(--brand); background: var(--panel); z-index: 1; }
+.pwin .tt { height: 22px; display: flex; justify-content: space-between; padding: 0 8px; align-items: center; background: var(--brand); color: var(--on-brand); font-size: 11px; }
+.pwin.iw { border-color: var(--accent); }
+.pwin.iw .tt { background: var(--accent); }
+.pwin img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.hint { position: absolute; left: 12px; bottom: 12px; max-width: 44%; color: var(--muted); font-size: 11.5px; }
+
+/* agents */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px/1 var(--mono); padding: 6px 9px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); }
+.map { width: 100%; border-collapse: collapse; font-size: 14px; }
+.map th { text-align: left; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
+.map td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.map td code { white-space: normal; word-break: break-word; }
+.scrollx { overflow-x: auto; }
+
+/* compare: when to reach for something else */
+.pick { display: grid; gap: 14px; }
+@media (min-width: 900px) { .pick { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pick .card .in { gap: 10px; }
+.pick .if { font: 500 11.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.pick .then { font: 600 26px/1.1 var(--display); color: var(--ink); }
+.pick .links { display: flex; gap: 16px; flex-wrap: wrap; font: 500 13px var(--mono); }
+.pick .ours { --fc: var(--brand); }
+.pick .ours .then { color: var(--brand); text-shadow: 0 0 18px var(--glow); }
+.tablewrap { overflow-x: auto; margin-top: 18px; border: 1px solid var(--line); background: var(--bg-2); }
+.cmp { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 14.5px; }
+.cmp th, .cmp td { text-align: left; vertical-align: top; padding: 13px 15px; border-bottom: 1px solid var(--line); }
+.cmp tr:last-child > * { border-bottom: 0; }
+.cmp thead th { font: 600 17px var(--display); color: var(--ink); letter-spacing: .01em; }
+.cmp thead th a { color: inherit; }
+.cmp tbody th { font-weight: 500; color: var(--ink); width: 18%; }
+.cmp td { color: var(--ink-2); }
+.cmp .us { background: color-mix(in srgb, var(--brand) 9%, transparent); color: var(--ink); }
+.dated { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+/* safety */
+.fence ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; font-size: 15px; color: var(--ink-2); }
+.fence li { padding-left: 20px; position: relative; }
+.fence li::before { position: absolute; left: 0; font: 500 14px/1.6 var(--mono); }
+.fence .in-box li::before { content: "+"; color: var(--brand); }
+.fence .ask li::before { content: "?"; color: var(--yellow); }
+
+/* install, faq, people */
+.inst { display: grid; gap: 14px; }
+@media (min-width: 900px) { .inst { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); } }
+.inst ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); font-size: 15px; }
+.faq { max-width: 56em; }
+.faq details { border-top: 1px solid var(--line); padding-block: 16px; }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; font: 600 18.5px/1.3 var(--display); color: var(--ink); list-style: none; display: flex; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "+"; font-family: var(--mono); color: var(--brand); }
+.faq details[open] summary::before { content: "−"; }
+.faq details p { margin-top: 10px; color: var(--ink-2); padding-left: 26px; }
+.people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.people a { --cut: 12px; display: block; text-decoration: none; color: var(--ink); }
+.people .in { display: grid; justify-items: center; gap: 10px; padding: 20px 12px; font: 500 14px var(--mono); }
+.people a:hover { --fc: var(--brand); }
+.people img { width: 72px; height: 72px; display: block; clip-path: polygon(0 0, 80% 0, 100% 20%, 100% 100%, 20% 100%, 0 80%); }
+footer { border-top: 1px solid var(--line); padding-block: 40px 56px; display: grid; gap: 16px; }
+footer pre { margin: 0; font: 13px/1.6 var(--mono); color: var(--ink-2); }
+footer pre b { color: var(--brand); font-weight: 500; }
+footer .links { display: flex; gap: 20px; flex-wrap: wrap; font: 500 13px var(--mono); }
+footer small { color: var(--muted); font-size: 13px; }
+
+/* a box opened in place: peek at a tile, or the demo */
+.layer { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgb(4 5 10 / .78); }
+.pop { --cut: 16px; --fc: var(--brand); --fb: var(--bg-2); width: min(1120px, 100%); filter: drop-shadow(0 0 30px var(--glow)); }
+.pop .th { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px; background: color-mix(in srgb, var(--brand) 16%, var(--panel)); font: 12px var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; }
+.pop .th button { background: none; border: 1px solid var(--line-2); color: var(--ink); cursor: pointer; padding: 3px 9px; font: 12px var(--mono); }
+.pop .th button:hover { border-color: var(--brand); }
+.pop video, .pop img { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; object-fit: cover; }
+.pop .cap { padding: 10px 14px; font: 12px var(--mono); color: var(--muted); border-top: 1px solid var(--line); }
+.pop .cap b { color: var(--brand); font-weight: 500; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="m" viewBox="0 0 15 15"><path fill="currentColor" d="M0 0h8v1H0zM13 0h2v1h-2zM0 1h1v13H0zM14 1h1v13h-1zM0 14h2v1H0zM7 14h8v1H7zM4 4h7v2H4zM4 6h1v4H4zM10 6h1v4h-1zM4 10h7v1H4z"/></symbol>
+  <symbol id="arrow" viewBox="0 0 12 18"><path d="M1 1v14l3.6-3.4 2.6 5.6 2.2-1-2.6-5.4H12z" fill="currentColor" stroke="#000" stroke-width="1"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="lockup" href="#top"><svg><use href="#m"/></svg>omabox</a>
+    <nav aria-label="Sections"><a href="#parallel">Parallel</a><a href="#never">Your desktop</a><a href="#drive">Drive</a><a href="#watch">Watch</a><a href="#compare">Compare</a><a href="#install">Install</a><a href="https://github.com/diogochaves/omabox">GitHub ↗</a></nav>
+    <div class="themes" role="group" aria-label="Omarchy theme">
+      <button style="--c:#9ece6a" data-t="tokyo-night" title="Tokyo Night" aria-pressed="true"></button>
+      <button style="--c:#a6e3a1" data-t="catppuccin" title="Catppuccin" aria-pressed="false"></button>
+      <button style="--c:#a9b665" data-t="gruvbox" title="Gruvbox" aria-pressed="false"></button>
+      <button style="--c:#faa968" data-t="retro-82" title="Retro 82" aria-pressed="false"></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <section class="hero">
+    <div>
+      <div class="mark boot" id="mark">
+        <button type="button" id="markbtn" aria-label="omabox: replay the mark">
+          <svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true" id="marksvg"></svg>
+        </button>
+        <div class="word"><b>omabox</b><span>0.2.0 · for Omarchy</span></div>
+      </div>
+      <p class="tag">Agents, off your desktop</p>
+      <h1>Your agents get desktops of their own. <span class="hl">Yours stays untouched.</span></h1>
+      <p class="lead">omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel, to launch, click, type and
+        screenshot apps in. However much it does, it never takes control of your system.</p>
+      <ul class="never" aria-label="What never happens on your desktop">
+        <li>No windows popping up out of nowhere</li>
+        <li>Your cursor never moves</li>
+        <li>No focus stolen mid-sentence</li>
+        <li>No password or keyring prompts</li>
+        <li>No notifications or tray icons left behind</li>
+        <li>No workspace switches</li>
+      </ul>
+      <div class="install cut"><div class="in"><code id="cmd">git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code><button class="copy" type="button" data-copy="cmd">Copy</button></div></div>
+      <p class="reqs">Omarchy 4 · Hyprland 0.56+ · a GPU render node · MIT</p>
+      <div class="ctas">
+        <button class="btn solid" type="button" id="demo"><span class="play" aria-hidden="true"></span>Watch the demo · 55 s</button>
+        <a class="btn" href="#parallel">How parallel boxes work</a>
+      </div>
+    </div>
+
+    <div class="live" id="live" aria-label="Your desktop stays still while three agents work in their own boxes">
+      <div class="cut" style="--cut:16px;--fc:var(--line-2)"><div class="in">
+        <div class="screen">
+          <div class="sbar"><span class="ws"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span><span class="clk">Sunday 22:18</span><span class="tray"><s></s><s></s></span></div>
+          <span class="you-label">Your desktop</span>
+          <div class="editor"><div class="tt">~/code/app — nvim</div><div class="ln" style="--w:70%"></div><div class="ln" style="--w:46%"></div><div class="ln" style="--w:82%"></div><div class="typ"><span></span><i></i></div><div class="ln" style="--w:58%;margin-top:9px"></div><div class="ln" style="--w:36%"></div></div>
+          <svg class="mycursor" viewBox="0 0 12 18" aria-hidden="true"><use href="#arrow"/></svg>
+          <div class="counters" aria-label="While the agents work: 0 windows opened, 0 cursor moves, 0 focus changes, 0 prompts">
+            <span><b>0</b>windows</span><span><b>0</b>cursor moves</span><span><b>0</b>focus changes</span><span><b>0</b>prompts</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="boxrow-h"><span>Their boxes · invisible · click to peek</span><b>3 up</b></div>
+      <div class="boxrow">
+        <button class="tile cut a1" type="button" data-peek="0"><span class="in">
+          <span class="th"><span>app-tray-5cc72cdc</span><span>claude</span></span>
+          <span class="screen"><span class="sbar"><span class="ws"><i>1</i><i>2</i><i>3</i></span><span class="clk">22:18</span><span class="tray"><s></s><s></s></span></span><span class="w"></span><svg class="cur" viewBox="0 0 12 18"><use href="#arrow"/></svg><span class="ring"></span></span>
+          <span class="tf"><b>feat/tray</b> · clicking through the app</span></span></button>
+        <button class="tile cut" type="button" data-peek="1"><span class="in">
+          <span class="th"><span>app-menu-9f01d2e4</span><span>codex</span></span>
+          <span class="screen"><span class="sbar"><span class="ws"><i>1</i><i>2</i><i>3</i></span><span class="clk">22:18</span><span class="tray"><s></s></span></span><span class="menu"><span class="sel"></span><i></i><i></i><i></i><i></i><i></i></span><span class="flash"></span><span class="toast">Screenshot saved</span></span>
+          <span class="tf"><b>fix/menu</b> · checking the launcher</span></span></button>
+        <button class="tile cut" type="button" data-peek="2"><span class="in">
+          <span class="th"><span>app-keyring-3b7a6c11</span><span>opencode</span></span>
+          <span class="screen"><span class="sbar"><span class="ws"><i>1</i><i>2</i><i>3</i></span><span class="clk">22:18</span><span class="tray"><s></s></span></span>
+            <span class="log"><span class="l">test_tray_icon ....... ok<br>test_notify ........... ok<br>test_keyring_store .... ok<br>test_keyring_lookup ... ok<br>test_portal_open ...... ok<br>test_menu_render ...... ok<br>test_theme_switch ..... ok<br>test_idle_down ........ ok<br><span class="ok">42 tests passed</span></span></span>
+            <span class="bar"><i></i></span><span class="pass">ctest: 42/42 passed</span></span>
+          <span class="tf"><b>test/keyring</b> · ctest with a real keyring</span></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="parallel">
+    <div class="head">
+      <p class="tag">Parallel boxes</p>
+      <h2>One box per agent, the way you give each one a <span class="hl">worktree</span>.</h2>
+      <p class="lead">A worktree keeps agents' code apart. A box keeps their screens, session buses and test runs apart. Each agent
+        session gets its own box, named after its worktree and its session, so visual checks and desktop tests run side by side
+        without ever seeing each other.</p>
+    </div>
+    <div class="lanes" id="lanes"></div>
+    <div class="lanebar">
+      <button class="btn solid" type="button" id="addlane">+ Start another agent</button>
+      <span class="reqs" style="margin:0">Each box: about 500 MB, up in 3–4 s, down after 30 minutes idle.</span>
+    </div>
+    <div class="ls cut"><div class="in"><div class="th">~/code/app · your terminal</div><pre id="ls"></pre></div></div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="card cut"><div class="in"><h3>Separate screens</h3><p>Each box runs its own Hyprland on a private screen of any size. One agent's window never covers another's screenshot.</p></div></div>
+      <div class="card cut"><div class="in"><h3>Separate session buses</h3><p>Tray icons, notifications, D-Bus names and the keyring are per box, so one agent's test never sees another's, or yours.</p></div></div>
+      <div class="card cut"><div class="in"><h3>Separate lifetimes</h3><p>One agent's <code>omabox down</code> never ends another's box. A throwaway <code>omabox run -- ctest</code> gets a box of its own, too.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="never">
+    <div class="head">
+      <p class="tag">Your desktop</p>
+      <h2>The agent never takes control of your system.</h2>
+      <p class="lead">Everything an agent does to see and test its work happens in its box. Here is what that keeps off your desktop, and how.</p>
+    </div>
+    <div class="nevergrid">
+      <div class="nv"><span class="what">Windows out of nowhere</span><h3>Its own screen</h3><p>A box runs its own compositor on a private screen. Nothing it opens is drawn on yours.</p></div>
+      <div class="nv"><span class="what">Your cursor, your keys</span><h3>Its own pointer and keyboard</h3><p>Clicks and keys go to the box's own virtual devices, never through uinput, so your cursor and keyboard are never touched.</p></div>
+      <div class="nv"><span class="what">Stolen focus</span><h3>Nothing opens on your session</h3><p>No focus changes, no workspace switches. When you peek, the window opens on workspace 9 without taking focus.</p></div>
+      <div class="nv"><span class="what">Password prompts</span><h3>A throwaway keyring</h3><p>Each box has a private keyring that stores and reads secrets without prompting. Yours is never asked or touched.</p></div>
+      <div class="nv"><span class="what">Leftovers</span><h3>Its own bar</h3><p>Notifications and tray icons land in the box's bar, and go when the box goes.</p></div>
+      <div class="nv"><span class="what">Accidents</span><h3>The guard, if you want it</h3><p>With <code>omabox guard on</code>, agents' shells get a display that doesn't exist, so a stray window fails instead of appearing.</p></div>
+    </div>
+    <p class="note">A box keeps an agent's apps off your desktop and out of your config, and never gets your secrets or input
+      devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network. To fence the agent in,
+      see <a href="#compare">ai-jail</a>.</p>
+  </section>
+
+  <section class="sec" id="drive">
+    <div class="head">
+      <p class="tag">Driving a box</p>
+      <h2>The agent drives its box the way you drive yours.</h2>
+    </div>
+    <div class="drive">
+      <div class="win cut"><div class="in"><div class="th"><span>claude · ~/code/app-tray</span><button type="button" id="replay">↻ replay</button></div><pre class="tty" id="tty" aria-live="off"></pre></div></div>
+      <div>
+        <div class="win box cut"><div class="in"><div class="th"><span>peek · app-tray-5cc72cdc</span><span id="live">no box</span></div>
+          <div class="pk"><div class="empty" id="empty">no box up yet</div><img id="pkimg" alt="" hidden width="1280" height="720"><span class="mk" id="mk" hidden style="left:26%;top:24%"></span></div></div></div>
+        <div class="newlist">
+          <div><span class="new">new</span><span><code>wait</code> for the screen to settle, a window to appear or a command to pass, instead of sleeping.</span></div>
+          <div><span class="new">new</span><span><code>--window</code> targets one window: shots, clicks and keys in its own coordinates.</span></div>
+          <div><span class="new">new</span><span>Shots of covered windows, or windows on another workspace.</span></div>
+          <div><span class="new">new</span><span>Click marks in peek, so you can see what the agent clicked.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="watch">
+    <div class="head">
+      <p class="tag">Watch</p>
+      <h2>Look inside any box, or take the wheel.</h2>
+    </div>
+    <div class="watch">
+      <div class="ways">
+        <div class="card cut"><div class="in"><h3>Peek</h3><p><code>omabox peek</code> opens a live, view-only window of any box on workspace 9, without taking your focus. It only copies frames out, so the agent never notices.</p></div></div>
+        <div class="card cut"><div class="in"><h3>Interactive</h3><p><code>omabox up --interactive</code> makes a box a real window you drive with your own keyboard and mouse. <kbd>SUPER</kbd>+<kbd>ALT</kbd>+<kbd>ESC</kbd> sends SUPER keys into it.</p></div></div>
+        <div class="card cut"><div class="in"><h3>The bar widget</h3><p>The omabox mark in your Omarchy bar lists every box, with peek, screenshot and down for each. The copy here works: click a box, or focus the panel and use its keys.</p></div></div>
+        <img class="shot" src="media/interactive.webp" alt="An interactive box: a whole Omarchy desktop as a window with the app menu open, next to the terminal that drives it" width="1280" height="720" loading="lazy">
+      </div>
+      <div>
+        <div class="desk">
+          <div class="dbar"><svg style="width:13px;height:13px"><use href="#m"/></svg><span class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></span><span class="clock">Sunday 22:19</span>
+            <button class="wbtn" id="wbtn" type="button" aria-expanded="true" aria-controls="panel" title="omabox"><svg><use href="#m"/></svg><span id="count">3</span></button></div>
+          <div class="panel" id="panel" tabindex="0" aria-label="omabox boxes. Keys: up and down to move, p peek, s shot, d down, n new, r refresh"></div>
+          <div id="spot"></div>
+          <p class="hint" id="hint">Your desktop. The boxes are elsewhere, invisible, until you peek.</p>
+        </div>
+        <p class="caption">A working copy of the widget's panel. The boxes are made up; the screenshots are real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="agents">
+    <div class="head">
+      <p class="tag">Agents</p>
+      <h2>Agents use it on their own.</h2>
+      <p class="lead">Install once. Your agents reach for a box whenever a task touches the desktop, without you asking and without changing your projects.</p>
+    </div>
+    <div class="grid2">
+      <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>install.sh</code> puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
+        <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
+      <div class="card cut"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
+      <div class="card cut span2"><div class="in"><h3>Your projects stay as they are</h3>
+        <div class="scrollx"><table class="map"><thead><tr><th>Your project says</th><th>The agent runs</th></tr></thead><tbody>
+          <tr><td><code>./build/app</code></td><td><code>omabox run -d -- ./build/app</code></td></tr>
+          <tr><td><code>grim out.png</code></td><td><code>omabox shot -o out.png</code></td></tr>
+          <tr><td><code>hyprctl -j clients</code></td><td><code>omabox hyprctl -j clients</code></td></tr>
+          <tr><td><code>ctest --test-dir build</code></td><td><code>omabox run -- ctest --test-dir build</code></td></tr>
+          <tr><td><code>omarchy-theme-set gruvbox</code></td><td><code>omabox run -- omarchy-theme-set gruvbox</code></td></tr>
+        </tbody></table></div></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="compare">
+    <div class="head">
+      <p class="tag">Compare</p>
+      <h2>Is omabox what you need?</h2>
+      <p class="lead">It does one thing: keep agents off your desktop while they test on a desktop of their own. If you want something else, these projects are good at it.</p>
+    </div>
+    <div class="pick">
+      <div class="card cut ours"><div class="in"><p class="if">Your agents build and test GUI apps, plugins or themes on Omarchy, several at once</p><p class="then">omabox</p>
+        <p>Parallel, invisible Omarchy desktops, and your own untouched.</p></div></div>
+      <div class="card cut"><div class="in"><p class="if">You want an agent to use your own desktop, without fighting you for the cursor and focus</p><p class="then">Cua</p>
+        <p>That's Cua's focus: computer-use agents that drive real desktops and apps, across macOS, Windows, Linux and Android, through MCP or a CLI. omabox does the opposite: it keeps agents off your desktop.</p>
+        <div class="links"><a href="https://cua.ai">cua.ai ↗</a><a href="https://github.com/trycua/cua">github.com/trycua/cua ↗</a></div></div></div>
+      <div class="card cut"><div class="in"><p class="if">You want to limit what the agent itself can read, write and reach</p><p class="then">ai-jail</p>
+        <p>A jail for the agent process: your home, SSH keys and cloud credentials out of reach, the project writable. omabox isn't a sandbox; ai-jail is one.</p>
+        <div class="links"><a href="https://aijail.io">aijail.io ↗</a></div></div></div>
+      <div class="card cut"><div class="in"><p class="if">You need a whole machine: an installer, system services, audio, suspend, a reboot</p><p class="then">omarchy-in-omarchy</p>
+        <p>A disposable Omarchy in QEMU/KVM. Heavier and slower to start, and a real machine where a box has no system bus.</p>
+        <div class="links"><a href="https://github.com/jankeesvw/omarchy-in-omarchy">github.com/jankeesvw/omarchy-in-omarchy ↗</a></div></div></div>
+    </div>
+    <div class="tablewrap"><table class="cmp">
+      <thead><tr><th scope="col"></th><th scope="col" class="us">omabox</th><th scope="col"><a href="https://cua.ai">Cua</a></th><th scope="col"><a href="https://aijail.io">ai-jail</a></th><th scope="col"><a href="https://github.com/jankeesvw/omarchy-in-omarchy">omarchy-in-omarchy</a></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">What it's for</th><td class="us">Desktops for agents to test on, apart from yours</td><td>Agents that use computers: yours or theirs</td><td>Limiting what an agent can read and reach</td><td>A whole disposable Omarchy machine</td></tr>
+        <tr><th scope="row">Your screen, cursor, focus</th><td class="us">Never touched</td><td>Designed to work beside you</td><td>Not its concern</td><td>A QEMU window</td></tr>
+        <tr><th scope="row">Several at once</th><td class="us">Yes, one per agent session</td><td>Yes</td><td>One jail per agent</td><td>One VM</td></tr>
+        <tr><th scope="row">Start and cost</th><td class="us">3–4 s, about 500 MB</td><td>Depends on the desktop</td><td>A process wrapper</td><td>Minutes once, then seconds; 8 GB RAM by default</td></tr>
+        <tr><th scope="row">Security boundary</th><td class="us">No</td><td>Depends on where it runs</td><td>Yes, that's the point</td><td>Yes, a VM</td></tr>
+        <tr><th scope="row">Platforms</th><td class="us">Omarchy on Linux</td><td>macOS, Windows, Linux, Android</td><td>Linux, macOS</td><td>Omarchy in QEMU/KVM</td></tr>
+      </tbody></table></div>
+    <p class="dated">Written in September 2026 from each project's own site. They move on their own, so check theirs.</p>
+  </section>
+
+  <section class="sec" id="safety">
+    <div class="head"><p class="tag">What a box gets</p><h2>What goes in, and what stays off until you ask.</h2></div>
+    <div class="grid2 fence">
+      <div class="card cut in-box"><div class="in"><h3>In the box</h3><ul><li>The repo you started it from, read-only, at the same path</li><li>Your theme, bar layout and terminal settings</li><li>mise's toolchains, so node, python and uv work as on the host</li><li>Its own screen, session bus and throwaway keyring</li></ul></div></div>
+      <div class="card cut ask"><div class="in"><h3>Off until you ask</h3><ul><li>Network isolation: <code>--net isolated --allow 8081</code></li><li>A systemd user manager: <code>--systemd</code></li><li>X11 apps: <code>--xwayland</code></li><li>Your real desktop, one command at a time: <code>omabox host</code></li></ul></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="install">
+    <div class="head"><p class="tag">Install</p><h2>Three minutes, then your agents take it from there.</h2></div>
+    <div class="inst">
+      <div class="card cut"><div class="in"><h3>What you need</h3><ul>
+        <li>Omarchy 4 on Arch, with Hyprland 0.56+</li>
+        <li>A GPU render node. Tested on AMD and Intel iGPUs and an NVIDIA RTX 4070 SUPER.</li>
+        <li>A patched aquamarine until a release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it privately; your system's copy isn't touched.</li></ul></div></div>
+      <div class="card cut"><div class="in"><h3>Install</h3>
+        <pre class="code"><span class="p">$ </span>git clone https://github.com/diogochaves/omabox && cd omabox
+<span class="p">$ </span>./install.sh           <span class="o"># asks before turning the guard on</span>
+<span class="p">$ </span>./install.sh --check   <span class="o"># starts a box, screenshots it, takes it down</span>
+<span class="p">$ </span>omarchy plugin enable chaves.omabox   <span class="o"># the bar widget</span></pre>
+        <p>Update with <code>git pull &amp;&amp; ./install.sh</code>. To remove it, see the <a href="https://github.com/diogochaves/omabox#remove">README</a>.</p></div></div>
+    </div>
+    <div class="faq" style="margin-top:56px">
+      <h3 style="font-size:26px;margin-bottom:10px">Questions people ask first</h3>
+      <details><summary>Does it work without Omarchy?</summary><p>No. A box runs your host's own Omarchy: its Hyprland config, its shell and your theme. That is what makes it faithful, and why it needs Omarchy 4 and Hyprland 0.56 or later.</p></details>
+      <details><summary>Can two agents test at the same time?</summary><p>Yes. Each Claude Code or Codex session gets its own box, named after its repo or worktree and its session. Anything else started with <code>omabox guard exec</code> gets one too.</p></details>
+      <details><summary>Is it a sandbox?</summary><p>No. It keeps apps off your desktop and never gets your secrets, input devices or seat, but it shares your kernel, GPU and, unless you pass <code>--net isolated</code>, your network. For a fence around the agent, use <a href="https://aijail.io">ai-jail</a>; for untrusted code, a VM.</p></details>
+      <details><summary>Does it work on NVIDIA?</summary><p>Yes. It was tested on an RTX 4070 SUPER with driver 615.71.09. With several GPUs, point a box at one with <code>OMABOX_RENDER_NODE</code>.</p></details>
+      <details><summary>Does peeking slow the agent down?</summary><p>No. Peek only copies frames out of the box.</p></details>
+    </div>
+    <div style="margin-top:56px">
+      <h3 style="font-size:26px;margin-bottom:6px">Built by</h3>
+      <p style="color:var(--ink-2);margin-bottom:18px">Everyone who has shipped code to omabox. Same size, alphabetical, no counts.</p>
+      <ul class="people">
+        <li><a class="cut" href="https://github.com/btsouth"><span class="in"><img src="media/avatar-btsouth.jpg" alt="" width="72" height="72" loading="lazy">btsouth</span></a></li>
+        <li><a class="cut" href="https://github.com/diogochaves"><span class="in"><img src="media/avatar-diogochaves.jpg" alt="" width="72" height="72" loading="lazy">diogochaves</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <pre><b>$</b> omabox down --all
+omabox: box 'app-tray-5cc72cdc' down
+omabox: box 'app-menu-9f01d2e4' down
+omabox: box 'app-keyring-3b7a6c11' down</pre>
+    <div class="links"><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/CHANGELOG.md">Changelog</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
+    <small>An unofficial community project for Omarchy. Every screenshot here was taken by omabox, in a box.</small>
+  </footer>
+</main>
+
+<div class="layer" id="layer" hidden>
+  <div class="pop cut" role="dialog" aria-modal="true" aria-labelledby="poptitle"><div class="in">
+    <div class="th"><span id="poptitle">peek</span><button type="button" id="popclose">Close · Esc</button></div>
+    <div id="popbody"></div>
+    <div class="cap" id="popcap"></div>
+  </div></div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const motion = matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* the mark, pixel by pixel; it powers on once, and again on a click */
+  const px = [[0,0,8,1],[13,0,2,1],[0,1,1,13],[14,1,1,13],[0,14,2,1],[7,14,8,1],[4,4,7,2],[4,6,1,4],[10,6,1,4],[4,10,7,1]];
+  const cells = []; px.forEach(([x, y, w, h]) => { for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) cells.push([x + i, y + j]); });
+  cells.sort((a, b) => (a[1] - b[1]) || (a[0] - b[0]));
+  $("#marksvg").innerHTML = cells.map(([x, y], i) => `<rect x="${x}" y="${y}" width="1" height="1" style="--i:${i}"/>`).join("");
+  $("#markbtn").addEventListener("click", () => { const m = $("#mark"); m.classList.remove("boot"); void m.offsetWidth; m.classList.add("boot"); });
+
+  /* colours */
+  let theme = "tokyo-night";
+  const termShot = () => `media/term-${theme}.webp`;
+  function setTheme(t) {
+    theme = t;
+    if (t === "tokyo-night") delete root.dataset.omarchy; else root.dataset.omarchy = t;
+    $$(".themes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
+    store.set("omarchy", t); renderSpot(); if (peekShows === "term") setPeek("term");
+  }
+  $$(".themes button").forEach(b => b.addEventListener("click", () => setTheme(b.dataset.t)));
+  $$("[data-copy]").forEach(b => b.addEventListener("click", async () => {
+    const el = document.getElementById(b.dataset.copy);
+    try { await navigator.clipboard.writeText(el.textContent); b.textContent = "Copied"; }
+    catch { const r = document.createRange(); r.selectNodeContents(el); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = "Selected"; }
+    setTimeout(() => { b.textContent = "Copy"; }, 1600);
+  }));
+
+  /* the live view pauses when you can't see it */
+  const live = $("#live");
+  new IntersectionObserver(es => live.classList.toggle("paused", !es[0].isIntersecting)).observe(live);
+
+  /* a box opened in place: it grows out of what you clicked */
+  const layer = $("#layer"), pop = $(".pop"), popbody = $("#popbody"); let opener = null;
+  function openPop(from, title, body, cap) {
+    opener = from; $("#poptitle").textContent = title; popbody.innerHTML = body; $("#popcap").innerHTML = cap; layer.hidden = false;
+    if (motion) {
+      const a = from.getBoundingClientRect(), b = pop.getBoundingClientRect();
+      pop.animate([{ transform: `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width}, ${a.height / b.height})`, opacity: .5 }, { transform: "none", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)" });
+      layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220 });
+    }
+    $("#popclose").focus();
+    $("video", popbody)?.play().catch(() => {});
+  }
+  function closePop() { $("video", popbody)?.pause(); layer.hidden = true; popbody.innerHTML = ""; opener?.focus(); }
+  $("#popclose").addEventListener("click", closePop);
+  layer.addEventListener("click", e => { if (e.target === layer) closePop(); });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !layer.hidden) closePop(); });
+  $("#demo").addEventListener("click", e => openPop(e.currentTarget, "peek · demo · 55 s",
+    `<video controls playsinline preload="auto" poster="media/demo-poster.webp" src="media/demo.mp4"></video>`,
+    `Recorded inside omabox: one box played the desktop, and every <b>omabox up</b> in it started a box inside that box.`));
+  const tiles = [
+    { name: "app-tray-5cc72cdc", img: () => termShot(), what: "Claude Code on feat/tray: a terminal open, the app under test next" },
+    { name: "app-menu-9f01d2e4", img: () => "media/menu.webp", what: "Codex on fix/menu: Omarchy's launcher open, in the Retro 82 theme" },
+    { name: "app-keyring-3b7a6c11", img: () => "media/desktop.webp", what: "OpenCode on test/keyring: tests running against the box's own keyring" },
+  ];
+  $$("[data-peek]").forEach(t => t.addEventListener("click", () => {
+    const d = tiles[+t.dataset.peek];
+    openPop(t, `peek · ${d.name}`, `<img src="${d.img()}" alt="The box ${d.name}">`, `<b>$ omabox peek -b ${d.name}</b> · ${esc(d.what)}. A real screenshot of a box.`);
+  }));
+
+  /* parallel lanes and omabox ls */
+  const pool = [
+    { wt: "~/code/app-theme", br: "feat/theme", agent: "pi", box: "app-theme-71c0ea52", size: "3440x1440@144", net: "host" },
+    { wt: "~/code/app-docs", br: "docs/shots", agent: "Hermes", box: "app-docs-e4d29b07", size: "1280x720@60", net: "host" },
+    { wt: "~/code/app-portal", br: "fix/portal", agent: "Claude Code", box: "app-portal-0a93f6c8", size: "1920x1080@60", net: "isolated" },
+  ];
+  let lanes = [
+    { wt: "~/code/app-tray", br: "feat/tray", agent: "Claude Code", box: "app-tray-5cc72cdc", size: "1920x1080@60", net: "host", idle: "2m/30m", st: "up" },
+    { wt: "~/code/app-menu", br: "fix/menu", agent: "Codex", box: "app-menu-9f01d2e4", size: "2560x1440@60", net: "host", idle: "0m/30m", st: "up" },
+    { wt: "~/code/app-keyring", br: "test/keyring", agent: "OpenCode", box: "app-keyring-3b7a6c11", size: "1920x1080@60", net: "isolated", idle: "5m/30m", st: "up" },
+  ];
+  const lanesEl = $("#lanes"), lsEl = $("#ls");
+  const pad = (s, n) => String(s).padEnd(n) + " ";
+  function renderLanes() {
+    lanesEl.innerHTML = lanes.map((l, i) => `<div class="lane cut ${l.st === "booting" ? "booting" : ""}"><div class="in">
+      <span class="wt">${esc(l.wt)}<small>${esc(l.br)}</small></span><span class="arrow">→</span>
+      <span class="agent">${esc(l.agent)}</span><span class="arrow">→</span>
+      <span class="bx"><svg><use href="#m"/></svg><span>${esc(l.box)}</span></span>
+      <span style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="st"><b>${l.st === "booting" ? "starting…" : "up"}</b> · ${esc(l.size)}${l.net === "isolated" ? " · isolated" : ""}</span>
+      <button class="down" type="button" data-down="${i}" ${l.st === "booting" ? "disabled" : ""}>down</button></span></div></div>`).join("");
+    const rows = lanes.filter(l => l.st === "up");
+    lsEl.innerHTML = `<span class="p">$</span> omabox ls\n<span class="h">${pad("NAME", 24)}${pad("MODE", 11)}${pad("SIZE", 16)}${pad("STATE", 6)}${pad("NET", 9)}${pad("IDLE", 9)}PLUGINS</span>\n` +
+      (rows.length ? rows.map(l => `${pad(l.box, 24)}${pad("headless", 11)}${pad(l.size, 16)}${pad("up", 6)}${pad(l.net, 9)}${pad(l.idle, 9)}`).join("\n") : "");
+    $("#addlane").disabled = !pool.length;
+    $("#addlane").style.opacity = pool.length ? 1 : .5;
+  }
+  lanesEl.addEventListener("click", e => {
+    const b = e.target.closest("[data-down]"); if (!b) return;
+    const [l] = lanes.splice(+b.dataset.down, 1); pool.unshift({ ...l }); renderLanes();
+  });
+  $("#addlane").addEventListener("click", async () => {
+    const n = pool.shift(); if (!n) return;
+    const l = { ...n, idle: "0m/30m", st: "booting" }; lanes.push(l); renderLanes();
+    await sleep(motion ? 1400 : 0); l.st = "up"; renderLanes();
+  });
+
+  /* the terminal: an agent drives its box; typed once when you get there */
+  const tty = $("#tty"), img = $("#pkimg"), empty = $("#empty"), mk = $("#mk"), liveTag = $("#live");
+  let peekShows = null;
+  function setPeek(what) {
+    peekShows = what;
+    const src = what === "term" ? termShot() : what === "desk" ? "media/desktop.webp" : null;
+    img.hidden = !src; empty.hidden = !!src; if (src) img.src = src;
+    liveTag.textContent = src ? "● live" : "no box";
+  }
+  const script = [
+    { cmd: "omabox up", out: "omabox: box 'app-tray-5cc72cdc' up (1920x1080@60)", then: () => setPeek("desk") },
+    { cmd: "omabox keys super+return" },
+    { cmd: "omabox wait window foot --focused", out: "satisfied: window foot focused after 0.21s", ok: 1, isNew: 1 },
+    { cmd: "omabox keys -t fastfetch Return", then: () => setPeek("term") },
+    { cmd: "omabox click --window foot 320 160", isNew: 1, then: () => { mk.hidden = false; } },
+    { cmd: "omabox shot --window foot", out: "/tmp/omabox-app-tray-5cc72cdc-221804-512.png", isNew: 1 },
+  ];
+  let run = 0;
+  async function play() {
+    const me = ++run; let done = "";
+    setPeek(null); mk.hidden = true;
+    const line = c => `<span class="p">❯</span> ${esc(c)}`;
+    const paint = cur => { tty.innerHTML = done + (cur !== null ? `${line(cur)}<span class="cursor"></span>` : ""); };
+    tty.parentElement.classList.add("typing");
+    for (const s of script) {
+      if (motion) { for (let i = 1; i <= s.cmd.length; i++) { if (me !== run) return; paint(s.cmd.slice(0, i)); await sleep(24 + Math.random() * 34); } await sleep(240); }
+      done += line(s.cmd) + (s.isNew && !s.out ? '<span class="t">new</span>' : "") + "\n";
+      if (s.out) done += `<span class="${s.ok ? "ok" : "o"}">${esc(s.out)}</span>${s.isNew ? '<span class="t">new</span>' : ""}\n`;
+      s.then?.(); paint(null);
+      if (motion) await sleep(460);
+    }
+    paint(""); tty.parentElement.classList.remove("typing");
+  }
+  $("#replay").addEventListener("click", play);
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); play(); } }, { threshold: .4 }).observe(tty);
+
+  /* the widget: a working copy of its panel */
+  const panel = $("#panel"), spot = $("#spot"), hint = $("#hint"), wbtn = $("#wbtn"), count = $("#count");
+  let wboxes = [
+    { name: "app-tray-5cc72cdc", mode: "headless", size: "1920x1080@60", age: "2 min", shot: "term" },
+    { name: "app-menu-9f01d2e4", mode: "headless", size: "2560x1440@60", age: "6 min", shot: "menu" },
+    { name: "app-keyring-3b7a6c11", mode: "headless", size: "1920x1080@60", age: "12 min", shot: "desk" },
+  ];
+  let sel = 0, face = "boxes", status = "", armed = null, armedAt = 0, peeking = null, newN = 1;
+  const cfg = { workspace: "9", confirm: false, always: true };
+  const shotOf = b => b.mode === "interactive" ? "media/interactive.webp" : b.shot === "term" ? termShot() : b.shot === "menu" ? "media/menu.webp" : "media/desktop.webp";
+  const where = () => cfg.workspace === "special" ? "the scratchpad" : "workspace " + cfg.workspace;
+  function stamp() { const d = new Date(), z = n => String(n).padStart(2, "0"); return `${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}-${String(d.getMilliseconds()).padStart(3, "0")}`; }
+  function renderSpot() {
+    const b = wboxes.find(x => x.name === peeking);
+    if (!b) { spot.innerHTML = ""; hint.hidden = false; return; }
+    hint.hidden = true; const iw = b.mode === "interactive";
+    spot.innerHTML = `<div class="pwin ${iw ? "iw" : ""}"><div class="tt"><span>${iw ? b.name : "peek · " + b.name}</span><span>${iw ? "yours to drive" : "view only"}</span></div><img src="${shotOf(b)}" alt="The box ${b.name}"></div>`;
+  }
+  function render() {
+    count.textContent = wboxes.length; wbtn.style.opacity = wboxes.length ? 1 : .55;
+    if (face === "settings") {
+      panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Settings</h4><small>omabox 0.2.0</small></div><button class="ib sp" data-a="back" type="button">‹ Back</button></div>
+        <div class="setting"><b>Where windows open</b><span>Interactive boxes and peek windows, never focused.</span><select id="ws" aria-label="Where windows open">${["1","2","3","4","5","6","7","8","9","special"].map(w => `<option value="${w}" ${w === cfg.workspace ? "selected" : ""}>${w === "special" ? "Scratchpad (SUPER+S)" : "Workspace " + w}</option>`).join("")}</select></div>
+        <div class="setting"><b>Confirm before closing</b><span>Closing an interactive box's window asks first.</span><button class="toggle" role="switch" data-a="confirm" aria-checked="${cfg.confirm}" aria-label="Confirm before closing" type="button"></button></div>
+        <div class="setting" style="border:0"><b>Always show in the bar</b><span>Off: the mark shows only while a box is up.</span><button class="toggle" role="switch" data-a="always" aria-checked="${cfg.always}" aria-label="Always show in the bar" type="button"></button></div>
+        <div class="status" aria-live="polite">${esc(status)}</div>`;
+      $("#ws", panel).addEventListener("change", e => { cfg.workspace = e.target.value; status = `omabox config workspace ${e.target.value}`; render(); });
+      return;
+    }
+    panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Boxes</h4><small>${wboxes.length ? wboxes.length + (wboxes.length > 1 ? " boxes up" : " box up") : "No boxes up"}</small></div><button class="ib sp" data-a="settings" type="button" aria-label="Settings">⚙</button></div>
+      <div class="rows" role="listbox" aria-label="Boxes">${wboxes.map((b, i) => `<div class="row" role="option" aria-selected="${i === sel}" data-i="${i}">
+        <div><div class="nm">${b.name}</div><div class="meta">${b.mode} · ${b.size} · ${b.age}${peeking === b.name ? " · " + (b.mode === "interactive" ? "shown" : "peeking") : ""}</div></div>
+        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button><button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button><button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
+      <button class="newbtn" data-a="new" type="button">+ New interactive box</button>
+      <div class="keys">↑↓ move · p peek/show · s shot · d down · n new · r refresh</div>
+      <div class="status" aria-live="polite">${esc(status)}</div>`;
+  }
+  function act(a, i = sel) {
+    const b = wboxes[i];
+    if (a === "settings") { face = "settings"; status = ""; }
+    else if (a === "back") { face = "boxes"; status = ""; }
+    else if (a === "confirm" || a === "always") { cfg[a] = !cfg[a]; status = a === "confirm" ? `omabox config confirm-close ${cfg.confirm ? "on" : "off"}` : `omabox config bar-icon ${cfg.always ? "always" : "auto"}`; }
+    else if (a === "refresh") status = "Refreshed: omabox ls --json";
+    else if (a === "new") { const name = `box-${newN++}`; wboxes.push({ name, mode: "interactive", size: "1280x720@60", age: "just now" }); sel = wboxes.length - 1; peeking = name; renderSpot(); status = `omabox up --interactive --new: '${name}' is a window on ${where()}`; }
+    else if (!b) return;
+    else if (a === "peek") { sel = i; peeking = b.name; renderSpot(); status = b.mode === "interactive" ? `Show: focused '${b.name}'` : `omabox: peek at box '${b.name}' on ${where()} (view only)`; }
+    else if (a === "shot") { sel = i; status = `/tmp/omabox-${b.name}-${stamp()}.png (opened)`; }
+    else if (a === "down") {
+      sel = i;
+      if (armed === b.name && Date.now() - armedAt < 3000) { wboxes.splice(i, 1); armed = null; if (peeking === b.name) { peeking = null; renderSpot(); } sel = Math.max(0, Math.min(sel, wboxes.length - 1)); status = `omabox: box '${b.name}' down`; }
+      else { armed = b.name; armedAt = Date.now(); status = `Press d again to take '${b.name}' down`; }
+    }
+    if (a !== "down") armed = null;
+    render();
+  }
+  panel.addEventListener("click", e => {
+    const t = e.target.closest("[data-a]"); if (t) { act(t.dataset.a, t.dataset.i !== undefined ? +t.dataset.i : sel); return; }
+    const r = e.target.closest(".row"); if (r) { sel = +r.dataset.i; armed = null; render(); }
+  });
+  panel.addEventListener("keydown", e => {
+    if (e.target.tagName === "SELECT") return;
+    const k = e.key;
+    if (face === "settings") { if (k === "Escape") { act("back"); e.preventDefault(); } return; }
+    const map = { p: "peek", Enter: "peek", s: "shot", d: "down", n: "new", r: "refresh" };
+    if (k === "ArrowDown" || k === "j") { sel = Math.min(sel + 1, wboxes.length - 1); armed = null; render(); e.preventDefault(); }
+    else if (k === "ArrowUp" || k === "k") { sel = Math.max(sel - 1, 0); armed = null; render(); e.preventDefault(); }
+    else if (map[k]) { act(map[k]); e.preventDefault(); }
+  });
+  wbtn.addEventListener("click", () => { const open = panel.hidden; panel.hidden = !open; wbtn.setAttribute("aria-expanded", open); if (open) panel.focus(); });
+
+  const saved = store.get("omarchy");
+  setTheme(saved && $(`.themes [data-t="${saved}"]`) ? saved : "tokyo-night");
+  render(); renderLanes();
+})();
+</script>
