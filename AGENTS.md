@@ -31,9 +31,16 @@ viewer adds `[hidden]{display:none!important}` (the page also sets it).
 
 ## Hosting
 
-omabox.app on Cloudflare Pages, from this repo: build command `node build.mjs`, output directory
-`dist`. Until launch the artifact is where Diogo reviews; the repo goes public when the site does.
-Contributors only change when the site is rebuilt (a push here, or a Pages deploy hook).
+Cloudflare Pages project `omabox` (account 433e2ce2a5dce0c5eae78569eccd4122), deployed by
+`.github/workflows/deploy.yml` with wrangler: on every push to main, daily at 06:17 UTC (so new
+omabox contributors show up) and by hand (`gh workflow run deploy -R diogochaves/omabox-site`). The
+token is the repo secret `CLOUDFLARE_API_TOKEN` (Pages:Edit, DNS:Edit on omabox.app); no Cloudflare
+GitHub app.
+
+Until launch the site is at <https://omabox.pages.dev> with noindex (the build adds it for any
+`SITE_URL` other than omabox.app), and the artifact stays where Diogo reviews. On launch day: attach
+omabox.app to the project, `gh variable set SITE_URL -b https://omabox.app -R diogochaves/omabox-site`,
+rerun the deploy, and make the repo public when Diogo says so.
 
 ## Checking a change
 

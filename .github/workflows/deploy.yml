@@ -1,0 +1,47 @@
+# Builds the site and deploys it to Cloudflare Pages (project "omabox"): on every push to main, once a
+# day (so new omabox contributors show up), and by hand from the Actions tab.
+#
+# Until launch the site is served at its pages.dev address with noindex. On launch day set the repo
+# variable SITE_URL to https://omabox.app (gh variable set SITE_URL -b https://omabox.app) and attach
+# the domain to the project.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  CLOUDFLARE_ACCOUNT_ID: 433e2ce2a5dce0c5eae78569eccd4122
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  PROJECT: omabox
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build
+        run: node build.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://omabox.pages.dev' }}
+
+      - name: Create the Pages project if it doesn't exist
+        run: |
+          npx --yes wrangler@4 pages project list | grep -qw "$PROJECT" ||
+            npx --yes wrangler@4 pages project create "$PROJECT" --production-branch main
+
+      - name: Deploy
+        run: npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true

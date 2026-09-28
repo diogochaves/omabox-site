@@ -145,7 +145,7 @@ aijail.io's plain narrative and compare page as a reference.
   (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
 
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
-- Register omabox.app and set up Cloudflare Pages (`node build.mjs`, output `dist`). A deploy hook
-  from the omabox repo would refresh contributors when a PR is merged there.
+- omabox.app is registered (2026-09-28). The site deploys to omabox.pages.dev (noindex) until 0.2.0
+  ships; attach omabox.app on launch day (AGENTS.md, "Hosting").
 - Maybe later: fetch the README/CHANGELOG at a pinned omabox tag in the build.
 - Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)

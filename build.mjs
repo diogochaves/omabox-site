@@ -3,6 +3,9 @@
 // agents), with their avatars saved next to the page. No dependencies; Node 18+.
 //
 //   node build.mjs              GITHUB_TOKEN, if set, is used for the API (optional)
+//   SITE_URL=https://x.pages.dev node build.mjs
+//                               builds for another address (links, link card) and keeps search
+//                               engines out: anything but omabox.app gets noindex
 //
 // If GitHub can't be reached, the page keeps the contributors written in the source and the build
 // says so; the rest of the site still builds.
@@ -10,7 +13,8 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 
 const REPO = "diogochaves/omabox";
-const SITE = "https://omabox.app";
+const HOME = "https://omabox.app";
+const SITE = (process.env.SITE_URL || HOME).replace(/\/+$/, "");
 const OUT = "dist";
 
 // AI agents that show up as GitHub users. Bots (type "Bot", or a login ending in "[bot]": Claude,
@@ -57,7 +61,7 @@ const head = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel. Your desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts.">
 <meta name="theme-color" content="#0b0c13">
-<link rel="canonical" href="${SITE}/">
+${SITE === HOME ? "" : '<meta name="robots" content="noindex">\n'}<link rel="canonical" href="${SITE}/">
 <link rel="icon" href="media/icon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${SITE}/">
@@ -86,5 +90,6 @@ try {
   console.warn(`contributors: kept the list in site/omabox.html (${e.message})`);
 }
 
+if (SITE !== HOME) await writeFile(`${OUT}/_headers`, "/*\n  X-Robots-Tag: noindex\n");
 await writeFile(`${OUT}/index.html`, `${head}${page.slice(0, body)}</head>\n<body>\n${rest}\n</body>\n</html>\n`);
-console.log(`built ${OUT}/index.html`);
+console.log(`built ${OUT}/index.html for ${SITE}${SITE === HOME ? "" : " (noindex)"}`);
