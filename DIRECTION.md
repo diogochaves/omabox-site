@@ -10,27 +10,41 @@ parts (see `reference/README.md`).
 
 ## What the site has to say
 
-1. **The promise, first:** the agent never takes control of your system. No windows appearing out
+Page order (since 2026-09-28):
+
+1. **Hero: the promise.** The agent never takes control of your system. No windows appearing out
    of nowhere, your cursor never moves, no focus stolen mid-sentence, no password or keyring
    prompts, no notifications or tray icons left behind, no workspace switches.
-2. **The main idea: parallel boxes, like git worktrees.** A worktree keeps agents' code apart; a
+2. **The problem, shown.** The same five agent steps side by side, on your desktop (app on top of
+   your editor, your keystrokes in its app, workspace switch, cursor yanked, pkexec prompt,
+   notifications and tray icons left) and with omabox (your desktop still, all of it in the box).
+   Counters: red on the left, 0 on the right. Plays once when scrolled to, replay button.
+3. **The promise, how:** each thing kept off (crossed out as it comes in), and how. Not a security
+   boundary; points to ai-jail.
+4. **The main idea: parallel boxes, like git worktrees.** A worktree keeps agents' code apart; a
    box keeps their screens, session buses and test runs apart. Each agent session gets its own box
    (named after its repo or worktree plus the session id, e.g. `app-tray-5cc72cdc`), so visual
    checks and desktop tests run side by side without seeing each other.
-3. How an agent drives a box (and what is new in 0.2.0: `wait`, `--window`, shots of covered
-   windows, click marks in peek).
-4. How you look inside: peek, interactive mode, the bar widget (a playable copy).
-5. Agents use it on their own: the skill (Claude Code, Codex, OpenCode, pi, Hermes), the opt-in
+5. How an agent drives a box, with all of 0.2.0: `wait` and `--wait`, `windows` and `--window`,
+   covered windows, `shot --fit` + `click --in`, `keys --pass`, click marks and key captions in
+   peek, faster shots, NVIDIA.
+6. How you look inside: peek, interactive mode, the bar widget (a playable copy).
+7. Agents use it on their own: the skill (Claude Code, Codex, OpenCode, pi, Hermes), the opt-in
    guard, projects unchanged.
-6. **Is omabox what you need?** Link out generously and honestly:
+8. **Better together: ai-jail + omabox.** Praise ai-jail (Fabio Akita, AkitaOnRails): it fences what the agent can touch, omabox decides where it draws. The
+   tested recipe (ai-jail 2.2.0): `omabox up; eval "$(omabox env)"; ai-jail --gpu --rw-map
+   "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app` runs a jailed app on the box's screen.
+   Said plainly: a jailed *agent* can't drive omabox yet (the jail's own PID namespace hides the
+   box; `omabox` inside it reports the box as dead).
+9. **Is omabox what you need?** Link out generously and honestly:
    - **Cua** (<https://cua.ai>, <https://github.com/trycua/cua>) when you want an agent to drive
      *your own* desktop without fighting you for the cursor and focus. That is Cua's main selling
      point, and omabox does the opposite (keeps agents off your desktop).
-   - **ai-jail** (<https://aijail.io>) to limit what the agent itself can read, write and reach.
-     omabox is not a sandbox; ai-jail is.
+   - **ai-jail** (<https://aijail.io>, <https://github.com/akitaonrails/ai-jail>) to limit what the
+     agent itself can read, write and reach. omabox is not a sandbox; ai-jail is, and they stack.
    - **omarchy-in-omarchy** (<https://github.com/jankeesvw/omarchy-in-omarchy>) when you need a whole
      machine (installer, system services, audio, suspend).
-7. What a box gets, install, FAQ, contributors, footer.
+10. What a box gets, install, FAQ, contributors, footer.
 
 Audience: Omarchy users who run coding agents; plugin, theme and app developers on Omarchy; people
 arriving from the computer-use crowd (tell them early that omabox is Omarchy-only).
@@ -49,6 +63,17 @@ arriving from the computer-use crowd (tell them early that omabox is Omarchy-onl
 - **Lightweight is a feature.** cua.ai nearly froze this machine (two always-on WebGL scenes on the
   iGPU starve Hyprland). No WebGL/canvas scenes, no scroll-jacking; animations are transform/opacity
   only, pause when out of view (IntersectionObserver), and respect `prefers-reduced-motion`.
+
+## Decisions (2026-09-28)
+
+- **No marketing video in this version.** The site uses what exists (the 55 s demo, screenshots,
+  CSS scenes). A problem-then-fix video may come in a later version, or only for x.com.
+- **Show the problem before the promise** (the side-by-side scene), and cover all of 0.2.0.
+- **Praise ai-jail and show the two together**, with only what was tested.
+- **More motion, still light:** sections fade in once, a glint runs along each section's top edge,
+  the header shows scroll progress and the current section, the promise labels get crossed out.
+  All transform/opacity, once or paused off screen. Measured: about 2% Chromium GPU at 1080p with
+  the hero's loops on screen, near 0 elsewhere.
 
 ### Rejected, and why
 
@@ -98,7 +123,11 @@ aijail.io's plain narrative and compare page as a reference.
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
 - Command output shown must match the CLI (`bin/omabox` in the omabox repo, `cua-ideas` branch for
-  0.2.0 syntax). `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`.
+  0.2.0 syntax). `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
+  (`0m/2h`), and a session's box goes down when its agent exits.
+- The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (window titles
+  shortened to `"~"` so no user or host name shows). In a box, `pkexec` prints `pkexec must be
+  setuid root` and exits 127: no prompt reaches you.
 - **To verify before going public:** the Cua descriptions (they come from cua.ai's page and
   Diogo's framing, "designed to work beside you"), ai-jail's platforms (Linux, macOS per its site),
   the omarchy-in-omarchy numbers (from the omabox README table, written 2026-09-24).
@@ -106,7 +135,12 @@ aijail.io's plain narrative and compare page as a reference.
 
 ## Open
 
-- Not yet checked: phone width and the pop-up peeks of draft 4 in a real browser.
+- 0.2.0 isn't released: `cua-ideas` still says "Unreleased" in the CHANGELOG and `VERSION` is
+  0.1.0. The site says 0.2.0 throughout.
+- A jailed agent driving omabox: planned in omabox issue #16
+  (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
+
+- Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
 - Contributors are hardcoded; the real build fetches them.
 - Hosting on omabox.com, a build step (fetch README/CHANGELOG/contributors at a pinned omabox tag).
 - Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)
