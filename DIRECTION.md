@@ -1,7 +1,7 @@
-# omabox.com: direction and decisions
+# omabox.app: direction and decisions
 
 The site for [omabox](https://github.com/diogochaves/omabox), launched with omabox **0.2.0** so people
-can find it. The domain is `omabox.com`. This folder is its own project on purpose: contributors to
+can find it. The domain is `omabox.app` (omabox.com belongs to someone else). This folder is its own project on purpose: contributors to
 omabox never have to deal with site code.
 
 The page we iterate on is **`site/omabox.html`** (draft 4), published as a claude.ai artifact:
@@ -56,8 +56,8 @@ arriving from the computer-use crowd (tell them early that omabox is Omarchy-onl
 - **Contributors:** code contributors only (GitHub contributors API, bots filtered out), identical
   tiles, alphabetical, no counts, Diogo included, no "maintainer" badge.
 - **No GitHub organisation for now**; only if the project really grows.
-- **Edit and test as an online artifact** for now; hosting on omabox.com (GitHub Pages or
-  Cloudflare Pages) comes later.
+- **Edit and test as an online artifact** until launch; then omabox.app on Cloudflare Pages
+  (decided 2026-09-28), and this repo goes public.
 - **Don't copy btso.dev** (Tyler's site; he is our only other contributor): no headshot hero, no
   daily ship grid, no ASCII bar charts, no ship log.
 - **Lightweight is a feature.** cua.ai nearly froze this machine (two always-on WebGL scenes on the
@@ -66,6 +66,10 @@ arriving from the computer-use crowd (tell them early that omabox is Omarchy-onl
 
 ## Decisions (2026-09-28)
 
+- **Domain: omabox.app, hosted on Cloudflare Pages.** omabox.com is taken.
+- **Contributors are fetched at build time** from the omabox repo: people only. Bots and AI agent
+  accounts (Claude, Codex, Copilot...) are dropped; human first names (devin, jules, cody) are not
+  treated as agents.
 - **No marketing video in this version.** The site uses what exists (the 55 s demo, screenshots,
   CSS scenes). A problem-then-fix video may come in a later version, or only for x.com.
 - **Show the problem before the promise** (the side-by-side scene), and cover all of 0.2.0.
@@ -141,6 +145,7 @@ aijail.io's plain narrative and compare page as a reference.
   (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
 
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
-- Contributors are hardcoded; the real build fetches them.
-- Hosting on omabox.com, a build step (fetch README/CHANGELOG/contributors at a pinned omabox tag).
+- Register omabox.app and set up Cloudflare Pages (`node build.mjs`, output `dist`). A deploy hook
+  from the omabox repo would refresh contributors when a PR is merged there.
+- Maybe later: fetch the README/CHANGELOG at a pinned omabox tag in the build.
 - Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)

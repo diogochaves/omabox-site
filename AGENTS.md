@@ -1,6 +1,6 @@
 # omabox-site: instructions for agents
 
-The site for omabox (omabox.com). Read `DIRECTION.md` first: what the site says, every decision so
+The site for omabox (omabox.app). Read `DIRECTION.md` first: what the site says, every decision so
 far and why the old drafts were dropped. Diogo (the owner) will say what to change; iterate on
 `site/omabox.html`.
 
@@ -10,6 +10,12 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   `<body>` (the artifact platform wraps it). `<title>` and `<style>` come first.
 - `site/media/`: its images and video, referenced as `media/...` (provenance in `site/media/README.md`).
 - `reference/`: old drafts to mine (`reference/README.md`). Not maintained.
+- `build.mjs`: builds the public site into `dist/` (git-ignored): the page wrapped into a whole
+  document (doctype, meta, link card, favicon), its media, and the omabox repo's contributors from
+  the GitHub API, people only (bots and AI agent accounts dropped), avatars saved locally. Between
+  the `<!-- contributors -->` markers the source keeps a hardcoded list, for the artifact and as the
+  fallback when GitHub can't be reached. `node build.mjs` (Node 18+, no dependencies;
+  `GITHUB_TOKEN` optional).
 
 ## Publishing
 
@@ -22,6 +28,12 @@ and `file_path: site/omabox.html`. Pass `files` only for media that is new or ch
 Platform rules that bite: external scripts only from cdnjs / jsdelivr / unpkg, fonts only from Google
 Fonts, other media must be published files; no `window.open`, `alert`, print or downloads; the
 viewer adds `[hidden]{display:none!important}` (the page also sets it).
+
+## Hosting
+
+omabox.app on Cloudflare Pages, from this repo: build command `node build.mjs`, output directory
+`dist`. Until launch the artifact is where Diogo reviews; the repo goes public when the site does.
+Contributors only change when the site is rebuilt (a push here, or a Pages deploy hook).
 
 ## Checking a change
 
