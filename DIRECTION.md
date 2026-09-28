@@ -101,8 +101,10 @@ aijail.io's plain narrative and compare page as a reference.
   clamp(26px, 3vw, 40px); Diogo found big bold headings too much), Instrument Sans for text,
   JetBrains Mono (Omarchy's own font) for code, labels and UI chrome. Labels: mono, uppercase,
   wide tracking, a small glowing dash before them.
-- **The logo is the star:** big pixel mark with a glow in the hero, lights up pixel by pixel (click
-  to replay). Mark geometry (15x15): outer frame with gaps at the top right and bottom left, inner
+- **The logo is the star:** one mark only. At the top of the page the big pixel mark (with its glow
+  and "0.2.0 · for Omarchy") sits in a see-through header; the first 120 px of scroll shrink it into
+  the bar's corner, as if into a box, while the bar's background fades in (2026-09-28). It lights up
+  pixel by pixel (click it at the top to replay). Mark geometry (15x15): outer frame with gaps at the top right and bottom left, inner
   square with a 2-row bar. SVG path is in the page (`<symbol id="m">`) and in the omabox repo's
   `assets/`.
 - **Cut frames:** cards, buttons, the install bar, box tiles and avatars have their top-right and
