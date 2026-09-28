@@ -40,7 +40,7 @@ GitHub app.
 Until launch the site is at <https://omabox.pages.dev> with noindex (the build adds it for any
 `SITE_URL` other than omabox.app), and the artifact stays where Diogo reviews. On launch day: attach
 omabox.app to the project, `gh variable set SITE_URL -b https://omabox.app -R diogochaves/omabox-site`,
-rerun the deploy, and make the repo public when Diogo says so.
+and rerun the deploy. The repo is public since 2026-09-28 (Actions is free for public repos).
 
 ## Checking a change
 

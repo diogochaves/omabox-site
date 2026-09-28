@@ -57,7 +57,7 @@ arriving from the computer-use crowd (tell them early that omabox is Omarchy-onl
   tiles, alphabetical, no counts, Diogo included, no "maintainer" badge.
 - **No GitHub organisation for now**; only if the project really grows.
 - **Edit and test as an online artifact** until launch; then omabox.app on Cloudflare Pages
-  (decided 2026-09-28), and this repo goes public.
+  (decided 2026-09-28). This repo went public on 2026-09-28, before launch, so Actions could deploy.
 - **Don't copy btso.dev** (Tyler's site; he is our only other contributor): no headshot hero, no
   daily ship grid, no ASCII bar charts, no ship log.
 - **Lightweight is a feature.** cua.ai nearly froze this machine (two always-on WebGL scenes on the
