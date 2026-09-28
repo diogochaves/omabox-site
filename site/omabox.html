@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* A dark, neon Omarchy: Tokyo Night by default (the theme the omabox mark is drawn in), other Omarchy
-   themes on the swatches. Frames are cut at the top right and bottom left, where the mark has its gaps. */
+   themes from the header's theme menu. Frames are cut at the top right and bottom left, where the mark has its gaps. */
 :root {
   --bg: #0b0c13; --bg-2: #10111a; --panel: #151724; --panel-2: #1a1d2e; --line: #252941; --line-2: #343a5c;
   --ink: #d6dcff; --ink-2: #a9b1d6; --muted: #6f769b;
@@ -85,10 +85,33 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .top nav a { color: var(--ink-2); text-decoration: none; padding: 8px 11px; }
 .top nav a:hover { color: var(--brand); }
 @media (min-width: 1000px) { .top nav { display: flex; } }
-.themes { display: flex; gap: 7px; margin-left: auto; }
+/* theme menu: the mark in each theme's own colours, and the command that would set it */
+.themes { position: relative; margin-left: auto; }
 @media (min-width: 1000px) { .themes { margin-left: 8px; } }
-.themes button { width: 14px; height: 14px; padding: 0; cursor: pointer; background: var(--c); border: 0; clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 30% 100%, 0 70%); opacity: .55; }
-.themes button[aria-pressed="true"] { opacity: 1; box-shadow: 0 0 10px var(--c); }
+.tbtn { --cut: 7px; --fc: var(--line-2); --fb: var(--panel); display: block; border: 0; cursor: pointer; font: 500 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.tbtn .in { display: flex; align-items: center; gap: 9px; padding: 7px 10px 7px 9px; }
+.tbtn svg { width: 15px; height: 15px; color: var(--brand); filter: drop-shadow(0 0 6px var(--glow)); }
+.tbtn .chev { width: 10px; height: 6px; color: var(--muted); filter: none; transition: transform .2s; }
+.tbtn:hover, .tbtn[aria-expanded="true"] { --fc: var(--brand); color: var(--ink); }
+.tbtn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+@media (max-width: 599px) { .tbtn .nm { display: none; } }
+.tmenu { --cut: 12px; --fc: var(--line-2); --fb: var(--bg-2); position: absolute; right: 0; top: calc(100% + 10px); width: 272px; z-index: 50; filter: drop-shadow(0 14px 30px rgb(0 0 0 / .5)); }
+.tmenu > .in { padding: 8px; display: grid; gap: 4px; }
+.tmenu .hd { font: 500 10.5px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding: 6px 6px 8px; }
+.trow { --cut: 8px; --fc: transparent; display: block; width: 100%; border: 0; padding: 1px; cursor: pointer; text-align: left; font: 13px/1 var(--mono); color: var(--ink); }
+.trow { --fb: var(--bg-2); }
+.trow .in { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 12px; padding: 7px 10px 7px 7px; }
+.trow .sw { width: 34px; height: 34px; display: grid; place-items: center; background: var(--tb); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .06); }
+.trow .sw svg { width: 20px; height: 20px; color: var(--tk); filter: drop-shadow(0 0 5px var(--tk)); }
+.trow .pal { display: flex; gap: 3px; margin-top: 7px; }
+.trow .pal b { width: 9px; height: 4px; }
+.trow .ok { width: 7px; height: 7px; background: var(--tk); box-shadow: 0 0 8px var(--tk); opacity: 0; }
+.trow:hover, .trow:focus-visible { --fc: var(--line-2); --fb: var(--panel); outline: none; }
+.trow[aria-checked="true"] { --fc: var(--tk); }
+.trow[aria-checked="true"] .ok { opacity: 1; }
+.tmenu .cmd { margin-top: 4px; padding: 9px 8px 5px; border-top: 1px solid var(--line); font: 11.5px/1.3 var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tmenu .cmd b { color: var(--brand); font-weight: 500; }
+.tmenu .cmd span { color: var(--ink); }
 
 /* ── hero ───────────────────────────────────────────────────────────────────── */
 .hero { display: grid; gap: 44px; padding-block: 48px 72px; align-items: center; }
@@ -557,11 +580,16 @@ footer small { color: var(--muted); font-size: 13px; }
   <div class="wrap">
     <a class="lockup" href="#top"><svg><use href="#m"/></svg>omabox</a>
     <nav aria-label="Sections"><a href="#problem">Problem</a><a href="#parallel">Parallel</a><a href="#drive">Drive</a><a href="#watch">Watch</a><a href="#jail">ai-jail</a><a href="#compare">Compare</a><a href="#install">Install</a><a href="https://github.com/diogochaves/omabox">GitHub ↗</a></nav>
-    <div class="themes" role="group" aria-label="Omarchy theme">
-      <button style="--c:#9ece6a" data-t="tokyo-night" title="Tokyo Night" aria-pressed="true"></button>
-      <button style="--c:#a6e3a1" data-t="catppuccin" title="Catppuccin" aria-pressed="false"></button>
-      <button style="--c:#a9b665" data-t="gruvbox" title="Gruvbox" aria-pressed="false"></button>
-      <button style="--c:#faa968" data-t="retro-82" title="Retro 82" aria-pressed="false"></button>
+    <div class="themes">
+      <button class="tbtn cut" id="tbtn" aria-haspopup="menu" aria-expanded="false" aria-controls="tmenu" aria-label="Omarchy theme"><span class="in"><svg><use href="#m"/></svg><span class="nm" id="tname">Tokyo Night</span><svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></button>
+      <div class="tmenu cut" id="tmenu" role="menu" aria-label="Omarchy theme" hidden><div class="in">
+        <div class="hd">Omarchy theme</div>
+        <button class="trow cut" role="menuitemradio" data-t="tokyo-night" aria-checked="false" style="--tb:#1a1b26;--tk:#9ece6a"><span class="in"><span class="sw"><svg><use href="#m"/></svg></span><span>Tokyo Night<span class="pal"><b style="background:#7aa2f7"></b><b style="background:#7dcfff"></b><b style="background:#bb9af7"></b><b style="background:#f7768e"></b><b style="background:#e0af68"></b></span></span><span class="ok"></span></span></button>
+        <button class="trow cut" role="menuitemradio" data-t="catppuccin" aria-checked="false" style="--tb:#1e1e2e;--tk:#a6e3a1"><span class="in"><span class="sw"><svg><use href="#m"/></svg></span><span>Catppuccin<span class="pal"><b style="background:#89b4fa"></b><b style="background:#89dceb"></b><b style="background:#cba6f7"></b><b style="background:#f38ba8"></b><b style="background:#f9e2af"></b></span></span><span class="ok"></span></span></button>
+        <button class="trow cut" role="menuitemradio" data-t="gruvbox" aria-checked="false" style="--tb:#282828;--tk:#a9b665"><span class="in"><span class="sw"><svg><use href="#m"/></svg></span><span>Gruvbox<span class="pal"><b style="background:#7daea3"></b><b style="background:#89b482"></b><b style="background:#d3869b"></b><b style="background:#ea6962"></b><b style="background:#d8a657"></b></span></span><span class="ok"></span></span></button>
+        <button class="trow cut" role="menuitemradio" data-t="retro-82" aria-checked="false" style="--tb:#05182e;--tk:#faa968"><span class="in"><span class="sw"><svg><use href="#m"/></svg></span><span>Retro 82<span class="pal"><b style="background:#8cbfb8"></b><b style="background:#3fb8b0"></b><b style="background:#f85525"></b><b style="background:#e97b3c"></b><b style="background:#f6dcac"></b></span></span><span class="ok"></span></span></button>
+        <div class="cmd"><b>$</b> omarchy-theme-set <span id="tcmd">tokyo-night</span></div>
+      </div></div>
     </div>
   </div>
   <span class="prog" id="prog" aria-hidden="true"></span>
@@ -982,10 +1010,28 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   function setTheme(t) {
     theme = t;
     if (t === "tokyo-night") delete root.dataset.omarchy; else root.dataset.omarchy = t;
-    $$(".themes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
+    $$(".trow").forEach(b => { b.setAttribute("aria-checked", b.dataset.t === t); if (b.dataset.t === t) $("#tname").textContent = b.textContent.trim(); });
+    $("#tcmd").textContent = t;
     store.set("omarchy", t); renderSpot(); if (peekShows === "term") setPeek("term");
   }
-  $$(".themes button").forEach(b => b.addEventListener("click", () => setTheme(b.dataset.t)));
+  const tbtn = $("#tbtn"), tmenu = $("#tmenu");
+  function themeMenu(open, focus) {
+    tmenu.hidden = !open; tbtn.setAttribute("aria-expanded", open);
+    if (open) $(`.trow[aria-checked="true"]`, tmenu).focus(); else { $("#tcmd").textContent = theme; if (focus) tbtn.focus(); }
+  }
+  tbtn.addEventListener("click", () => themeMenu(tmenu.hidden));
+  $$(".trow").forEach(b => {
+    b.addEventListener("click", () => { setTheme(b.dataset.t); themeMenu(false, true); });
+    const show = () => { $("#tcmd").textContent = b.dataset.t; };
+    b.addEventListener("pointerenter", show); b.addEventListener("focus", show);
+  });
+  tmenu.addEventListener("keydown", e => {
+    const rows = $$(".trow", tmenu), i = rows.indexOf(document.activeElement);
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { rows[(i + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length].focus(); e.preventDefault(); }
+    else if (e.key === "Escape") themeMenu(false, true);
+    else if (e.key === "Tab") themeMenu(false);
+  });
+  document.addEventListener("pointerdown", e => { if (!tmenu.hidden && !e.target.closest(".themes")) themeMenu(false); });
   $$("[data-copy]").forEach(b => b.addEventListener("click", async () => {
     const el = document.getElementById(b.dataset.copy);
     try { await navigator.clipboard.writeText(el.textContent); b.textContent = "Copied"; }
@@ -1243,7 +1289,7 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   }, { passive: true });
 
   const saved = store.get("omarchy");
-  setTheme(saved && $(`.themes [data-t="${saved}"]`) ? saved : "tokyo-night");
+  setTheme(saved && $(`.trow[data-t="${saved}"]`) ? saved : "tokyo-night");
   render(); renderLanes();
 })();
 </script>

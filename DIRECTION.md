@@ -94,9 +94,13 @@ aijail.io's plain narrative and compare page as a reference.
 
 ## Visual system (draft 4)
 
-- **Dark, neon, "modern cyberpunk".** Tokyo Night by default (the theme the mark is drawn in); the
-  swatches switch to Catppuccin, Gruvbox, Retro 82 (values from each theme's `colors.toml` in
-  `/usr/share/omarchy/themes/*/`). Dark only, by choice.
+- **Dark, neon, "modern cyberpunk".** Tokyo Night by default (the theme the mark is drawn in); a
+  theme menu in the header switches to Catppuccin, Gruvbox, Retro 82 (values from each theme's
+  `colors.toml` in `/usr/share/omarchy/themes/*/`). Dark only, by choice.
+- **Theme menu** (2026-09-28, replaced four tiny swatches Diogo disliked; not omarchy.org's picker):
+  a cut-frame button with the mark and the theme's name; each row shows the mark in that theme's
+  own colours on its own background with a palette strip, and the footer shows the
+  `omarchy-theme-set NAME` for the row you point at.
 - **Type:** Chakra Petch for headings (600, moderate sizes: h1 clamp(34px, 4.3vw, 58px), h2
   clamp(26px, 3vw, 40px); Diogo found big bold headings too much), Instrument Sans for text,
   JetBrains Mono (Omarchy's own font) for code, labels and UI chrome. Labels: mono, uppercase,
