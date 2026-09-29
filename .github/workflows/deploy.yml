@@ -1,9 +1,8 @@
 # Builds the site and deploys it to Cloudflare Pages (project "omabox"): on every push to main, once a
 # day (so new omabox contributors show up), and by hand from the Actions tab.
 #
-# Until launch the site is served at its pages.dev address with noindex. On launch day set the repo
-# variable SITE_URL to https://omabox.app (gh variable set SITE_URL -b https://omabox.app) and attach
-# the domain to the project.
+# The repo variable SITE_URL is https://omabox.app since launch (2026-09-29); the last step keeps the
+# domain attached. Without it the build targets omabox.pages.dev with noindex.
 
 name: deploy
 
@@ -45,3 +44,22 @@ jobs:
 
       - name: Deploy
         run: npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true
+
+      # Once SITE_URL is omabox.app: attach the domain to the project and point its DNS at it. Both
+      # calls are no-ops when already done.
+      - name: Attach omabox.app
+        if: vars.SITE_URL == 'https://omabox.app'
+        run: |
+          api() { curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "$@"; }
+          A=https://api.cloudflare.com/client/v4
+          api -X POST "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains" -d '{"name":"omabox.app"}' |
+            jq -c '{success, errors: [.errors[]?.message], status: .result.status}'
+          zone=$(api "$A/zones?name=omabox.app" | jq -r '.result[0].id // empty')
+          if [ -z "$zone" ]; then echo "::warning::can't read the omabox.app zone: add a proxied CNAME omabox.app -> $PROJECT.pages.dev by hand"; exit 0; fi
+          if [ "$(api "$A/zones/$zone/dns_records?name=omabox.app" | jq '.result | length')" = 0 ]; then
+            api -X POST "$A/zones/$zone/dns_records" -d "{\"type\":\"CNAME\",\"name\":\"omabox.app\",\"content\":\"$PROJECT.pages.dev\",\"proxied\":true}" |
+              jq -c '{success, errors: [.errors[]?.message]}'
+          else
+            echo "omabox.app already has DNS records:"; api "$A/zones/$zone/dns_records?name=omabox.app" | jq -c '.result[] | {type, content, proxied}'
+          fi
+          sleep 20; api "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/omabox.app" | jq -c '{status: .result.status, verification: .result.verification_data.status}'

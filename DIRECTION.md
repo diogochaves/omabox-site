@@ -158,8 +158,7 @@ aijail.io's plain narrative and compare page as a reference.
   (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
 
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
-- omabox.app is registered (2026-09-28). The site deploys to omabox.pages.dev (noindex) until launch;
-  attach omabox.app on launch day (AGENTS.md, "Hosting").
+- Launched at omabox.app on 2026-09-29, with omabox 0.2.0 out (AGENTS.md, "Hosting").
 - SEO: the build writes a description, canonical, Open Graph and Twitter cards, JSON-LD
   (SoftwareApplication), `robots.txt` (Disallow on the preview) and, for omabox.app only,
   `sitemap.xml`. On launch: submit omabox.app to Google Search Console, and link it from the omabox

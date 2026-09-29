@@ -37,10 +37,11 @@ omabox contributors show up) and by hand (`gh workflow run deploy -R diogochaves
 token is the repo secret `CLOUDFLARE_API_TOKEN` (Pages:Edit, DNS:Edit on omabox.app); no Cloudflare
 GitHub app.
 
-Until launch the site is at <https://omabox.pages.dev> with noindex (the build adds it for any
-`SITE_URL` other than omabox.app), and the artifact stays where Diogo reviews. On launch day: attach
-omabox.app to the project, `gh variable set SITE_URL -b https://omabox.app -R diogochaves/omabox-site`,
-and rerun the deploy. The repo is public since 2026-09-28 (Actions is free for public repos).
+Launched on 2026-09-29: <https://omabox.app>. The repo variable `SITE_URL` is `https://omabox.app`
+(it sets the site's own address: canonical, link card, robots and sitemap; the page's GitHub links
+always go to diogochaves/omabox), and the workflow's last step keeps the domain attached to the
+project and its DNS pointed at it. The build adds noindex for any other `SITE_URL`. The artifact
+stays where Diogo reviews.
 
 ## Checking a change
 
