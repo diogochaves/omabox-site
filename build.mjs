@@ -65,7 +65,7 @@ ${SITE === HOME ? "" : '<meta name="robots" content="noindex">\n'}<link rel="can
 <link rel="icon" href="media/icon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${SITE}/">
-<meta property="og:title" content="omabox: agents off your desktop">
+<meta property="og:title" content="omabox: desktops for AI agents on Omarchy">
 <meta property="og:description" content="A whole Omarchy desktop for every AI agent, invisible and in parallel. Yours stays untouched.">
 <meta property="og:image" content="${SITE}/media/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -79,7 +79,7 @@ ${SITE === HOME ? "" : '<meta name="robots" content="noindex">\n'}<link rel="can
 `;
 
 let page = await readFile("site/omabox.html", "utf8");
-page = page.replace(/<title>[^<]*<\/title>/, "<title>omabox: agents off your desktop</title>");
+page = page.replace(/<title>[^<]*<\/title>/, "<title>omabox: desktops for AI agents on Omarchy</title>");
 const body = page.indexOf("<svg");   // the <title>, fonts and <style> go in <head>; the rest is the body
 if (body < 0) throw new Error("site/omabox.html: no <svg> sprite where the body starts");
 
