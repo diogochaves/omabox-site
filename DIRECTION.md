@@ -46,7 +46,7 @@ Install, GitHub (with its mark).
    - **ai-jail** (<https://aijail.io>, <https://github.com/akitaonrails/ai-jail>) to limit what the
      agent itself can read, write and reach. omabox is not a sandbox; ai-jail is, and they stack.
    - **omarchy-in-omarchy** (<https://github.com/jankeesvw/omarchy-in-omarchy>) when you need a whole
-     machine (installer, system services, audio, suspend).
+     machine (the real installer, system services, a reboot).
    Cards only: the comparison table said the same things again and was dropped (2026-09-29); its
    facts (platforms, cost, security boundary) are in the cards.
 10. Install, FAQ, contributors, footer.
@@ -145,9 +145,11 @@ aijail.io's plain narrative and compare page as a reference.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (window titles
   shortened to `"~"` so no user or host name shows). In a box, `pkexec` prints `pkexec must be
   setuid root` and exits 127: no prompt reaches you.
-- **To verify before going public:** the Cua descriptions (they come from cua.ai's page and
-  Diogo's framing, "designed to work beside you"), ai-jail's platforms (Linux, macOS per its site),
-  the omarchy-in-omarchy numbers (from the omabox README table on main, written 2026-09-24).
+- Claims about other projects were checked against their own sites and READMEs on 2026-09-29: Cua
+  is mainly cloud fleets for training and evals, and its Driver works beside you on your desktop
+  (experimental on Hyprland, a few apps); ai-jail runs on Linux, macOS and Windows through WSL2
+  (2.2.1 is current; the recipe was tested with 2.2.0); omarchy-in-omarchy installs itself in about
+  30 minutes once, then boots in about 18 s (its README doesn't mention audio or suspend).
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open

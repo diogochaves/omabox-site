@@ -817,7 +817,7 @@ footer small { color: var(--muted); font-size: 13px; }
       <h2>ai-jail fences the agent in. <span class="hl">omabox keeps its windows out.</span></h2>
       <p class="lead"><a href="https://aijail.io">ai-jail</a>, by Fabio Akita (<a href="https://github.com/akitaonrails">AkitaOnRails</a>),
         is the sandbox we point people to. It runs an agent inside bubblewrap, Landlock and seccomp on
-        Linux, and sandbox-exec on macOS. It does carefully the one thing omabox doesn't do: limit what the agent can read, write
+        Linux (and Windows through WSL2), and sandbox-exec on macOS. It does carefully the one thing omabox doesn't do: limit what the agent can read, write
         and reach. The two answer different questions, so they stack.</p>
     </div>
     <div class="flow" id="flow" aria-label="An app runs inside ai-jail, and its only way to a screen is the box's Wayland socket; your desktop is untouched">
@@ -860,14 +860,14 @@ footer small { color: var(--muted); font-size: 13px; }
     <div class="pick">
       <div class="card cut ours"><div class="in"><p class="if">Your agents build and test GUI apps, plugins or themes on Omarchy, several at once</p><p class="then">omabox</p>
         <p>Parallel, invisible Omarchy desktops, up in 3–4 s for about 500 MB each, and your own untouched. Omarchy on Linux only, and not a security boundary.</p></div></div>
-      <div class="card cut"><div class="in"><p class="if">You want an agent to use your own desktop, without fighting you for the cursor and focus</p><p class="then">Cua</p>
-        <p>That's Cua's focus: computer-use agents that drive real desktops and apps, across macOS, Windows, Linux and Android, through MCP or a CLI. omabox does the opposite: it keeps agents off your desktop.</p>
+      <div class="card cut"><div class="in"><p class="if">You want an agent on your own desktop, beside you, or cloud machines for agents at scale</p><p class="then">Cua</p>
+        <p>Cua's fleets run computer-use agents on cloud Linux, Windows, macOS and Android machines for training and evals. Its Driver works on your own macOS, Windows or Linux desktop, through a CLI, MCP or SDKs, and can click and type without taking your cursor or focus where the app allows it (on Hyprland, still experimental and a few apps). omabox does the opposite: it keeps agents off your desktop.</p>
         <div class="links"><a href="https://cua.ai">cua.ai ↗</a><a href="https://github.com/trycua/cua">github.com/trycua/cua ↗</a></div></div></div>
       <div class="card cut"><div class="in"><p class="if">You want to limit what the agent itself can read, write and reach</p><p class="then">ai-jail</p>
-        <p>A jail for the agent process, on Linux and macOS: your home, SSH keys and cloud credentials out of reach, the project writable. omabox isn't a sandbox; ai-jail is one, and the two stack.</p>
+        <p>A jail for the agent process, on Linux, macOS and Windows through WSL2: your home, SSH keys and cloud credentials out of reach, the project writable. omabox isn't a sandbox; ai-jail is one, and the two stack.</p>
         <div class="links"><a href="#jail">Use them together ↑</a><a href="https://aijail.io">aijail.io ↗</a></div></div></div>
-      <div class="card cut"><div class="in"><p class="if">You need a whole machine: an installer, system services, audio, suspend, a reboot</p><p class="then">omarchy-in-omarchy</p>
-        <p>A disposable Omarchy in QEMU/KVM, 8 GB of RAM by default. Heavier, and minutes on its first start, but a real machine where a box has no system bus.</p>
+      <div class="card cut"><div class="in"><p class="if">You need a whole machine: the real installer, system services, a reboot</p><p class="then">omarchy-in-omarchy</p>
+        <p>A disposable Omarchy in QEMU/KVM, 8 GB of RAM by default. Heavier: it installs itself once, in about 30 minutes, then boots in about 18 seconds. A real machine, where a box has no system bus.</p>
         <div class="links"><a href="https://github.com/jankeesvw/omarchy-in-omarchy">github.com/jankeesvw/omarchy-in-omarchy ↗</a></div></div></div>
     </div>
     <p class="dated" style="margin-top:18px">Written in September 2026 from each project's own site. They move on their own, so check theirs.</p>
@@ -878,7 +878,7 @@ footer small { color: var(--muted); font-size: 13px; }
     <div class="inst">
       <div class="card cut"><div class="in"><h3>What you need</h3><ul>
         <li>Omarchy 4 on Arch, with Hyprland 0.56+</li>
-        <li>A GPU render node. Tested on AMD and Intel iGPUs and an NVIDIA RTX 4070 SUPER.</li>
+        <li>A GPU render node. Tested on AMD and Intel iGPUs and NVIDIA RTX 4070 SUPER and 5070 Ti cards.</li>
         <li>A patched aquamarine until a release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it privately; your system's copy isn't touched.</li></ul></div></div>
       <div class="card cut"><div class="in"><h3>Install</h3>
         <pre class="code"><span class="p">$ </span>git clone https://github.com/diogochaves/omabox && cd omabox
@@ -892,7 +892,7 @@ footer small { color: var(--muted); font-size: 13px; }
       <details><summary>Does it work without Omarchy?</summary><p>No. A box runs your host's own Omarchy: its Hyprland config, its shell and your theme. That is what makes it faithful, and why it needs Omarchy 4 and Hyprland 0.56 or later.</p></details>
       <details><summary>Can two agents test at the same time?</summary><p>Yes. Each Claude Code or Codex session gets its own box, named after its repo or worktree and its session. Anything else started with <code>omabox guard exec</code> gets one too.</p></details>
       <details><summary>Is it a sandbox?</summary><p>No. It keeps apps off your desktop and never gets your secrets, input devices or seat, but it shares your kernel, GPU and, unless you pass <code>--net isolated</code>, your network. For a fence around the agent, use <a href="#jail">ai-jail</a>, which pairs well with omabox; for hostile code, a VM.</p></details>
-      <details><summary>Does it work on NVIDIA?</summary><p>Yes. It was tested on an RTX 4070 SUPER with driver 615.71.09. With several GPUs, point a box at one with <code>OMABOX_RENDER_NODE</code>.</p></details>
+      <details><summary>Does it work on NVIDIA?</summary><p>Yes. It was tested on an RTX 4070 SUPER with driver 615.71.09, and on an RTX 5070 Ti beside an AMD iGPU. An interactive box renders on the GPU your desktop renders on; with several GPUs, point a headless box at one with <code>OMABOX_RENDER_NODE</code>.</p></details>
       <details><summary>Does peeking slow the agent down?</summary><p>No. Peek only copies frames out of the box.</p></details>
     </div>
     <div style="margin-top:56px">
