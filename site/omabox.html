@@ -890,6 +890,7 @@ footer small { color: var(--muted); font-size: 13px; }
     <div class="faq" style="margin-top:56px">
       <h3 style="font-size:26px;margin-bottom:10px">Questions people ask first</h3>
       <details><summary>Does it work without Omarchy?</summary><p>No. A box runs your host's own Omarchy: its Hyprland config, its shell and your theme. That is what makes it faithful, and why it needs Omarchy 4 and Hyprland 0.56 or later.</p></details>
+      <details><summary>Is omabox part of Omarchy?</summary><p>No. omabox is an independent community project, built by the people below, and is not made or endorsed by the Omarchy project. It is built for Omarchy and follows its conventions, so report problems on <a href="https://github.com/diogochaves/omabox/issues">omabox's GitHub</a>, not to Omarchy.</p></details>
       <details><summary>Can two agents test at the same time?</summary><p>Yes. Each Claude Code or Codex session gets its own box, named after its repo or worktree and its session. Anything else started with <code>omabox guard exec</code> gets one too.</p></details>
       <details><summary>Is it a sandbox?</summary><p>No. It keeps apps off your desktop and never gets your secrets, input devices or seat, but it shares your kernel, GPU and, unless you pass <code>--net isolated</code>, your network. For a fence around the agent, use <a href="#jail">ai-jail</a>, which pairs well with omabox; for hostile code, a VM.</p></details>
       <details><summary>Does it work on NVIDIA?</summary><p>Yes. It was tested on an RTX 4070 SUPER with driver 615.71.09, and on an RTX 5070 Ti beside an AMD iGPU. An interactive box renders on the GPU your desktop renders on; with several GPUs, point a headless box at one with <code>OMABOX_RENDER_NODE</code>.</p></details>
@@ -920,7 +921,7 @@ omabox: box 'app-tray-5cc72cdc' down
 omabox: box 'app-menu-9f01d2e4' down
 omabox: box 'app-keyring-3b7a6c11' down</pre>
     <div class="links"><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/CHANGELOG.md">Changelog</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
-    <small>An unofficial community project for Omarchy. Every screenshot here was taken by omabox, in a box.</small>
+    <small>An independent community project, not affiliated with or endorsed by Omarchy. Every screenshot here was taken by omabox, in a box.</small>
   </footer>
 </main>
 
