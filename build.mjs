@@ -61,7 +61,7 @@ const head = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel. Your desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts.">
 <meta name="theme-color" content="#0b0c13">
-${SITE === HOME ? "" : '<meta name="robots" content="noindex">\n'}<link rel="canonical" href="${SITE}/">
+${SITE === HOME ? '<meta name="google-site-verification" content="-2jD-QisVYY6LeZz7BjqZh5F_TZoDvAYAb3ViPGuCUQ">\n' : '<meta name="robots" content="noindex">\n'}<link rel="canonical" href="${SITE}/">
 <link rel="icon" href="media/icon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${SITE}/">
