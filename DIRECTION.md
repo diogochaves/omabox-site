@@ -116,7 +116,13 @@ aijail.io's plain narrative and compare page as a reference.
   bottom-left corners cut, echoing the mark's gaps (`.cut` + `.in`, `--cut` size).
 - **Box = green frame.** Anything that is a box (tiles, peek windows, pop-ups) is framed in the
   brand green with a green-tinted title bar; your own desktop is neutral.
-- Neon glow only on key words and the brand; a faint HUD grid behind the top of the page.
+- Neon glow only on key words and the brand. The background is an aurora of the theme's colours,
+  drawn once (2026-09-29): green by the mark, blue top right, violet and cyan lower down. It replaced
+  a faint square HUD grid Diogo didn't like; also tried: plain, dots, scanlines, scattered pixels,
+  grain.
+- No horizontal scroll on phones, down to 320 px: grids use `minmax(0, 1fr)` columns so long code
+  scrolls in its block, and inline code wraps under 480 px. `overflow-x: clip` on the body hides
+  overflow on desktop but not on phones, so it is no fix.
 
 ## Interactions (draft 4)
 
@@ -154,5 +160,9 @@ aijail.io's plain narrative and compare page as a reference.
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
 - omabox.app is registered (2026-09-28). The site deploys to omabox.pages.dev (noindex) until launch;
   attach omabox.app on launch day (AGENTS.md, "Hosting").
+- SEO: the build writes a description, canonical, Open Graph and Twitter cards, JSON-LD
+  (SoftwareApplication), `robots.txt` (Disallow on the preview) and, for omabox.app only,
+  `sitemap.xml`. On launch: submit omabox.app to Google Search Console, and link it from the omabox
+  repo's website field and README.
 - Maybe later: fetch the README/CHANGELOG at the release tag (`v0.2.0`) in the build.
 - Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)

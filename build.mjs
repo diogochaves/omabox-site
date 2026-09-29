@@ -69,6 +69,13 @@ ${SITE === HOME ? "" : '<meta name="robots" content="noindex">\n'}<link rel="can
 <meta property="og:description" content="A whole Omarchy desktop for every AI agent, invisible and in parallel. Yours stays untouched.">
 <meta property="og:image" content="${SITE}/media/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify({
+  "@context": "https://schema.org", "@type": "SoftwareApplication", name: "omabox", url: `${SITE}/`,
+  description: "A whole Omarchy desktop for every AI agent, invisible and in parallel, so your own desktop stays untouched.",
+  applicationCategory: "DeveloperApplication", operatingSystem: "Linux (Omarchy)", softwareVersion: "0.2.0",
+  license: "https://opensource.org/licenses/MIT", codeRepository: `https://github.com/${REPO}`,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+})}</script>
 `;
 
 let page = await readFile("site/omabox.html", "utf8");
@@ -91,5 +98,8 @@ try {
 }
 
 if (SITE !== HOME) await writeFile(`${OUT}/_headers`, "/*\n  X-Robots-Tag: noindex\n");
+// without these, Pages answers /robots.txt and /sitemap.xml with the page itself
+await writeFile(`${OUT}/robots.txt`, SITE === HOME ? `User-agent: *\nAllow: /\nSitemap: ${HOME}/sitemap.xml\n` : "User-agent: *\nDisallow: /\n");
+if (SITE === HOME) await writeFile(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${HOME}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url></urlset>\n`);
 await writeFile(`${OUT}/index.html`, `${head}${page.slice(0, body)}</head>\n<body>\n${rest}\n</body>\n</html>\n`);
 console.log(`built ${OUT}/index.html for ${SITE}${SITE === HOME ? "" : " (noindex)"}`);
