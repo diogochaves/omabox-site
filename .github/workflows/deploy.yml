@@ -45,21 +45,25 @@ jobs:
       - name: Deploy
         run: npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true
 
-      # Once SITE_URL is omabox.app: attach the domain to the project and point its DNS at it. Both
-      # calls are no-ops when already done.
-      - name: Attach omabox.app
+      # Once SITE_URL is omabox.app: attach omabox.app and www.omabox.app to the project and point their
+      # DNS at it (www only redirects, in functions/_middleware.js). All no-ops when already done.
+      - name: Attach omabox.app and www.omabox.app
         if: vars.SITE_URL == 'https://omabox.app'
         run: |
           api() { curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "$@"; }
           A=https://api.cloudflare.com/client/v4
-          api -X POST "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains" -d '{"name":"omabox.app"}' |
-            jq -c '{success, errors: [.errors[]?.message], status: .result.status}'
           zone=$(api "$A/zones?name=omabox.app" | jq -r '.result[0].id // empty')
-          if [ -z "$zone" ]; then echo "::warning::can't read the omabox.app zone: add a proxied CNAME omabox.app -> $PROJECT.pages.dev by hand"; exit 0; fi
-          if [ "$(api "$A/zones/$zone/dns_records?name=omabox.app" | jq '.result | length')" = 0 ]; then
-            api -X POST "$A/zones/$zone/dns_records" -d "{\"type\":\"CNAME\",\"name\":\"omabox.app\",\"content\":\"$PROJECT.pages.dev\",\"proxied\":true}" |
-              jq -c '{success, errors: [.errors[]?.message]}'
-          else
-            echo "omabox.app already has DNS records:"; api "$A/zones/$zone/dns_records?name=omabox.app" | jq -c '.result[] | {type, content, proxied}'
-          fi
-          sleep 20; api "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/omabox.app" | jq -c '{status: .result.status, verification: .result.verification_data.status}'
+          for d in omabox.app www.omabox.app; do
+            echo "== $d"
+            api -X POST "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains" -d "{\"name\":\"$d\"}" |
+              jq -c '{success, errors: [.errors[]?.message], status: .result.status}'
+            if [ -z "$zone" ]; then echo "::warning::can't read the omabox.app zone: add a proxied CNAME $d -> $PROJECT.pages.dev by hand"; continue; fi
+            if [ "$(api "$A/zones/$zone/dns_records?name=$d" | jq '.result | length')" = 0 ]; then
+              api -X POST "$A/zones/$zone/dns_records" -d "{\"type\":\"CNAME\",\"name\":\"$d\",\"content\":\"$PROJECT.pages.dev\",\"proxied\":true}" |
+                jq -c '{success, errors: [.errors[]?.message]}'
+            else
+              api "$A/zones/$zone/dns_records?name=$d" | jq -c '.result[] | {type, content, proxied}'
+            fi
+          done
+          sleep 20
+          for d in omabox.app www.omabox.app; do api "$A/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/$d" | jq -c "{domain: \"$d\", status: .result.status}"; done

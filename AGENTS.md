@@ -39,8 +39,9 @@ GitHub app.
 
 Launched on 2026-09-29: <https://omabox.app>. The repo variable `SITE_URL` is `https://omabox.app`
 (it sets the site's own address: canonical, link card, robots and sitemap; the page's GitHub links
-always go to diogochaves/omabox), and the workflow's last step keeps the domain attached to the
-project and its DNS pointed at it. The build adds noindex for any other `SITE_URL`. The artifact
+always go to diogochaves/omabox), and the workflow's last step keeps omabox.app and www.omabox.app attached to
+the project and their DNS pointed at it. www only redirects to omabox.app (301), in
+`functions/_middleware.js`; `dist/_routes.json` keeps `/media/*` out of it. The build adds noindex for any other `SITE_URL`. The artifact
 stays where Diogo reviews.
 
 ## Checking a change

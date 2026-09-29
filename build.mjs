@@ -98,6 +98,8 @@ try {
 }
 
 if (SITE !== HOME) await writeFile(`${OUT}/_headers`, "/*\n  X-Robots-Tag: noindex\n");
+// functions/_middleware.js (the www redirect) runs for these paths only, not for the media
+await writeFile(`${OUT}/_routes.json`, JSON.stringify({ version: 1, include: ["/*"], exclude: ["/media/*"] }) + "\n");
 // without these, Pages answers /robots.txt and /sitemap.xml with the page itself
 await writeFile(`${OUT}/robots.txt`, SITE === HOME ? `User-agent: *\nAllow: /\nSitemap: ${HOME}/sitemap.xml\n` : "User-agent: *\nDisallow: /\n");
 if (SITE === HOME) await writeFile(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${HOME}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url></urlset>\n`);
