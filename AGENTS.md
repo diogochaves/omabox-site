@@ -65,7 +65,7 @@ One look per change, then publish; Diogo reviews on the live page.
 - Keep it light: transform/opacity animations, paused off screen, `prefers-reduced-motion`
   respected; no WebGL scenes, no scroll-jacking (see DIRECTION.md, "Lightweight is a feature").
 - Command output on the page must match the real CLI (omabox repo `bin/omabox`; 0.2.0 syntax on
-  its `cua-ideas` branch).
+  its `release-0.2.0` branch).
 - Screenshots come from a box (`site/media/README.md`), never from the real desktop, and carry no
   personal details (user or host names, hardware).
 - Copy: plain, active, specific; say "not a security boundary" wherever safety comes up.

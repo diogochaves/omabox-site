@@ -10,27 +10,30 @@ parts (see `reference/README.md`).
 
 ## What the site has to say
 
-Page order (since 2026-09-28):
+Page order (since 2026-09-29). Nav: What it fixes, How it works, Commands, ai-jail, Compare,
+Install, GitHub (with its mark).
 
 1. **Hero: the promise.** The agent never takes control of your system. No windows appearing out
    of nowhere, your cursor never moves, no focus stolen mid-sentence, no password or keyring
    prompts, no notifications or tray icons left behind, no workspace switches.
-2. **The problem, shown.** The same five agent steps side by side, on your desktop (app on top of
-   your editor, your keystrokes in its app, workspace switch, cursor yanked, pkexec prompt,
-   notifications and tray icons left) and with omabox (your desktop still, all of it in the box).
-   Counters: red on the left, 0 on the right. Plays once when scrolled to, replay button.
-3. **The promise, how:** each thing kept off (crossed out as it comes in), and how. Not a security
-   boundary; points to ai-jail.
+2. **What it fixes, shown** (`#fixes`). The same five agent steps side by side, on your desktop
+   (app on top of your editor, your keystrokes in its app, workspace switch, cursor yanked, pkexec
+   prompt, notifications and tray icons left) and with omabox (your desktop still, all of it in the
+   box). Counters: red on the left, 0 on the right. Plays once when scrolled to, replay button.
+3. **The promise, how** (`#never`, "How it works"): each thing kept off (crossed out as it comes
+   in), and how; then what a box gets and what stays off until you ask. Not a security boundary;
+   points to ai-jail.
 4. **The main idea: parallel boxes, like git worktrees.** A worktree keeps agents' code apart; a
    box keeps their screens, session buses and test runs apart. Each agent session gets its own box
    (named after its repo or worktree plus the session id, e.g. `app-tray-5cc72cdc`), so visual
    checks and desktop tests run side by side without seeing each other.
-5. How an agent drives a box, with all of 0.2.0: `wait` and `--wait`, `windows` and `--window`,
-   covered windows, `shot --fit` + `click --in`, `keys --pass`, click marks and key captions in
-   peek, faster shots, NVIDIA.
-6. How you look inside: peek, interactive mode, the bar widget (a playable copy).
-7. Agents use it on their own: the skill (Claude Code, Codex, OpenCode, pi, Hermes), the opt-in
+5. Agents use it on their own: the skill (Claude Code, Codex, OpenCode, pi, Hermes), the opt-in
    guard, projects unchanged.
+6. **Commands** (`#drive`): the typed terminal and its peek, then the commands agents use most
+   (up/down, run, shot, keys/click, wait, windows), each with a real example, and "And the rest":
+   every other command with one line, plus `up`'s main options. Not "new in 0.2.0": this is the
+   site's first version, so it shows the whole CLI.
+7. How you look inside: peek, interactive mode, the bar widget (a playable copy).
 8. **Better together: ai-jail + omabox.** Praise ai-jail (Fabio Akita, AkitaOnRails): it fences what the agent can touch, omabox decides where it draws. The
    tested recipe (ai-jail 2.2.0): `omabox up; eval "$(omabox env)"; ai-jail --gpu --rw-map
    "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app` runs a jailed app on the box's screen.
@@ -44,7 +47,9 @@ Page order (since 2026-09-28):
      agent itself can read, write and reach. omabox is not a sandbox; ai-jail is, and they stack.
    - **omarchy-in-omarchy** (<https://github.com/jankeesvw/omarchy-in-omarchy>) when you need a whole
      machine (installer, system services, audio, suspend).
-10. What a box gets, install, FAQ, contributors, footer.
+   Cards only: the comparison table said the same things again and was dropped (2026-09-29); its
+   facts (platforms, cost, security boundary) are in the cards.
+10. Install, FAQ, contributors, footer.
 
 Audience: Omarchy users who run coding agents; plugin, theme and app developers on Omarchy; people
 arriving from the computer-use crowd (tell them early that omabox is Omarchy-only).
@@ -104,7 +109,7 @@ aijail.io's plain narrative and compare page as a reference.
 - **The logo is the star:** one mark only. At the top of the page the big pixel mark (with its glow
   and "0.2.0 · for Omarchy") sits in a see-through header; the first 120 px of scroll shrink it into
   the bar's corner, as if into a box, while the bar's background fades in (2026-09-28). It lights up
-  pixel by pixel (click it at the top to replay). Mark geometry (15x15): outer frame with gaps at the top right and bottom left, inner
+  pixel by pixel. Clicked, at any size, it breaks and the page goes back to the very top (2026-09-29): its pixels burst, fall into a heap under it (a different heap each time), blink like loot in a game, vanish, and it powers on again. The wordmark sits 10 px further right at full size so the heap never reaches it (WAAPI transform/opacity on the 75 rects, only while it plays; no measurable GPU cost). Mark geometry (15x15): outer frame with gaps at the top right and bottom left, inner
   square with a 2-row bar. SVG path is in the page (`<symbol id="m">`) and in the omabox repo's
   `assets/`.
 - **Cut frames:** cards, buttons, the install bar, box tiles and avatars have their top-right and
@@ -128,7 +133,7 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI (`bin/omabox` in the omabox repo, `cua-ideas` branch for
+- Command output shown must match the CLI (`bin/omabox` in the omabox repo, `release-0.2.0` branch for
   0.2.0 syntax). `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (window titles
@@ -141,8 +146,8 @@ aijail.io's plain narrative and compare page as a reference.
 
 ## Open
 
-- 0.2.0 isn't released: `cua-ideas` still says "Unreleased" in the CHANGELOG and `VERSION` is
-  0.1.0. The site says 0.2.0 throughout.
+- 0.2.0 is prepared on the omabox repo's `release-0.2.0` branch (CHANGELOG dated 2026-09-29,
+  `VERSION` 0.2.0) but not tagged or merged to main yet. The site says 0.2.0 throughout.
 - A jailed agent driving omabox: planned in omabox issue #16
   (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
 
