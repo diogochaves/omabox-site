@@ -133,26 +133,26 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI (`bin/omabox` in the omabox repo, `release-0.2.0` branch for
-  0.2.0 syntax). `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
+- Command output shown must match the CLI: `bin/omabox` at the `v0.2.0` tag (<https://github.com/diogochaves/omabox/tree/v0.2.0>).
+  The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (window titles
   shortened to `"~"` so no user or host name shows). In a box, `pkexec` prints `pkexec must be
   setuid root` and exits 127: no prompt reaches you.
 - **To verify before going public:** the Cua descriptions (they come from cua.ai's page and
   Diogo's framing, "designed to work beside you"), ai-jail's platforms (Linux, macOS per its site),
-  the omarchy-in-omarchy numbers (from the omabox README table, written 2026-09-24).
+  the omarchy-in-omarchy numbers (from the omabox README table on main, written 2026-09-24).
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open
 
-- 0.2.0 is prepared on the omabox repo's `release-0.2.0` branch (CHANGELOG dated 2026-09-29,
-  `VERSION` 0.2.0) but not tagged or merged to main yet. The site says 0.2.0 throughout.
+- 0.2.0 is released: tag `v0.2.0` on main (5a2d904),
+  <https://github.com/diogochaves/omabox/releases/tag/v0.2.0>. The site says 0.2.0 throughout.
 - A jailed agent driving omabox: planned in omabox issue #16
   (<https://github.com/diogochaves/omabox/issues/16>), a broker on our side, no ai-jail change.
 
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
-- omabox.app is registered (2026-09-28). The site deploys to omabox.pages.dev (noindex) until 0.2.0
-  ships; attach omabox.app on launch day (AGENTS.md, "Hosting").
-- Maybe later: fetch the README/CHANGELOG at a pinned omabox tag in the build.
+- omabox.app is registered (2026-09-28). The site deploys to omabox.pages.dev (noindex) until launch;
+  attach omabox.app on launch day (AGENTS.md, "Hosting").
+- Maybe later: fetch the README/CHANGELOG at the release tag (`v0.2.0`) in the build.
 - Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)
