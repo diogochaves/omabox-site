@@ -241,8 +241,9 @@ aijail.io's plain narrative and compare page as a reference.
 
 - The 0.4.3 update: `UPDATE-0.4.3.md` section 3 is done (2026-10-01); what is left there is the
   package install block, waiting for omacom/omarchy-pkgs#754.
-- Not yet checked: the pop-up peeks in a real browser, and moving between pages inside the artifact
-  viewer.
+- The pop-ups (a box tile's peek, the clip) checked on omabox.app on 2026-10-01: in Diogo's Chrome
+  (they open, fit, close with Esc, no console errors) and in a box's Chromium (the clip plays). Not
+  yet checked: moving between pages inside the artifact viewer.
 - Launched at omabox.app on 2026-09-29 (AGENTS.md, "Hosting"). SEO: the build writes a description,
   canonical, Open Graph and Twitter cards, JSON-LD, `robots.txt` and, for omabox.app only,
   `sitemap.xml` (every page). The omabox repo's website field and README link the site. Google Search
