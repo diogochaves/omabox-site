@@ -10,9 +10,13 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   or `<body>` (the artifact platform wraps it). `<title>`, its links and `<style>` come first.
 - `site/base.css`: what every page shares (tokens, type, cut frames, cards, header, footer, motion).
   Each page's `<style>` has only what it uses.
-- `site/commands.html`, `site/develop.html`, `site/changelog.html`: the other pages, as a `<style>`
-  and a `<main>` only; the build adds the head, header and footer (taken from the home page) and
-  fills their `<!-- markers -->`. `/develop` is written by hand. `/commands` and `/changelog` are
+- `site/how-it-works.html`, `site/commands.html`, `site/develop.html`, `site/compare.html`,
+  `site/changelog.html`, `site/install.html`: the other pages, as a `<style>` and a `<main>` only (a
+  page's `<script>` goes inside its `<main>`); the build adds the head, header, "Keep reading", an
+  install call to action (not on /install) and footer, and fills their `<!-- markers -->`. The nav
+  (between `<!-- nav -->` markers), "Keep reading" (`<section class="sec more">`, one card per line)
+  and the footer are written once, in the home page, and copied from it. Every page but `/commands`
+  and `/changelog` is written by hand. `/commands` and `/changelog` are
   read from the omabox repo at its latest release tag: every command and its help from `bin/omabox`
   (the usage heredoc, not run), the changelog from `CHANGELOG.md`. `site/commands.json` is the
   hand-written half of `/commands`: groups, a line and examples per command (a command missing
@@ -30,15 +34,20 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   way. `/commands` and `/changelog` have no fallback: without GitHub the build stops and the site
   keeps its last deploy. `node build.mjs` (Node 18+, no dependencies; `GITHUB_TOKEN` optional);
   `node build.mjs --preview` writes the other pages into `preview/` (git-ignored) for the artifact.
+- The home page sends links to sections that moved to pages (`/#compare`, `/#jail`, `/#never`...)
+  on to them, so old links keep working (the omabox README links `/#compare`).
 
 ## Publishing
 
-The page lives at <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. To update it from a new
-session: read it first (Artifact `action: "read"` with that `url`), then publish with the same `url`
-and `file_path: site/omabox.html`. The other pages and the shared CSS go in `files`: run
-`node build.mjs --preview`, then pass `{"base.css": "site/base.css", "commands.html":
-"preview/commands.html", "develop.html": "preview/develop.html", "changelog.html":
-"preview/changelog.html"}` (the ones that changed). Pass media only when new or changed
+Draft 5 (the site split into pages, 2026-10-01) is on the branch `draft-5` and lives at
+<https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> until Diogo settles it; draft 4, what omabox.app runs from main, stays at
+<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. To update one from a new session: read it first
+(Artifact `action: "read"` with its `url`), then publish with the same `url` and `file_path:
+site/omabox.html`. The other pages and the shared CSS go in `files`: run `node build.mjs --preview`,
+then pass `{"base.css": "site/base.css", "how-it-works.html": "preview/how-it-works.html",
+"commands.html": "preview/commands.html", "develop.html": "preview/develop.html", "compare.html":
+"preview/compare.html", "changelog.html": "preview/changelog.html", "install.html":
+"preview/install.html"}` (the ones that changed). Pass media only when new or changed
 (`{"media/x.webp": "site/media/x.webp"}`); files left out are kept. Don't publish without `url`
 (that makes a separate artifact) unless Diogo asks for a new draft, as he did for draft 4.
 
@@ -72,6 +81,7 @@ L=$(mktemp -d); cp -r site/media site/base.css preview/*.html $L/
 { echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>'; cat site/omabox.html; echo '</body></html>'; } > $L/index.html
 omabox up -b look --ro-bind $L
 omabox run -b look -d -- chromium --user-data-dir=/tmp/chr --no-first-run --no-default-browser-check --ozone-platform=wayland --app=file://$L/index.html
+# another page: omabox run -b look -- pkill -x chromium, then the same with $L/compare.html
 omabox shot -b look                      # Page_Down with: omabox keys -b look Page_Down
 omabox mode -b look 412x915              # phone width
 omabox gpu -b look 5                     # GPU cost (draft 4: 0% idle and scrolling at 1080p)
@@ -85,7 +95,7 @@ One look per change, then publish; Diogo reviews on the live page.
 - Keep it light: transform/opacity animations, paused off screen, `prefers-reduced-motion`
   respected; no WebGL scenes, no scroll-jacking (see DIRECTION.md, "Lightweight is a feature").
 - Command output on the page must match the real CLI: `bin/omabox` at the omabox repo's latest
-  release tag (`v0.4.3` on 2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.3>). Install
+  release tag (`v0.4.4` on 2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.4>). Install
   steps and README links follow its main branch. The build writes that release's version into every
   `<span class="ver">` and the JSON-LD; the source keeps the last one as the fallback.
 - Screenshots come from a box (`site/media/README.md`), never from the real desktop, and carry no

@@ -1,0 +1,133 @@
+<style>
+/* /compare: when to reach for something else, and ai-jail with omabox */
+.pick { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .pick { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pick .card .in { gap: 10px; }
+.pick .if { font: 500 11.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.pick .then { font: 600 26px/1.1 var(--display); color: var(--ink); }
+.pick .links { display: flex; gap: 16px; flex-wrap: wrap; font: 500 13px var(--mono); }
+.pick .ours { --fc: var(--brand); }
+.pick .ours .then { color: var(--brand); text-shadow: 0 0 18px var(--glow); }
+.dated { font-size: 13px; color: var(--muted); margin-top: 18px; }
+/* better together: an app in ai-jail, drawing on the box's screen */
+.flow { display: grid; gap: 14px; align-items: stretch; margin-bottom: 22px; }
+@media (min-width: 980px) { .flow { grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr) 120px minmax(0, .8fr); align-items: center; } }
+.fence-j { border: 1.5px dashed var(--accent); padding: 18px; display: grid; gap: 10px; background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.fence-j .lbl, .fbox .lbl, .yours .lbl { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.fence-j .lbl { color: var(--accent); }
+.fence-j .proc { justify-self: start; font: 500 12.5px var(--mono); padding: 6px 10px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); }
+.fence-j ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font: 11.5px var(--mono); color: var(--muted); }
+.fence-j li::before { content: "✕ "; color: var(--red); }
+.fence-j li.ok::before { content: "✓ "; color: var(--brand); }
+.wire { position: relative; height: 2px; overflow: hidden; background: var(--line); }
+@media (max-width: 979px) { .wire { width: 2px; height: 34px; justify-self: center; } }
+.wire::after { content: ""; position: absolute; inset: 0 -40px 0 0; background: repeating-linear-gradient(90deg, var(--brand) 0 8px, transparent 8px 20px); animation: wire 1s linear infinite; }
+@media (max-width: 979px) { .wire::after { inset: -40px 0 0 0; background: repeating-linear-gradient(180deg, var(--brand) 0 8px, transparent 8px 20px); animation-name: wirev; } }
+@keyframes wire { to { transform: translateX(-20px); } }
+@keyframes wirev { to { transform: translateY(20px); } }
+.paused .wire::after { animation-play-state: paused; }
+@media (min-width: 980px) { .wirel .wire { width: 100%; } }
+.wirel { display: grid; gap: 6px; justify-items: center; font: 10.5px var(--mono); color: var(--muted); text-align: center; }
+.fbox { --cut: 12px; --fc: var(--brand); --fb: var(--bg-2); filter: drop-shadow(0 0 14px var(--glow)); }
+.fbox .in { display: grid; gap: 10px; padding: 16px; }
+.fbox .lbl { color: var(--brand); }
+.fbox .mini { position: relative; aspect-ratio: 16 / 9; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
+.fbox .mini .w2 { position: absolute; left: 12%; top: 16%; width: 70%; height: 62%; border: 1.5px solid var(--yellow); background: var(--panel-2); font: 10px var(--mono); color: var(--ink); padding: 6px 8px; }
+.fbox .mini .w2 small { display: block; color: var(--muted); }
+.yours { border: 1px solid var(--line); padding: 16px; display: grid; gap: 8px; background: var(--bg-2); }
+.yours .lbl { color: var(--muted); }
+.yours p { font-size: 14px; color: var(--ink-2); }
+.duo { display: grid; gap: 14px; }
+@media (min-width: 900px) { .duo { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.duo .card ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; color: var(--ink-2); font-size: 15px; }
+.duo .jail { --fc: color-mix(in srgb, var(--accent) 70%, transparent); }
+.duo .jail .q { color: var(--accent); }
+.duo .boxc { --fc: color-mix(in srgb, var(--brand) 70%, transparent); }
+.duo .q { font: 500 11.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); }
+.recipe { margin-top: 14px; }
+.recipe .in { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }   /* minmax: its long command scrolls instead of widening the page */
+@media (min-width: 1000px) { .recipe .in { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: start; gap: 12px 28px; } }
+.recipe p { color: var(--ink-2); font-size: 15px; }
+</style>
+<main class="wrap">
+  <section class="page">
+    <div class="head">
+      <p class="tag">Compare</p>
+      <h1>Is omabox what you need?</h1>
+      <p class="lead">It does one thing: keep agents off your desktop while they test on a desktop of their own. If you want
+        something else, these projects are good at it.</p>
+    </div>
+
+    <section class="grp" id="pick">
+      <div class="pick">
+        <div class="card cut ours"><div class="in"><p class="if">Your agents build and test GUI apps, plugins or themes on Omarchy, several at once</p><p class="then">omabox</p>
+          <p>Parallel, invisible Omarchy desktops, up in about 4 s for about 500 MB each, and your own untouched. Omarchy on Linux only, and not a security boundary.</p></div></div>
+        <div class="card cut"><div class="in"><p class="if">You want an agent on your own desktop, beside you, or cloud machines for agents at scale</p><p class="then">Cua</p>
+          <p>Cua's fleets run computer-use agents on cloud Linux, Windows, macOS and Android machines for training and evals, and it now runs sandboxes on your own machine too. Its Driver works on your own macOS, Windows or Linux desktop, through a CLI, MCP or SDKs, and can click and type without taking your cursor or focus where the app allows it (on Hyprland, still experimental and a few apps). omabox does the opposite: it keeps agents off your desktop.</p>
+          <div class="links"><a href="https://cua.ai">cua.ai ↗</a><a href="https://github.com/trycua/cua">github.com/trycua/cua ↗</a></div></div></div>
+        <div class="card cut"><div class="in"><p class="if">You want to limit what the agent itself can read, write and reach</p><p class="then">ai-jail</p>
+          <p>A jail for the agent process, on Linux, macOS and Windows through WSL2: your home, SSH keys and cloud credentials out of reach, the project writable. omabox isn't a sandbox; ai-jail is one, and the two stack.</p>
+          <div class="links"><a href="#jail">Use them together ↓</a><a href="https://aijail.io">aijail.io ↗</a></div></div></div>
+        <div class="card cut"><div class="in"><p class="if">You need a whole machine: the real installer, system services, a reboot</p><p class="then">omarchy-in-omarchy</p>
+          <p>A disposable Omarchy in QEMU/KVM, 8 GB of RAM by default. Heavier: it installs itself once, in about 30 minutes, then boots in about 18 seconds. A real machine, where a box has no system bus.</p>
+          <div class="links"><a href="https://github.com/jankeesvw/omarchy-in-omarchy">github.com/jankeesvw/omarchy-in-omarchy ↗</a></div></div></div>
+      </div>
+      <p class="dated">Checked on 2026-10-01 against each project's own site. They move on their own, so check theirs.</p>
+    </section>
+
+    <section class="grp" id="jail">
+      <p class="tag">Better together</p>
+      <h2 style="margin-top:14px">ai-jail fences the agent in. <span class="hl">omabox keeps its windows out.</span></h2>
+      <p class="lead" style="margin-top:16px"><a href="https://aijail.io">ai-jail</a>, by Fabio Akita (<a href="https://github.com/akitaonrails">AkitaOnRails</a>),
+        is the sandbox we point people to. It runs an agent inside bubblewrap, Landlock and seccomp on Linux (and Windows through
+        WSL2), and sandbox-exec on macOS. It does carefully the one thing omabox doesn't do: limit what the agent can read, write
+        and reach. The two answer different questions, so they stack.</p>
+      <div class="flow" id="flow" aria-label="An app runs inside ai-jail, and its only way to a screen is the box's Wayland socket; your desktop is untouched">
+        <div class="fence-j"><span class="lbl">ai-jail · the fence</span><span class="proc">./build/app</span>
+          <ul><li class="ok">your project, at its real path</li><li>~/.ssh, ~/.aws, ~/.gnupg</li><li>your shell's tokens</li><li>network, unless you allow it</li></ul></div>
+        <div class="wirel"><div class="wire"></div><span>one Wayland socket:<br>the box's</span></div>
+        <div class="fbox cut"><div class="in"><span class="lbl">omabox · its screen</span><div class="mini"><div class="w2">./build/app<small>drawn in the box</small></div></div></div></div>
+        <div class="wirel" aria-hidden="true"><span style="font-size:22px;color:var(--red)">✕</span><span>nothing reaches</span></div>
+        <div class="yours"><span class="lbl">Your desktop</span><p>No window, no focus change, no prompt.</p></div>
+      </div>
+      <div class="duo">
+        <div class="card cut jail"><div class="in"><p class="q">ai-jail answers: what can it touch?</p><h3>A fence around the agent</h3>
+          <ul><li>Your project read-write at its real path, <code>/usr</code> read-only</li><li>A fresh home: no <code>~/.ssh</code>, <code>~/.aws</code>, <code>~/.gnupg</code> or browser profiles</li><li>The environment cut to an allowlist, so tokens stay in your shell</li><li>Network, display, GPU and Docker off until you allow them</li></ul>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font:500 13px var(--mono)"><a href="https://aijail.io">aijail.io ↗</a><a href="https://github.com/akitaonrails/ai-jail">github.com/akitaonrails/ai-jail ↗</a></div></div></div>
+        <div class="card cut boxc"><div class="in"><p class="q">omabox answers: where does it draw?</p><h3>A desktop of its own</h3>
+          <ul><li>Its own screen, pointer and keyboard</li><li>Its own session bus, tray, notifications and keyring</li><li>Your cursor, focus and workspaces untouched</li><li>Not a security boundary: that part is ai-jail's</li></ul></div></div>
+      </div>
+      <div class="card cut recipe"><div class="in">
+        <div style="display:grid;gap:10px"><h3>Try a build you don't trust yet</h3>
+          <p>A contributor's branch, an app you just downloaded: run it in ai-jail, and give it the box's screen as its only display.
+            ai-jail keeps it out of your home, keys and network; its window opens in the box, where <code>omabox shot</code> and
+            <code>peek</code> see it.</p></div>
+        <div><pre class="code"><span class="p">$ </span>omabox up
+<span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
+<span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app</pre>
+          <p class="caption">Tested with ai-jail 2.6.2 and omabox 0.4.3 on Linux.</p></div>
+      </div></div>
+      <div class="card cut recipe"><div class="in">
+        <div style="display:grid;gap:10px"><h3>Or jail the agent itself</h3>
+          <p>A jail can't start a box on its own, so its <code>omabox</code> hands each command to a broker outside, with no
+            change to ai-jail. <code>up</code>, <code>shot</code>, <code>keys</code>, <code>click</code> and the rest work in the
+            jail as outside. The broker keeps a jail's boxes to what the jail has: no network when the jail has none, only its own
+            project, only the boxes it started, all gone when it exits.</p></div>
+        <div><pre class="code"><span class="p">$ </span>omabox broker on   <span class="o"># prints the lines to add to ~/.ai-jail</span>
+<span class="p">$ </span>ai-jail claude</pre>
+          <p class="caption">Tested with ai-jail 2.2.1 and 2.6.2 and omabox 0.4.4 on Linux.</p></div>
+      </div></div>
+      <p class="note">Not for a jailed agent: <code>omabox host</code>, <code>peek</code>, interactive boxes, the guard and
+        <code>config</code> changes. Driving a box is running code in it, so the broker is what keeps a box from being a way out
+        of the jail.</p>
+    </section>
+  </section>
+
+<script>
+(() => {
+  /* the wire's dashes run only while you can see them */
+  const flow = document.getElementById("flow");
+  new IntersectionObserver(es => flow.classList.toggle("paused", !es[0].isIntersecting)).observe(flow);
+})();
+</script>
+</main>

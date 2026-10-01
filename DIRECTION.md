@@ -4,11 +4,42 @@ The site for [omabox](https://github.com/diogochaves/omabox), launched with omab
 can find it. The domain is `omabox.app` (omabox.com belongs to someone else). This folder is its own project on purpose: contributors to
 omabox never have to deal with site code.
 
-The page we iterate on is **`site/omabox.html`** (draft 4), published as a claude.ai artifact:
+The page we iterate on is **`site/omabox.html`** (draft 5 on the branch `draft-5`, <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d>; draft 4 on main), published as a claude.ai artifact:
 <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. Older drafts are in `reference/`, to mine for
 parts (see `reference/README.md`).
 
+## Draft 5 (2026-10-01): the site split into pages, like aijail.io
+
+Diogo, after testing the four pages: the new pages had no clear way in (the top menu only jumped
+within the home page), and the home page was too long. Modelled on <https://aijail.io>: its nav is
+pages only (Do I need it?, How it works, Compare, Configure, Security, Download, Install); its home
+page is a short tour where each section is a teaser that links to the page with the whole story;
+every page ends with "Keep reading" and the same call to install.
+
+Agreed: Diogo left the structure to us; omabox.app stays on draft 4 (main) until draft 5 is settled.
+Draft 5 is on the branch `draft-5`, published as its own artifact (AGENTS.md, "Publishing").
+
+- **Nav, on every page:** How it works · Commands · Develop · Compare · Changelog · Install · GitHub.
+  Pages only; under 1000 px a Menu button (a `<details>`, no script). Written once in the home page.
+- **Home (`/`), direct:** hero (unchanged); What it fixes (the side-by-side); How it works in four
+  steps (reach for a box, `up`, work in it, gone with the agent), linking to /how-it-works and
+  /commands; parallel boxes (the lanes and `omabox ls`); What it is not (not a sandbox, not for your
+  own desktop, not a whole machine, only for Omarchy), linking to /compare and /install; Keep reading
+  (a card per page); FAQ; install and Built by; footer.
+- **`/how-it-works`:** what it keeps off your desktop and how; what a box gets and what stays off
+  until you ask; agents use it on their own (skill, guard, saves); one box per session; look inside
+  (peek, interactive, the playable widget).
+- **`/commands`:** the typed terminal and its peek, and "Your projects stay as they are", above the
+  generated list.
+- **`/compare`:** the four cards, then ai-jail with omabox (the diagram, the two recipes, the broker).
+- **`/install`:** what you need (the GPU as "AMD, Intel or NVIDIA", Diogo 2026-10-01: no models or
+  driver versions on the site), install and check, what setup does, update, remove, what a box can't
+  do. Follows the omabox README on main.
+- `/develop` and `/changelog` as before. Old anchors (`/#compare`, `/#jail`...) go to the new pages.
+
 ## What the site has to say
+
+(Draft 4, what omabox.app runs until draft 5 is settled.)
 
 Four pages since 2026-10-01 (Decisions 2026-10-01): the home page tells the story; `/commands`,
 `/develop` and `/changelog` hold the rest. The other pages' nav: Overview, Commands, Develop,
@@ -44,7 +75,7 @@ Install, GitHub (with its mark).
    tested recipe (ai-jail 2.2.1, omabox 0.4.3, re-run 2026-10-01): `omabox up; eval "$(omabox env)";
    ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app` runs a jailed app
    on the box's screen. Since omabox 0.3.0 a jailed *agent* drives boxes of its own through
-   `omabox broker on` (wording from the omabox README, "Related projects"; not yet run by us), with
+   `omabox broker on` (run by us on 2026-10-01 with ai-jail 2.2.1 and 2.6.2, omabox 0.4.4), with
    what it can't do (`host`, `peek`, interactive boxes, guard, config) said plainly.
 9. **Is omabox what you need?** Link out generously and honestly:
    - **Cua** (<https://cua.ai>, <https://github.com/trycua/cua>) when you want an agent to drive
@@ -89,10 +120,9 @@ reference parts went stale with it (the checklist: `UPDATE-0.4.3.md`). Agreed wi
   ai-jail broker, install, skill, widget keys, keys-to-box, `clip`); then the pages (done
   2026-10-01); then re-check the claims in `UPDATE-0.4.3.md` section 3.
 - **How the pages came out** (2026-10-01): `/commands` lists all 31 commands of 0.4.3 in six groups,
-  each with a line, examples and its exact synopsis. omabox's main branch already has help per
-  command (`@` lines in the usage heredoc); 0.4.3 doesn't, so for now the rest of `omabox help`
-  shows once, as "The details", and each command gets its own `omabox help CMD` text by itself
-  once a release has it. `/changelog` renders `CHANGELOG.md` at the release. `/develop` is plugins,
+  each with a line, examples and its exact synopsis. 0.4.3 had no help per command, so the rest of
+  `omabox help` showed once, as "The details"; since 0.4.4 (`@` lines in the usage heredoc) each
+  command shows its own `omabox help CMD` text (29 of 31), and "The details" is gone. `/changelog` renders `CHANGELOG.md` at the release. `/develop` is plugins,
   themes and apps (the stock bar, plugin diagnostics, `ls --json`, saves, `run -d --replace`,
   `--systemd`, the skill), then Hyprland and Omarchy themselves, and what a box can't test.
 
@@ -181,30 +211,43 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.4.3` on
-  2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.3>).
+- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.4.4` on
+  2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.4>).
   The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (to re-capture
   from 0.4.3, or confirm unchanged: `UPDATE-0.4.3.md` section 3) (window titles
   shortened to `"~"` so no user or host name shows). In a box, `pkexec` prints `pkexec must be
   setuid root` and exits 127: no prompt reaches you.
-- Claims about other projects were checked against their own sites and READMEs on 2026-09-29: Cua
-  is mainly cloud fleets for training and evals, and its Driver works beside you on your desktop
-  (experimental on Hyprland, a few apps); ai-jail runs on Linux, macOS and Windows through WSL2
-  (2.2.1 is current; the recipe was re-run with 2.2.1 and omabox 0.4.3 on 2026-10-01); omarchy-in-omarchy installs itself in about
-  30 minutes once, then boots in about 18 s (its README doesn't mention audio or suspend).
+- Claims about other projects were re-checked against their own sites and READMEs on 2026-10-01:
+  Cua is mainly cloud fleets for training and evals, now with local sandboxes too, and its Driver
+  works beside you on your desktop (experimental on Hyprland and Omarchy, LibreOffice Calc and
+  Inkscape; its README now leads with Driver sessions on an Omarchy desktop); ai-jail runs on Linux,
+  macOS and Windows through WSL2 (2.6.2 is current; the app recipe passes with 2.6.2 and omabox
+  0.4.3); omarchy-in-omarchy installs itself in about 30 minutes once, then boots in about 18 s,
+  8 GB of RAM by default (its README doesn't mention audio or suspend).
+- The ai-jail broker (`omabox broker on`) broke with ai-jail 2.6.2, which passes bwrap's options
+  through a memfd (`--args FD`, ai-jail #147) instead of its command line, where the broker read the
+  jail's limits. omabox 0.4.4 (2026-10-01) reads them from that memfd; checked with ai-jail 2.2.1
+  and 2.6.2 (a jailed agent ran up, run -d, windows, shot, lua, ls, down; host, peek, interactive
+  boxes, guard and clip refused).
+- A box (0.4.3, default `up`) measured on 2026-10-01: up in 4.2 s every time, 400–500 MB (PSS). The
+  site says "about 500 MB, up in about 4 s".
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open
 
-- The 0.4.3 update: `UPDATE-0.4.3.md` sections 3 (claims to re-check) and 4 (these files) are
-  still open; the pages are done (Decisions 2026-10-01).
-
-- Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
-- Launched at omabox.app on 2026-09-29, with omabox 0.2.0 out (AGENTS.md, "Hosting").
-- SEO: the build writes a description, canonical, Open Graph and Twitter cards, JSON-LD
-  (SoftwareApplication), `robots.txt` (Disallow on the preview) and, for omabox.app only,
-  `sitemap.xml`. On launch: submit omabox.app to Google Search Console, and link it from the omabox
-  repo's website field and README.
-- Light theme? (Dark only was a choice in drafts 3-4; revisit if asked.)
+- **Draft 5 waits for Diogo's review** (its artifact, AGENTS.md "Publishing"); then merge `draft-5`
+  into main, which deploys it. After that, the omabox README's `omabox.app/#compare` link can point
+  to `/compare` (the old anchor redirects meanwhile).
+- The 0.4.3 update: `UPDATE-0.4.3.md` section 3 is done (2026-10-01); what is left there is the
+  package install block, waiting for omacom/omarchy-pkgs#754.
+- A newer clip: the omabox README leads with `docs/media/clip-0.2.0.mp4`; the site still plays the
+  55 s demo. Swap only if Diogo wants.
+- Not yet checked: the pop-up peeks in a real browser, and moving between pages inside the artifact
+  viewer.
+- Launched at omabox.app on 2026-09-29 (AGENTS.md, "Hosting"). SEO: the build writes a description,
+  canonical, Open Graph and Twitter cards, JSON-LD, `robots.txt` and, for omabox.app only,
+  `sitemap.xml` (every page). The omabox repo's website field and README link the site. Google Search
+  Console: Diogo's step, once; the sitemap then brings in new pages by itself.
+- Light theme? (Dark only was a choice in drafts 3-5; revisit if asked.)

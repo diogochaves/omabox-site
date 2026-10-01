@@ -86,19 +86,19 @@ Installing:
 
 ## 3. Re-check before saying it again
 
-- [ ] "about 500 MB, up in 3–4 s" (parallel section, Compare card): measure a 0.4.3 box.
-- [ ] Hardware line: README now says AMD and Intel iGPUs, RTX 4070 SUPER (615.71.09), RTX 5070 Ti
+- [x] "about 500 MB, up in 3–4 s" (parallel section, Compare card): measure a 0.4.3 box. (2026-10-01: 4.2 s, 400–500 MB; now "about 4 s")
+- [x] (Diogo: "AMD, Intel or NVIDIA", no models) Hardware line: README now says AMD and Intel iGPUs, RTX 4070 SUPER (615.71.09), RTX 5070 Ti
   (610.57.04, open module). The site's FAQ names the 4070 driver only.
-- [ ] ai-jail (the app recipe re-run with ai-jail 2.2.1 and omabox 0.4.3 on 2026-10-01, passed; the
+- [x] (recipe passes with 2.6.2; the broker fails with 2.6.2, works with 2.2.1 and 2.6.1: DIRECTION.md) ai-jail (the app recipe re-run with ai-jail 2.2.1 and omabox 0.4.3 on 2026-10-01, passed; the
   broker still to run): DIRECTION.md says 2.2.1 is current and the page says the recipe was tested with 2.2.0. Check aijail.io /
   their releases, and re-run the recipe (and the broker) with omabox 0.4.3 so the caption can say so.
-- [ ] Cua and omarchy-in-omarchy claims ("Written in September 2026"): re-read their pages; update the
+- [x] (2026-10-01: they hold; Cua now has local sandboxes too) Cua and omarchy-in-omarchy claims ("Written in September 2026"): re-read their pages; update the
   date line if anything moved.
-- [ ] The Commands terminal output was captured from a 0.2.0 box (2026-09-28). Re-capture from 0.4.3
+- [x] (re-captured from 0.4.3: only `keys --wait` adds a detail) The Commands terminal output was captured from a 0.2.0 box (2026-09-28). Re-capture from 0.4.3
   (window titles shortened to `"~"`) or confirm nothing it shows changed. `omabox ls` columns are
   unchanged (`NAME MODE SIZE STATE NET IDLE PLUGINS`), idle default still 2h.
-- [ ] Screenshots in `site/media/`: still representative of the 0.4.x widget and boxes?
-- [ ] Contributors: only btsouth and diogochaves on the page; the build fetches them, so check the
+- [x] (still current; the omabox README now leads with `clip-0.2.0.mp4`, a newer clip than the 55 s demo) Screenshots in `site/media/`: still representative of the 0.4.x widget and boxes?
+- [x] (matches) Contributors: only btsouth and diogochaves on the page; the build fetches them, so check the
   hardcoded fallback list still matches.
 
 ## 4. Site files that pin 0.2.0

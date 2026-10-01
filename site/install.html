@@ -1,0 +1,89 @@
+<style>
+/* /install: what you need, install and check, update, remove (following the omabox README on main) */
+.inst { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .inst { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); } }
+.inst ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); font-size: 15px; }
+.inst .card p { font-size: 15px; }
+.lim { margin: 0; padding-left: 18px; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; max-width: 56em; }
+</style>
+<main class="wrap">
+  <section class="page">
+    <div class="head">
+      <p class="tag">Install</p>
+      <h1>Three minutes, then your agents <span class="hl">take it from there.</span></h1>
+      <p class="lead">omabox installs from its git repository, into your home. It asks for <code>sudo</code> only to install
+        packages it needs that you don't have yet.</p>
+    </div>
+
+    <section class="grp" id="need">
+      <h2>What you need</h2>
+      <div class="inst" style="margin-top:18px">
+        <div class="card cut"><div class="in"><h3>Your machine</h3><ul>
+          <li>Omarchy 4 on Arch, with Hyprland 0.56 or later</li>
+          <li>A GPU: AMD, Intel or NVIDIA</li>
+          <li>One of the agents the skill is installed for, if you want them to use it on their own: Claude Code, Codex, OpenCode, pi or Hermes</li></ul></div></div>
+        <div class="card cut"><div class="in"><h3>On NVIDIA</h3>
+          <p>Headless boxes on NVIDIA, and the confirm-close setting, need a fix to aquamarine (Hyprland's backend library) until a
+            release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it
+            privately inside the clone; your system's copy isn't touched, and everything else runs on it.</p>
+          <p>An interactive box renders on the GPU your desktop renders on. With several GPUs, point a headless box at one with
+            <code>OMABOX_RENDER_NODE</code>.</p></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="install">
+      <h2>Install and check</h2>
+      <div class="inst" style="margin-top:18px">
+        <div class="card cut"><div class="in"><h3>Install</h3>
+          <pre class="code"><span class="p">$ </span>git clone https://github.com/diogochaves/omabox && cd omabox
+<span class="p">$ </span>./install.sh           <span class="o"># asks about the bar widget and the guard</span>
+<span class="p">$ </span>./install.sh --check   <span class="o"># then starts a box, screenshots it, takes it down</span></pre>
+          <p><code>install.sh</code> installs any missing packages, builds the aquamarine fix, then runs <code>omabox setup</code>.</p></div></div>
+        <div class="card cut"><div class="in"><h3>What setup does</h3><ul>
+          <li>Links <code>~/.local/bin/omabox</code></li>
+          <li>Puts the agent skill wherever Omarchy puts its own skills (<code>~/.agents</code>, <code>~/.claude</code>, <code>~/.codex</code>, <code>~/.pi/agent</code>, <code>~/.hermes</code>)</li>
+          <li>Links the bar widget, and asks whether to put it in your bar</li>
+          <li>Asks whether to turn on the <a href="how-it-works.html#agents">agent guard</a></li></ul>
+          <p>Later, by hand: <code>omarchy plugin enable chaves.omabox</code>, <code>omabox guard on</code>.</p></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="update">
+      <h2>Update and remove</h2>
+      <div class="inst" style="margin-top:18px">
+        <div class="card cut"><div class="in"><h3>Update</h3>
+          <pre class="code"><span class="p">$ </span>git pull && ./install.sh</pre>
+          <p>Run it after a Hyprland upgrade too. <code>omabox --version</code> says which aquamarine boxes use. After an
+            upgrade the bar runs the old widget until the shell restarts; its panel says so. What changed in each release is in the
+            <a href="changelog.html">changelog</a>.</p></div></div>
+        <div class="card cut"><div class="in"><h3>Remove</h3>
+          <pre class="code"><span class="p">$ </span>omabox down --all                         <span class="o"># every box</span>
+<span class="p">$ </span>omabox setup --remove                     <span class="o"># guard and broker off, widget off, links gone</span>
+<span class="p">$ </span>rm -rf ~/.config/omabox ~/.cache/omabox   <span class="o"># settings, and box HOMEs a crash left behind</span>
+<span class="p">$ </span>rm -rf ~/.local/share/omabox              <span class="o"># saves, if you made any</span></pre>
+          <p>Run <code>setup --remove</code> before you delete the clone: once omabox is gone there is no <code>guard off</code>
+            left to run. Then delete the clone. The packages <code>install.sh</code> added stay; it printed them as
+            <code>missing:</code> if there were any. The <a href="https://github.com/diogochaves/omabox#install">README</a> has
+            the details.</p></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="limits">
+      <h2>What a box can't do</h2>
+      <p class="lead">Worth knowing before you hand it a task.</p>
+      <ul class="lim">
+        <li>Apps that need system services over the system bus (disks, NetworkManager, bluetooth, power) open with errors or not
+          at all: a box has no system bus, by design.</li>
+        <li>No real hardware: monitors, HDR and VRR, input devices, audio, suspend and lock never run in a box. For the
+          installer, system services or a reboot, <a href="compare.html#pick">a whole machine in a VM</a> is the tool.</li>
+        <li>It is not a security boundary: it shares your kernel, GPU and, by default, your network. For a fence around the
+          agent, use <a href="compare.html#jail">ai-jail</a> with it.</li>
+        <li>Of the agents the skill is installed for, Claude Code and OpenCode were checked end to end; Codex, pi and Hermes find
+          the skill.</li>
+      </ul>
+      <p class="note">Something didn't work on your machine? Run <code>./install.sh --check</code> and
+        <a href="https://github.com/diogochaves/omabox/issues/new">tell us what happened</a>. Another GPU, several monitors or
+        a config nothing like ours is the test we don't have.</p>
+    </section>
+  </section>
+</main>

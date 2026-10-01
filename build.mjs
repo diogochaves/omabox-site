@@ -34,15 +34,24 @@ const PAGES = [
     title: "omabox: desktops for AI agents on Omarchy",
     desc: "omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel. Your desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts.",
     card: "A whole Omarchy desktop for every AI agent, invisible and in parallel. Yours stays untouched." },
+  { src: "how-it-works.html", out: "how-it-works.html", path: "/how-it-works", name: "How it works",
+    title: "How omabox works: a desktop of its own for every agent",
+    desc: "What an omabox box keeps off your desktop and how, what a box gets, one box per agent session, and how you look inside one." },
   { src: "commands.html", out: "commands.html", path: "/commands", name: "Commands",
     title: "omabox commands: every command and option",
     desc: "Every omabox command, its options and examples, read from omabox help at the latest release." },
   { src: "develop.html", out: "develop.html", path: "/develop", name: "Develop",
     title: "Develop for Omarchy with omabox",
     desc: "Test Omarchy shell plugins, themes and apps, and changes to Hyprland or Omarchy itself, in a box instead of on your desktop." },
+  { src: "compare.html", out: "compare.html", path: "/compare", name: "Compare",
+    title: "omabox, ai-jail, Cua and omarchy-in-omarchy compared",
+    desc: "omabox is not a security boundary. When to pair it with ai-jail, and when Cua or omarchy-in-omarchy is what you need instead." },
   { src: "changelog.html", out: "changelog.html", path: "/changelog", name: "Changelog",
     title: "omabox changelog",
     desc: "What changed in each omabox release." },
+  { src: "install.html", out: "install.html", path: "/install", name: "Install",
+    title: "Install omabox",
+    desc: "What omabox needs, how to install and check it, update it and remove it." },
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -246,15 +255,23 @@ const fonts = pick(/<link rel="preconnect"[^]*?<link rel="stylesheet" href="base
 const sprite = pick(/<svg width="0" height="0"[^]*?<\/svg>/, "<svg> sprite");
 const ghMark = pick(/<svg viewBox="0 0 16 16"[^]*?<\/svg>/, "GitHub mark");
 const others = PAGES.filter(p => !p.home);
-const pagesRow = cur => `<nav class="pages" aria-label="Pages"><a href="index.html">Overview</a>${others.map(p =>
-  `<a href="${p.out}"${p === cur ? ' aria-current="page"' : ""}>${p.name}</a>`).join("")}</nav>`;
+// The nav (a row on wide screens, a menu on narrow ones) and "Keep reading" are written once, in the
+// home page; each other page gets them with its own link marked, or left out.
+const nav = pick(/<!-- nav[^>]*-->[^]*?<!-- \/nav -->/, "<!-- nav --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
+const more = pick(/ {2}<section class="sec more"[^]*?<\/section>/, "Keep reading section");
 const header = cur => `<header class="top">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="omabox, the home page"><span class="bm static"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true"><use href="#m"/></svg></span><span class="bw" aria-hidden="true">omabox</span></a>
-    <nav aria-label="Pages"><a href="index.html">Overview</a>${others.map(p =>
-      `<a href="${p.out}"${p === cur ? ' class="here" aria-current="page"' : ""}>${p.name}</a>`).join("")}<a href="index.html#install">Install</a><a class="gh" href="https://github.com/${REPO}">${ghMark}GitHub</a></nav>
+    ${nav.replaceAll(`href="${cur.out}"`, `href="${cur.out}" aria-current="page"`)}
   </div>
 </header>`;
+const ending = cur => `${more.replace(new RegExp(`\\n[^\\n]*href="${cur.out}"[^\\n]*`), "")}${cur.out === "install.html" ? "" : `
+  <section class="sec get">
+    <div class="head"><p class="tag">Install</p><h2>Give every agent a desktop of its own.</h2>
+      <p class="lead">Omarchy 4 with Hyprland 0.56 or later, and a GPU. Three minutes, then your agents take it from there.</p></div>
+    <pre class="code"><span class="p">$ </span>git clone https://github.com/${REPO} &amp;&amp; cd omabox &amp;&amp; ./install.sh</pre>
+    <div class="ctas"><a class="btn solid" href="install.html">Install guide</a><a class="btn gh" href="https://github.com/${REPO}">${ghMark}GitHub</a></div>
+  </section>`}`;
 const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^]*?<\/pre>/, "");
 
 const notes = JSON.parse(await readFile("site/commands.json", "utf8"));
@@ -265,8 +282,7 @@ const generated = {
 const fill = (html, page) => {
   html = html.replaceAll(/(<span class="ver">)[^<]+/g, `$1${version}`)
     .replaceAll("<!-- release-url -->", `https://github.com/${REPO}/releases/tag/v${version}`)
-    .replaceAll("<!-- changelog-url -->", `https://github.com/${REPO}/blob/v${version}/CHANGELOG.md`)
-    .replaceAll("<!-- pages -->", pagesRow(page));
+    .replaceAll("<!-- changelog-url -->", `https://github.com/${REPO}/blob/v${version}/CHANGELOG.md`);
   for (const [k, v] of Object.entries(generated[page.src] || {})) {
     if (!html.includes(`<!-- ${k} -->`)) throw new Error(`site/${page.src}: no <!-- ${k} --> marker`);
     html = html.replace(`<!-- ${k} -->`, v);
@@ -300,7 +316,7 @@ for (const page of PAGES) {
   } else {
     const src = fill(await readFile(`site/${page.src}`, "utf8"), page);
     const style = src.match(/<style>[^]*?<\/style>/)?.[0] || "";
-    const main = src.slice(src.indexOf("<main")).replace(/<\/main>\s*$/, `${footer}\n</main>`);
+    const main = src.slice(src.indexOf("<main")).replace(/<\/main>\s*$/, `${ending(page)}\n\n${footer}\n</main>`);
     doc = `${head(page)}${fonts}\n${style}\n</head>\n<body>\n${sprite}\n\n${header(page)}\n\n${main}\n</body>\n</html>\n`;
   }
   await writeFile(`${OUT}/${page.out}`, links(doc));

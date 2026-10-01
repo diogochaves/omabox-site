@@ -22,16 +22,113 @@
 .cmd details .code { font-size: 12px; margin-top: 8px; }
 .names { margin-top: 18px; }
 .help { font-size: 12px; max-height: 70vh; overflow: auto; }
+/* an agent drives its box: the typed terminal and its peek */
+.drive { display: grid; gap: 22px; align-items: start; }
+@media (min-width: 1000px) { .drive { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.win { --cut: 12px; --fb: var(--bg-2); }
+.win .th { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 12px; border-bottom: 1px solid var(--line); font: 11.5px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; }
+.win .th button { background: none; border: 0; color: var(--muted); cursor: pointer; font: inherit; padding: 0; }
+.win .th button:hover { color: var(--ink); }
+.win.box { --fc: var(--brand); }
+.win.box .th { background: color-mix(in srgb, var(--brand) 16%, var(--panel)); color: var(--ink); }
+.tty { margin: 0; padding: 14px 16px; height: 400px; overflow: hidden; font: 12.5px/1.65 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--ink); }
+.tty .p { color: var(--brand); }
+.tty .o { color: var(--muted); }
+.tty .ok { color: var(--brand); }
+.cursor { display: inline-block; width: .6em; height: 1.15em; vertical-align: -.22em; background: var(--ink); }
+.typing .cursor { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.pk { position: relative; aspect-ratio: 16 / 9; background: var(--bg); }
+.pk img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pk .empty { position: absolute; inset: 0; display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
+.pk .mk { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border: 2px solid var(--yellow); border-radius: 50%; box-shadow: 0 0 12px var(--yellow); }
+.pk .mk::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; background: var(--yellow); border-radius: 50%; }
+.pk .mk:not([hidden]) { animation: mk 1.2s ease-out 2; }
+@keyframes mk { 0% { transform: scale(.4); opacity: 0; } 30% { opacity: 1; } 100% { transform: none; } }
+.pk .kc { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); font: 12px var(--mono); color: #fff; background: rgb(0 0 0 / .7); padding: 3px 9px; border: 1px solid var(--yellow); white-space: nowrap; }
+.map { width: 100%; border-collapse: collapse; font-size: 14px; }
+.map th { text-align: left; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
+.map td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.map td code { white-space: normal; word-break: break-word; }
+.scrollx { overflow-x: auto; }
+.top2 { display: grid; gap: 14px; margin-top: 22px; }
 </style>
 <main class="wrap">
   <section class="page">
     <div class="head">
       <p class="tag">Commands</p>
       <h1>Every omabox command.</h1>
-      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">0.4.3</span></a> when this
+      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">0.4.4</span></a> when this
         site was built, so the options match the omabox you install.</p>
-      <!-- pages -->
     </div>
+
+    <section class="grp" id="drive">
+      <h2>The agent drives its box the way you drive yours</h2>
+      <p class="lead">Launch, type, click, wait and look, with commands that report what happened. Peek shows where the agent
+        clicks and what it types, over the view only, never in its screenshots.</p>
+      <div class="drive">
+        <div class="win cut"><div class="in"><div class="th"><span>claude · ~/code/app-tray</span><button type="button" id="replay">↻ replay</button></div><pre class="tty" id="tty" aria-live="off"></pre></div></div>
+        <div class="win box cut"><div class="in"><div class="th"><span>peek · app-tray-5cc72cdc</span><span id="livetag">no box</span></div>
+          <div class="pk"><div class="empty" id="empty">no box up yet</div><img id="pkimg" alt="" hidden width="1280" height="720"><span class="mk" id="mk" hidden style="left:31%;top:28%"></span><span class="kc" id="kc" hidden></span></div></div></div>
+      </div>
+      <div class="top2">
+        <div class="card cut"><div class="in"><h3>Your projects stay as they are</h3>
+          <p>The skill maps what your project's instructions say to the same thing in a box.</p>
+          <div class="scrollx"><table class="map"><thead><tr><th>Your project says</th><th>The agent runs</th></tr></thead><tbody>
+            <tr><td><code>./build/app</code></td><td><code>omabox run -d -- ./build/app</code></td></tr>
+            <tr><td><code>grim out.png</code></td><td><code>omabox shot -o out.png</code></td></tr>
+            <tr><td><code>hyprctl -j clients</code></td><td><code>omabox hyprctl -j clients</code></td></tr>
+            <tr><td><code>ctest --test-dir build</code></td><td><code>omabox run -- ctest --test-dir build</code></td></tr>
+            <tr><td><code>omarchy-theme-set gruvbox</code></td><td><code>omabox run -- omarchy-theme-set gruvbox</code></td></tr>
+          </tbody></table></div></div></div>
+      </div>
+    </section>
+
     <!-- commands -->
   </section>
+
+<script>
+(() => {
+  /* the terminal: an agent drives its box; typed once when you get there */
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const motion = matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const tty = $("#tty"), img = $("#pkimg"), empty = $("#empty"), mk = $("#mk"), kc = $("#kc"), liveTag = $("#livetag");
+  function setPeek(what) {
+    const src = what === "term" ? "media/term-tokyo-night.webp" : what === "desk" ? "media/desktop.webp" : null;
+    img.hidden = !src; empty.hidden = !!src; if (src) img.src = src;
+    liveTag.textContent = src ? "● live" : "no box";
+  }
+  /* real 0.4.3 output (the window title shortened) */
+  const shotPath = "/tmp/omabox-app-tray-5cc72cdc-191016-233.png";
+  const caption = t => { kc.textContent = t; kc.hidden = false; clearTimeout(caption.t); caption.t = setTimeout(() => { kc.hidden = true; }, 1800); };
+  const script = [
+    { cmd: "omabox up", out: "omabox: box 'app-tray-5cc72cdc' up (1920x1080@60) in /run/user/1000/omabox/app-tray-5cc72cdc", then: () => setPeek("desk") },
+    { cmd: "omabox keys super+return", then: () => caption("super+return") },
+    { cmd: "omabox wait window foot --focused", out: 'satisfied: window foot focused after 0.16s: 0x615039f77f80 foot "~" at 12,49 1896x1019, focused', ok: 1 },
+    { cmd: "omabox keys --wait -t fastfetch Return", out: "satisfied: settled after 0.54s (last change 0.23s at 10,47 1900x1023; ignored 64x1 at 944,552: cursor)", ok: 1, then: () => { setPeek("term"); caption("fastfetch ⏎"); } },
+    { cmd: "omabox shot --window foot --fit 1280", out: `omabox: window 0x615039f77f80 foot "~" 1896x1019 at 12,49, workspace 1; image 1280x687 (x1.48); click with --in ${shotPath}\n${shotPath}` },
+    { cmd: `omabox click --in ${shotPath} 400 200`, then: () => { mk.hidden = true; void mk.offsetWidth; mk.hidden = false; } },
+  ];
+  let run = 0;
+  async function play() {
+    const me = ++run; let done = "";
+    setPeek(null); mk.hidden = true; kc.hidden = true;
+    const line = c => `<span class="p">❯</span> ${esc(c)}`;
+    const paint = cur => { tty.innerHTML = done + (cur !== null ? `${line(cur)}<span class="cursor"></span>` : ""); tty.scrollTop = tty.scrollHeight; };
+    tty.parentElement.classList.add("typing");
+    for (const s of script) {
+      if (motion) { for (let i = 1; i <= s.cmd.length; i++) { if (me !== run) return; paint(s.cmd.slice(0, i)); await sleep(24 + Math.random() * 34); } await sleep(240); }
+      done += line(s.cmd) + "\n";
+      if (s.out) done += `<span class="${s.ok ? "ok" : "o"}">${esc(s.out)}</span>\n`;
+      s.then?.(); paint(null);
+      if (motion) await sleep(460);
+    }
+    paint(""); tty.parentElement.classList.remove("typing");
+  }
+  $("#replay").addEventListener("click", play);
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); play(); } }, { threshold: .4 }).observe(tty);
+})();
+</script>
 </main>

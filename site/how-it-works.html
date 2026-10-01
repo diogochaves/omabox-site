@@ -1,0 +1,244 @@
+<style>
+/* /how-it-works: what a box keeps off your desktop and how, what it gets, one box per agent, and looking inside */
+/* never: what can't reach your desktop, each crossed out */
+.nevergrid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (min-width: 760px) { .nevergrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .nevergrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.nv { background: var(--bg-2); padding: 24px; display: grid; gap: 10px; align-content: start; }
+.nv .what { position: relative; justify-self: start; font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.nv .what::after { content: ""; position: absolute; left: -2px; right: -2px; top: 52%; height: 1.5px; background: var(--red); box-shadow: 0 0 8px var(--red); }
+.nv h3 { font-size: 19px; }
+.nv p { color: var(--ink-2); font-size: 15px; }
+/* in the box, off until you ask */
+.fence ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; font-size: 15px; color: var(--ink-2); }
+.fence li { padding-left: 20px; position: relative; }
+.fence li::before { position: absolute; left: 0; font: 500 14px/1.6 var(--mono); }
+.fence .in-box li::before { content: "+"; color: var(--brand); }
+.fence .ask li::before { content: "?"; color: var(--yellow); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px/1 var(--mono); padding: 6px 9px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); }
+.reqs { margin-top: 14px; font: 12px var(--mono); color: var(--muted); }
+/* watch: peek, interactive, the widget */
+.watch { display: grid; gap: 22px; }
+@media (min-width: 1080px) { .watch { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; } .watch > :last-child { position: sticky; top: 84px; } }
+.ways { display: grid; gap: 14px; }
+.shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+.desk { position: relative; min-height: 510px; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; font: 12px/1.4 var(--mono); }
+.dbar { height: 30px; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: var(--panel); border-bottom: 1px solid var(--line); color: var(--muted); }
+.dbar .ws { display: flex; gap: 9px; }
+.dbar .ws b { color: var(--ink); font-weight: 500; }
+.dbar .clock { margin: 0 auto; }
+.wbtn { display: flex; align-items: center; gap: 5px; background: none; border: 0; padding: 3px 6px; color: var(--brand); cursor: pointer; font: inherit; }
+.wbtn[aria-expanded="true"] { background: var(--panel-2); }
+.wbtn svg { width: 14px; height: 14px; }
+.panel { position: absolute; right: 10px; top: 40px; width: min(410px, calc(100% - 20px)); background: var(--panel); border: 2px solid var(--accent); padding: 14px; display: grid; gap: 12px; z-index: 2; }
+.panel:focus { outline: none; }
+.panel:focus-visible { box-shadow: 0 0 0 2px var(--yellow); }
+.phead { display: flex; align-items: center; gap: 10px; }
+.phead svg { width: 26px; height: 26px; color: var(--ink); }
+.phead h4 { margin: 0; font: 600 14px var(--sans); color: var(--ink); }
+.phead small { display: block; font: 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.phead .sp { margin-left: auto; }
+.ib { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; padding: 3px 7px; }
+.ib:hover { color: var(--ink); border-color: var(--line-2); }
+.ib.on { color: var(--red); }
+.rows { display: grid; gap: 4px; max-height: 212px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+.row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid transparent; cursor: pointer; }
+.row[aria-selected="true"] { background: var(--panel-2); border-color: var(--line-2); }
+.row .nm { color: var(--ink); }
+.row .meta { color: var(--muted); font-size: 11px; }
+.row .acts { margin-left: auto; display: flex; gap: 2px; }
+.row .armed { color: var(--red); border-color: var(--red); }
+.newbtn { width: 100%; background: none; border: 1px solid var(--line-2); padding: 8px; cursor: pointer; }
+.newbtn:hover { border-color: var(--accent); }
+.keys { color: var(--muted); font-size: 11px; text-align: center; }
+.status { min-height: 1.4em; color: var(--brand); font-size: 11.5px; word-break: break-word; }
+.setting { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding-block: 6px; border-bottom: 1px solid var(--line); }
+.setting b { color: var(--ink); font-weight: 500; }
+.setting span { color: var(--muted); font-size: 11px; grid-column: 1; }
+.setting select, .toggle { grid-row: 1 / span 2; grid-column: 2; }
+.setting select { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-2); font: inherit; padding: 4px; }
+.toggle { width: 38px; height: 20px; border: 1px solid var(--line-2); background: var(--bg-2); position: relative; cursor: pointer; padding: 0; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; background: var(--muted); transition: transform .15s; }
+.toggle[aria-checked="true"]::after { transform: translateX(18px); background: var(--brand); }
+.pwin { position: absolute; left: 10px; bottom: 10px; width: min(320px, 56%); border: 2px solid var(--brand); background: var(--panel); z-index: 1; }
+.pwin .tt { height: 22px; display: flex; justify-content: space-between; padding: 0 8px; align-items: center; background: var(--brand); color: var(--on-brand); font-size: 11px; }
+.pwin.iw { border-color: var(--accent); }
+.pwin.iw .tt { background: var(--accent); }
+.pwin img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.hint { position: absolute; left: 12px; bottom: 12px; max-width: 44%; color: var(--muted); font-size: 11.5px; }
+</style>
+<main class="wrap">
+  <section class="page">
+    <div class="head">
+      <p class="tag">How it works</p>
+      <h1>A whole desktop for every agent, <span class="hl">none of it on yours.</span></h1>
+      <p class="lead">A box is a real Omarchy desktop: its own Hyprland, your theme and bar, on a screen only it can see. Here is
+        what that keeps off your desktop, what a box gets, how agents use it, and how you look inside one.</p>
+    </div>
+
+    <section class="grp" id="never">
+      <h2>What it keeps off your desktop, and how</h2>
+      <p class="lead">Everything an agent does to see and test its work happens in its box.</p>
+      <div class="nevergrid">
+        <div class="nv"><span class="what">Windows out of nowhere</span><h3>Its own screen</h3><p>A box runs its own compositor on a private screen. Nothing it opens is drawn on yours.</p></div>
+        <div class="nv"><span class="what">Your cursor, your keys</span><h3>Its own pointer and keyboard</h3><p>Clicks and keys go to the box's own virtual devices, never through uinput, so your cursor and keyboard are never touched.</p></div>
+        <div class="nv"><span class="what">Stolen focus</span><h3>Nothing opens on your session</h3><p>No focus changes, no workspace switches. When you peek, the window opens on workspace 9 without taking focus.</p></div>
+        <div class="nv"><span class="what">Password prompts</span><h3>No system bus, a throwaway keyring</h3><p>In a box, <code>pkexec</code> fails at once instead of asking for your password. Its keyring stores and reads secrets without prompting; yours is never asked.</p></div>
+        <div class="nv"><span class="what">Leftovers</span><h3>Its own bar</h3><p>Notifications and tray icons land in the box's bar, and go when the box goes.</p></div>
+        <div class="nv"><span class="what">Accidents</span><h3>The guard, if you want it</h3><p>With <code>omabox guard on</code>, agents' shells get a display that doesn't exist, so a stray window fails instead of appearing.</p></div>
+      </div>
+    </section>
+
+    <section class="grp" id="box">
+      <h2>What a box gets</h2>
+      <p class="lead">Enough of your setup to look and behave like your desktop, and nothing that would let it reach yours.</p>
+      <div class="grid2 fence">
+        <div class="card cut in-box"><div class="in"><h3>In the box</h3><ul><li>The repo you started it from, read-only, at the same path</li><li>Your theme, bar layout and terminal settings</li><li>mise's toolchains, so node, python and uv work as on the host</li><li>Its own screen, session bus and throwaway keyring</li></ul></div></div>
+        <div class="card cut ask"><div class="in"><h3>Off until you ask</h3><ul><li>Network isolation: <code>--net isolated --allow 8081</code></li><li>A systemd user manager: <code>--systemd</code></li><li>X11 apps: <code>--xwayland</code></li><li>Your real desktop, one command at a time: <code>omabox host</code></li></ul></div></div>
+      </div>
+      <p class="note">A box keeps an agent's apps off your desktop and out of your config, and never gets your secrets or input
+        devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network. To fence the agent in,
+        pair it with <a href="compare.html#jail">ai-jail</a>.</p>
+    </section>
+
+    <section class="grp" id="agents">
+      <h2>Agents use it on their own</h2>
+      <p class="lead">Install once. Your agents reach for a box whenever a task touches the desktop, without you asking and
+        without changing your projects.</p>
+      <div class="grid3">
+        <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
+          <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
+        <div class="card cut"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
+        <div class="card cut"><div class="in"><h3>Sign in once, every box starts signed in</h3><p>An app that needs an account, a PIN or a library: set it up in a box once and <code>omabox save</code> it. Boxes started <code>--from</code> the save open with it already set up, keyring included.</p>
+          <pre class="code"><span class="p">$ </span>omabox save signed-in
+<span class="p">$ </span>omabox up --from signed-in</pre></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="parallel">
+      <h2>One box per agent session</h2>
+      <p class="lead">A worktree keeps agents' code apart. A box keeps their screens, session buses and test runs apart. Each
+        session's box is named after its repo or worktree and the session, like <code>app-tray-5cc72cdc</code>.</p>
+      <div class="grid3">
+        <div class="card cut"><div class="in"><h3>Separate screens</h3><p>Each box runs its own Hyprland on a private screen of any size. One agent's window never covers another's screenshot.</p></div></div>
+        <div class="card cut"><div class="in"><h3>Separate session buses</h3><p>Tray icons, notifications, D-Bus names and the keyring are per box, so one agent's test never sees another's, or yours.</p></div></div>
+        <div class="card cut"><div class="in"><h3>Separate lifetimes</h3><p>One agent's <code>omabox down</code> never ends another's box. A throwaway <code>omabox run -- ctest</code> gets a box of its own, too.</p></div></div>
+      </div>
+      <p class="reqs">Each box: about 500 MB, up in about 4 s, down when its agent exits or after 2 h idle.</p>
+    </section>
+
+    <section class="grp" id="inside">
+      <h2>Look inside any box, or take the wheel</h2>
+      <p class="lead">A box is invisible until you want to see it.</p>
+      <div class="watch">
+        <div class="ways">
+          <div class="card cut"><div class="in"><h3>Peek</h3><p><code>omabox peek</code> opens a live, view-only window of any box on workspace 9, without taking your focus. It only copies frames out, so the agent never notices.</p></div></div>
+          <div class="card cut"><div class="in"><h3>Interactive</h3><p><code>omabox up --interactive</code> makes a box a real window you drive with your own keyboard and mouse. <kbd>SUPER</kbd>+<kbd>ALT</kbd>+<kbd>ESC</kbd> sends SUPER keys into it once; with <code>omabox keys-to-box on</code> they follow focus and the pointer into it, and its border turns red while they do. <code>omabox clip</code> hands it your clipboard (a URL, a password), and <code>--from-box</code> brings the box's back.</p>
+            <img class="shot" src="media/interactive.webp" alt="An interactive box: a whole Omarchy desktop as a window with the app menu open, next to the terminal that drives it" width="1280" height="720" loading="lazy"></div></div>
+          <div class="card cut"><div class="in"><h3>The bar widget</h3><p>The omabox mark in your Omarchy bar lists every box, with peek, screenshot and down for each, and keys-to-box and the clipboard in and out for an interactive one. The copy here works: click a box, or focus the panel and use its keys.</p></div></div>
+        </div>
+        <div>
+          <div class="desk">
+            <div class="dbar"><svg style="width:13px;height:13px"><use href="#m"/></svg><span class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></span><span class="clock">Sunday 22:19</span>
+              <button class="wbtn" id="wbtn" type="button" aria-expanded="true" aria-controls="panel" title="omabox"><svg><use href="#m"/></svg><span id="count">3</span></button></div>
+            <div class="panel" id="panel" tabindex="0" aria-label="omabox boxes. Keys: up and down to move, p peek or show, s shot, f keys to the box, v paste in, c copy out, d down, n new, r refresh"></div>
+            <div id="spot"></div>
+            <p class="hint" id="hint">Your desktop. The boxes are elsewhere, invisible, until you peek.</p>
+          </div>
+          <p class="caption">A working copy of the panel in omabox <span class="ver">0.4.4</span>. The boxes are made up; the screenshots are real.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+  /* the widget: a working copy of its panel */
+  const panel = $("#panel"), spot = $("#spot"), hint = $("#hint"), wbtn = $("#wbtn"), count = $("#count");
+  let wboxes = [
+    { name: "app-tray-5cc72cdc", mode: "headless", size: "1920x1080@60", age: "2 min", shot: "term" },
+    { name: "app-menu-9f01d2e4", mode: "headless", size: "2560x1440@60", age: "6 min", shot: "menu" },
+    { name: "app-keyring-3b7a6c11", mode: "headless", size: "1920x1080@60", age: "12 min", shot: "desk" },
+  ];
+  let sel = 0, face = "boxes", status = "", armed = null, armedAt = 0, newAt = 0, peeking = null, newN = 1;
+  const cfg = { workspace: "9", confirm: false, always: true };
+  const shotOf = b => b.mode === "interactive" ? "media/interactive.webp" : b.shot === "term" ? "media/term-tokyo-night.webp" : b.shot === "menu" ? "media/menu.webp" : "media/desktop.webp";
+  const where = () => cfg.workspace === "special" ? "the scratchpad" : "workspace " + cfg.workspace;
+  function stamp() { const d = new Date(), z = n => String(n).padStart(2, "0"); return `${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}-${String(d.getMilliseconds()).padStart(3, "0")}`; }
+  function renderSpot() {
+    const b = wboxes.find(x => x.name === peeking);
+    if (!b) { spot.innerHTML = ""; hint.hidden = false; return; }
+    hint.hidden = true; const iw = b.mode === "interactive";
+    spot.innerHTML = `<div class="pwin ${iw ? "iw" : ""}"><div class="tt"><span>${iw ? b.name : "peek · " + b.name}</span><span>${iw ? "yours to drive" : "view only"}</span></div><img src="${shotOf(b)}" alt="The box ${b.name}"></div>`;
+  }
+  function render() {
+    const keep = $(".rows", panel)?.scrollTop || 0;
+    renderPanel();
+    const rows = $(".rows", panel); if (rows) rows.scrollTop = keep;
+  }
+  function renderPanel() {
+    count.textContent = wboxes.length; wbtn.style.opacity = wboxes.length ? 1 : .55;
+    if (face === "settings") {
+      panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Settings</h4><small>omabox ${$(".ver").textContent}</small></div><button class="ib sp" data-a="back" type="button">‹ Back</button></div>
+        <div class="setting"><b>Where windows open</b><span>Interactive boxes and peek windows, never focused.</span><select id="ws" aria-label="Where windows open">${["1","2","3","4","5","6","7","8","9","special"].map(w => `<option value="${w}" ${w === cfg.workspace ? "selected" : ""}>${w === "special" ? "Scratchpad (SUPER+S)" : "Workspace " + w}</option>`).join("")}</select></div>
+        <div class="setting"><b>Confirm before closing</b><span>Closing an interactive box's window asks first; closing it again shuts the box down.</span><button class="toggle" role="switch" data-a="confirm" aria-checked="${cfg.confirm}" aria-label="Confirm before closing" type="button"></button></div>
+        <div class="setting" style="border:0"><b>Always show in the bar</b><span>Off: the icon only while a box is up.</span><button class="toggle" role="switch" data-a="always" aria-checked="${cfg.always}" aria-label="Always show in the bar" type="button"></button></div>
+        <div class="status" aria-live="polite">${esc(status)}</div>`;
+      $("#ws", panel).addEventListener("change", e => { cfg.workspace = e.target.value; status = `omabox config workspace ${e.target.value}`; render(); });
+      return;
+    }
+    panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Boxes</h4><small>${wboxes.length ? wboxes.length + (wboxes.length > 1 ? " boxes up" : " box up") : "No boxes up"}</small></div><button class="ib sp" data-a="settings" type="button" aria-label="Settings">⚙</button></div>
+      <div class="rows" role="listbox" aria-label="Boxes">${wboxes.map((b, i) => `<div class="row" role="option" aria-selected="${i === sel}" data-i="${i}">
+        <div><div class="nm">${b.name}</div><div class="meta">${b.mode} · ${b.size} · ${b.age}${peeking === b.name ? " · " + (b.mode === "interactive" ? "shown" : "peeking") : ""}${b.keys ? " · keys follow focus" : ""}</div></div>
+        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button>${b.mode === "interactive" ? `<button class="ib ${b.keys ? "on" : ""}" data-a="keys" data-i="${i}" type="button" title="SUPER keys follow focus and the pointer into it: ${b.keys ? "on" : "off"} (f)">⌨</button>` : ""}<button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button>${b.mode === "interactive" ? `<button class="ib" data-a="clip" data-i="${i}" type="button" title="Paste your clipboard into the box (v)">⇲</button><button class="ib" data-a="clipout" data-i="${i}" type="button" title="Copy the box's clipboard out (c)">⇱</button>` : ""}<button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
+      <button class="newbtn" data-a="new" type="button">+ ${Date.now() - newAt < 3000 ? "Press n again to start one" : "New interactive box"}</button>
+      <div class="keys">↑↓&nbsp;move · p&nbsp;peek/show · s&nbsp;shot · f&nbsp;keys · v&nbsp;paste&nbsp;in · c&nbsp;copy&nbsp;out · d&nbsp;down · n&nbsp;new · r&nbsp;refresh</div>
+      <div class="status" aria-live="polite">${esc(status)}</div>`;
+  }
+  function act(a, i = sel) {
+    const b = wboxes[i];
+    if (a === "settings") { face = "settings"; status = ""; }
+    else if (a === "back") { face = "boxes"; status = ""; }
+    else if (a === "confirm" || a === "always") { cfg[a] = !cfg[a]; status = a === "confirm" ? `omabox config confirm-close ${cfg.confirm ? "on" : "off"}` : `omabox config bar-icon ${cfg.always ? "always" : "auto"}`; }
+    else if (a === "refresh") status = "Refreshed: omabox ls --json";
+    else if (a === "armnew") { newAt = Date.now(); status = ""; setTimeout(() => { if (Date.now() - newAt >= 3000) render(); }, 3050); }
+    else if (a === "new") { newAt = 0; const name = `box-${newN++}`; wboxes.push({ name, mode: "interactive", size: "1280x720@60", age: "just now" }); sel = wboxes.length - 1; peeking = name; renderSpot(); status = `omabox up --interactive --new: '${name}' is a window on ${where()}`; }
+    else if (!b) return;
+    else if (a === "peek") { sel = i; peeking = b.name; renderSpot(); status = b.mode === "interactive" ? `Show: focused '${b.name}'` : `omabox: peek at box '${b.name}' on ${where()} (view only)`; }
+    else if (a === "shot") { sel = i; status = `/tmp/omabox-${b.name}-${stamp()}.png (opened)`; }
+    else if (b.mode !== "interactive" && (a === "keys" || a === "clip" || a === "clipout")) return;   // an interactive box's only, as in the real panel
+    else if (a === "keys") { sel = i; b.keys = !b.keys; status = b.keys ? `omabox: box '${b.name}': SUPER keys go to it while its window has focus and the pointer is over it` : `omabox: box '${b.name}': SUPER keys are your desktop's again`; }
+    else if (a === "clip") { sel = i; status = `omabox: handed text (text/plain;charset=utf-8, 23 bytes) from your clipboard to box '${b.name}'`; }
+    else if (a === "clipout") { sel = i; status = `omabox: handed text (text/plain;charset=utf-8, 41 bytes) from box '${b.name}' to your clipboard`; }
+    else if (a === "down") {
+      sel = i;
+      if (armed === b.name && Date.now() - armedAt < 3000) { wboxes.splice(i, 1); armed = null; if (peeking === b.name) { peeking = null; renderSpot(); } sel = Math.max(0, Math.min(sel, wboxes.length - 1)); status = `omabox: box '${b.name}' down`; }
+      else { armed = b.name; armedAt = Date.now(); status = `Press d again to take '${b.name}' down`; }
+    }
+    if (a !== "down") armed = null;
+    render();
+    if (a === "new") $(`.row[data-i="${sel}"]`, panel)?.scrollIntoView({ block: "nearest" });
+  }
+  panel.addEventListener("click", e => {
+    const t = e.target.closest("[data-a]"); if (t) { act(t.dataset.a, t.dataset.i !== undefined ? +t.dataset.i : sel); return; }
+    const r = e.target.closest(".row"); if (r) { sel = +r.dataset.i; armed = null; render(); }
+  });
+  panel.addEventListener("keydown", e => {
+    if (e.target.tagName === "SELECT") return;
+    const k = e.key;
+    if (face === "settings") { if (k === "Escape") { act("back"); e.preventDefault(); } return; }
+    const map = { p: "peek", Enter: "peek", s: "shot", f: "keys", v: "clip", c: "clipout", d: "down", r: "refresh", n: Date.now() - newAt < 3000 ? "new" : "armnew" };   // n twice, like the real panel
+    if (k === "ArrowDown" || k === "j") { sel = Math.min(sel + 1, wboxes.length - 1); armed = null; render(); e.preventDefault(); }
+    else if (k === "ArrowUp" || k === "k") { sel = Math.max(sel - 1, 0); armed = null; render(); e.preventDefault(); }
+    else if (map[k]) { act(map[k]); e.preventDefault(); }
+    $(`.row[data-i="${sel}"]`, panel)?.scrollIntoView({ block: "nearest" });
+  });
+  wbtn.addEventListener("click", () => { const open = panel.hidden; panel.hidden = !open; wbtn.setAttribute("aria-expanded", open); if (open) panel.focus(); });
+  render();
+})();
+</script>
+</main>
