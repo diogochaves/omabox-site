@@ -1,0 +1,37 @@
+<style>
+/* /commands: every command, from omabox help at the latest release (build.mjs), with commands.json's lines */
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.jump a { font: 500 12.5px/1 var(--mono); padding: 7px 9px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); text-decoration: none; }
+.jump a:hover { border-color: var(--brand); color: var(--brand); }
+.group { padding-block: 48px 8px; scroll-margin-top: 60px; }
+.group > h2 { margin-bottom: 18px; }
+.cmd { --cut: 12px; scroll-margin-top: 76px; margin-bottom: 14px; }
+.cmd > .in { padding: 22px; display: grid; gap: 12px; }
+@media (min-width: 1000px) { .cmd > .in { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 12px 28px; align-items: start; } .cmd .wide { grid-column: 1 / -1; } }
+.cmd h3 { font: 600 19px/1.2 var(--mono); }
+.cmd h3 a { color: inherit; text-decoration: none; }
+.cmd h3 a:hover { color: var(--brand); }
+.cmd p { color: var(--ink-2); font-size: 15.5px; }
+.cmd .syn { font-size: 12px; }
+.cmd .ex { display: grid; gap: 8px; align-content: start; }
+.cmd .ex .lbl, .help .lbl { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.cmd details { border-top: 1px solid var(--line); padding-top: 10px; }
+.cmd summary { cursor: pointer; font: 500 13px var(--mono); color: var(--cyan); }
+.cmd details[open] summary { margin-bottom: 10px; }
+.cmd details p { font-size: 14.5px; max-width: 52em; margin-top: 8px; }
+.cmd details .code { font-size: 12px; margin-top: 8px; }
+.names { margin-top: 18px; }
+.help { font-size: 12px; max-height: 70vh; overflow: auto; }
+</style>
+<main class="wrap">
+  <section class="page">
+    <div class="head">
+      <p class="tag">Commands</p>
+      <h1>Every omabox command.</h1>
+      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">0.4.3</span></a> when this
+        site was built, so the options match the omabox you install.</p>
+      <!-- pages -->
+    </div>
+    <!-- commands -->
+  </section>
+</main>

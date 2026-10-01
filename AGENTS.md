@@ -2,26 +2,43 @@
 
 The site for omabox (omabox.app). Read `DIRECTION.md` first: what the site says, every decision so
 far and why the old drafts were dropped. Diogo (the owner) will say what to change; iterate on
-`site/omabox.html`.
+`site/omabox.html` and the other pages beside it.
 
 ## Layout
 
-- `site/omabox.html`: the page, as an **artifact source**: no `<!doctype>`, `<html>`, `<head>` or
-  `<body>` (the artifact platform wraps it). `<title>` and `<style>` come first.
-- `site/media/`: its images and video, referenced as `media/...` (provenance in `site/media/README.md`).
+- `site/omabox.html`: the home page, as an **artifact source**: no `<!doctype>`, `<html>`, `<head>`
+  or `<body>` (the artifact platform wraps it). `<title>`, its links and `<style>` come first.
+- `site/base.css`: what every page shares (tokens, type, cut frames, cards, header, footer, motion).
+  Each page's `<style>` has only what it uses.
+- `site/commands.html`, `site/develop.html`, `site/changelog.html`: the other pages, as a `<style>`
+  and a `<main>` only; the build adds the head, header and footer (taken from the home page) and
+  fills their `<!-- markers -->`. `/develop` is written by hand. `/commands` and `/changelog` are
+  read from the omabox repo at its latest release tag: every command and its help from `bin/omabox`
+  (the usage heredoc, not run), the changelog from `CHANGELOG.md`. `site/commands.json` is the
+  hand-written half of `/commands`: groups, a line and examples per command (a command missing
+  there still shows, under Other, and the build warns).
+- Links between pages are written `commands.html`, `index.html#install`: the build makes them
+  `/commands`, `/#install` for omabox.app, and leaves them for the artifact.
+- `site/media/`: images and video, referenced as `media/...` (provenance in `site/media/README.md`).
 - `reference/`: old drafts to mine (`reference/README.md`). Not maintained.
-- `build.mjs`: builds the public site into `dist/` (git-ignored): the page wrapped into a whole
-  document (doctype, meta, link card, favicon), its media, and the omabox repo's contributors from
-  the GitHub API (and the version of its latest release), people only (bots and AI agent accounts dropped), avatars saved locally. Between
-  the `<!-- contributors -->` markers the source keeps a hardcoded list, for the artifact and as the
-  fallback when GitHub can't be reached. `node build.mjs` (Node 18+, no dependencies;
-  `GITHUB_TOKEN` optional).
+- `build.mjs`: builds the public site into `dist/` (git-ignored): every page wrapped into a whole
+  document (doctype, meta, canonical, link card, favicon), `base.css`, the media, the sitemap. The
+  version in every `<span class="ver">` is omabox's latest release; the home page gets the omabox
+  repo's contributors from the GitHub API, people only (bots and AI agent accounts dropped), avatars
+  saved locally. Between the `<!-- contributors -->` markers the source keeps a hardcoded list, for
+  the artifact and as the fallback when GitHub can't be reached; the version falls back the same
+  way. `/commands` and `/changelog` have no fallback: without GitHub the build stops and the site
+  keeps its last deploy. `node build.mjs` (Node 18+, no dependencies; `GITHUB_TOKEN` optional);
+  `node build.mjs --preview` writes the other pages into `preview/` (git-ignored) for the artifact.
 
 ## Publishing
 
 The page lives at <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. To update it from a new
 session: read it first (Artifact `action: "read"` with that `url`), then publish with the same `url`
-and `file_path: site/omabox.html`. Pass `files` only for media that is new or changed
+and `file_path: site/omabox.html`. The other pages and the shared CSS go in `files`: run
+`node build.mjs --preview`, then pass `{"base.css": "site/base.css", "commands.html":
+"preview/commands.html", "develop.html": "preview/develop.html", "changelog.html":
+"preview/changelog.html"}` (the ones that changed). Pass media only when new or changed
 (`{"media/x.webp": "site/media/x.webp"}`); files left out are kept. Don't publish without `url`
 (that makes a separate artifact) unless Diogo asks for a new draft, as he did for draft 4.
 
@@ -32,8 +49,8 @@ viewer adds `[hidden]{display:none!important}` (the page also sets it).
 ## Hosting
 
 Cloudflare Pages project `omabox` (account 433e2ce2a5dce0c5eae78569eccd4122), deployed by
-`.github/workflows/deploy.yml` with wrangler: on every push to main, daily at 06:17 UTC (so new
-omabox contributors show up) and by hand (`gh workflow run deploy -R diogochaves/omabox-site`). The
+`.github/workflows/deploy.yml` with wrangler: on every push to main, daily at 06:17 UTC (so a new
+omabox release, its commands and changelog, and new contributors show up) and by hand (`gh workflow run deploy -R diogochaves/omabox-site`). The
 token is the repo secret `CLOUDFLARE_API_TOKEN` (Pages:Edit, DNS:Edit on omabox.app); no Cloudflare
 GitHub app.
 
@@ -50,14 +67,15 @@ Never open the page on Diogo's real desktop unless he asks (then `omabox host --
 Look at it in a box (this machine has omabox; load the omabox skill):
 
 ```bash
-D=$PWD/site
-{ echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>'; cat $D/omabox.html; echo '</body></html>'; } > $D/test.html
-omabox up -b look --ro-bind $D
-omabox run -b look -d -- chromium --user-data-dir=/tmp/chr --no-first-run --no-default-browser-check --ozone-platform=wayland --app=file://$D/test.html
+node build.mjs --preview                 # the other pages, as the artifact gets them
+L=$(mktemp -d); cp -r site/media site/base.css preview/*.html $L/
+{ echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>'; cat site/omabox.html; echo '</body></html>'; } > $L/index.html
+omabox up -b look --ro-bind $L
+omabox run -b look -d -- chromium --user-data-dir=/tmp/chr --no-first-run --no-default-browser-check --ozone-platform=wayland --app=file://$L/index.html
 omabox shot -b look                      # Page_Down with: omabox keys -b look Page_Down
 omabox mode -b look 412x915              # phone width
 omabox gpu -b look 5                     # GPU cost (draft 4: 0% idle and scrolling at 1080p)
-omabox down -b look; rm $D/test.html
+omabox down -b look; rm -r $L
 ```
 
 One look per change, then publish; Diogo reviews on the live page.

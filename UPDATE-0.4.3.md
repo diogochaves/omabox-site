@@ -51,32 +51,32 @@ the rest, pages included, is in `DIRECTION.md`, "Decisions (2026-10-01)"; sectio
 Pick what earns a place; not everything needs a card. Grouped by who it is for.
 
 Agents (Commands section, "And the rest", the typed terminal):
-- [ ] **Saves** (0.3.0): `omabox save SAVE` keeps a box's HOME (signed in, a PIN, a library), `up
+- [x] **Saves** (0.3.0): `omabox save SAVE` keeps a box's HOME (signed in, a PIN, a library), `up
   --from SAVE` / `run --from SAVE` start from it; `omabox saves`, `saves rm`. A good card: "sign in
   once, every box starts signed in".
-- [ ] **Seeing inside a box** (0.3.0): `omabox log` (Hyprland, shell, apps, `run -d`; `-f`, `--grep`),
+- [x] **Seeing inside a box** (0.3.0): `omabox log` (Hyprland, shell, apps, `run -d`; `-f`, `--grep`),
   `omabox events` (Hyprland's events, `--mark`/`--since`, `--until RE` waits for one), `omabox lua
   EXPR`.
-- [ ] **Input like a hand** (0.3.0): `drag`, `click --steps N` (travel, hover on the way), `--mod ctrl`.
-- [ ] **`run -d --replace`** (0.3.0): restart an app after a rebuild in one step. `run --env-file`.
-- [ ] **Plugin work** (0.4.3): `up --plugin` and `restart-shell` say *why* a plugin is not in the bar
+- [x] **Input like a hand** (0.3.0): `drag`, `click --steps N` (travel, hover on the way), `--mod ctrl`.
+- [x] **`run -d --replace`** (0.3.0): restart an app after a rebuild in one step. `run --env-file`.
+- [x] **Plugin work** (0.4.3): `up --plugin` and `restart-shell` say *why* a plugin is not in the bar
   (validator or shell message); `ls --json` records what a box tested (Omarchy version, theme, each
   plugin's commit `+dirty`); the skill maps plugin/app steps written for the real desktop to boxes.
-- [ ] **Test your Hyprland or Omarchy change** (0.3.0, 0.4.2): `up --hyprland PATH` (a Hyprland build
+- [x] **Test your Hyprland or Omarchy change** (0.3.0, 0.4.2): `up --hyprland PATH` (a Hyprland build
   of yours), `up --omarchy DIR` (an Omarchy checkout, like `omarchy dev link` without touching your
   system). Fits the "Your projects stay as they are" table or a new card for Hyprland/Omarchy
   contributors.
-- [ ] "And the rest" list (l. 168–181) is missing: `lua`, `log`, `events`, `drag`, `save`/`saves`,
+- [x] "And the rest" list (l. 168–181) is missing: `lua`, `log`, `events`, `drag`, `save`/`saves`,
   `clip`, `keys-to-box`, `broker`, `setup`. And `up`'s options line: `--from`, `--hyprland`,
   `--omarchy`, `--json`.
 
 You, driving a box:
-- [ ] **`omabox clip`** (0.3.0): your clipboard into an interactive box once (a password, a URL), and
+- [x] **`omabox clip`** (0.3.0): your clipboard into an interactive box once (a password, a URL), and
   back with `--from-box`; never for agents.
-- [ ] keys-to-box (see 1).
+- [x] keys-to-box (see 1).
 
 Installing:
-- [ ] **`omabox setup` / `setup --remove`** (0.4.0) and the read-only system install
+- [ ] (setup and --remove: done in Install; the system install waits for the package) **`omabox setup` / `setup --remove`** (0.4.0) and the read-only system install
   (`/usr/lib/omabox`, `/usr/bin/omabox`).
 - [ ] **The omarchy-pkgs path**: PR omacom/omarchy-pkgs#754 (Add omabox) is **open, not merged**
   (waiting for a maintainer). Don't show `pacman -S omabox` until it merges. Prepare the block
@@ -103,11 +103,11 @@ Installing:
 
 ## 4. Site files that pin 0.2.0
 
-- [ ] `AGENTS.md` "Rules": output must match `bin/omabox` at `v0.2.0` → the new tag (`v0.4.3`).
-- [ ] `DIRECTION.md`: "launched with 0.2.0", "Facts to keep right" (tag, captured output), the Open
+- [x] `AGENTS.md` "Rules": output must match `bin/omabox` at `v0.2.0` → the new tag (`v0.4.3`).
+- [x] `DIRECTION.md`: "launched with 0.2.0", "Facts to keep right" (tag, captured output), the Open
   list (#16 "planned" is done; "fetch the README/CHANGELOG at the release tag" idea). Add a dated
   "Decisions" block for this update.
-- [ ] Commands section rule in DIRECTION: "Not 'new in 0.2.0': … shows the whole CLI". Same idea now:
+- [x] Commands section rule in DIRECTION: "Not 'new in 0.2.0': … shows the whole CLI". Same idea now:
   no "what's new" list on the page, unless decided otherwise (see 5).
 
 ## 5. Decisions for Diogo

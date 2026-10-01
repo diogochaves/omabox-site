@@ -2,88 +2,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="base.css">
 <style>
-/* A dark, neon Omarchy in Tokyo Night, the theme the omabox mark is drawn in. Frames are cut at the top
-   right and bottom left, where the mark has its gaps. */
-:root {
-  --bg: #0b0c13; --bg-2: #10111a; --panel: #151724; --panel-2: #1a1d2e; --line: #252941; --line-2: #343a5c;
-  --ink: #d6dcff; --ink-2: #a9b1d6; --muted: #6f769b;
-  --brand: #9ece6a; --on-brand: #0b0c13; --glow: rgb(158 206 106 / .38);
-  --accent: #7aa2f7; --cyan: #7dcfff; --magenta: #bb9af7; --red: #f7768e; --yellow: #e0af68;
-  --display: "Chakra Petch", "Instrument Sans", system-ui, sans-serif;
-  --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --cut: 14px; --g: 16px;
-  color-scheme: dark;
-}
-@media (min-width: 760px) { :root { --g: 28px; } }
-
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
-body {
-  margin: 0; color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: clip;
-  /* an aurora of the theme's colours, drawn once: green by the mark, blue top right, violet and cyan lower down */
-  background:
-    radial-gradient(900px 520px at 12% -8%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 70%),
-    radial-gradient(1100px 620px at 92% -12%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
-    radial-gradient(900px 600px at -10% 45%, color-mix(in srgb, var(--magenta) 10%, transparent), transparent 70%),
-    radial-gradient(1000px 700px at 110% 80%, color-mix(in srgb, var(--cyan) 7%, transparent), transparent 70%),
-    var(--bg);
-  background-attachment: fixed;
-}
-a { color: var(--cyan); text-underline-offset: 3px; }
-button { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-h1, h2, h3 { font-family: var(--display); color: var(--ink); margin: 0; text-wrap: balance; font-weight: 600; }
-h1 { font-size: clamp(34px, 4.3vw, 58px); line-height: 1.04; letter-spacing: -.01em; }
-h2 { font-size: clamp(26px, 3vw, 40px); line-height: 1.1; letter-spacing: -.005em; }
-h3 { font-size: 18.5px; line-height: 1.25; letter-spacing: .01em; }
-.hl { color: var(--brand); text-shadow: 0 0 22px var(--glow); }
-p { margin: 0; }
-code, kbd, pre { font-family: var(--mono); }
-:not(pre) > code { font-size: .86em; background: var(--panel-2); border: 1px solid var(--line); padding: .05em .35em; white-space: nowrap; }
-@media (max-width: 480px) { :not(pre) > code { white-space: normal; overflow-wrap: anywhere; } }   /* small phones: a long flag wraps instead of widening the page */
-kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px; padding: 0 .35em; background: var(--panel); }
-.wrap { max-width: 1240px; margin: 0 auto; padding-inline: var(--g); }
-.tag { font: 500 11.5px/1.4 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); display: flex; gap: 10px; align-items: center; }
-.tag::before { content: ""; width: 18px; height: 2px; background: currentColor; box-shadow: 0 0 10px currentColor; }
-.lead { font-size: clamp(16.5px, 1.35vw, 18.5px); color: var(--ink-2); max-width: 40em; }
-
-/* the cut frame: the mark's two gaps, as corners */
-.cut { position: relative; isolation: isolate; clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))); background: var(--fc, var(--line-2)); padding: 1px; }
-.cut > .in { clip-path: polygon(0 0, calc(100% - var(--cut) + .5px) 0, 100% calc(var(--cut) - .5px), 100% 100%, calc(var(--cut) - .5px) 100%, 0 calc(100% - var(--cut) + .5px)); background: var(--fb, var(--panel)); height: 100%; }
-.card > .in { padding: 22px; display: grid; gap: 12px; align-content: start; }
-.card p { color: var(--ink-2); font-size: 15.5px; }
-
-/* ── header ─────────────────────────────────────────────────────────────────── */
-/* At the top of the page the header is see-through and the big mark sits in it; scrolling the first
-   120px (--t: 0 to 1) shrinks the mark into the bar's corner, as if into a box, and the bar fades in.
-   Transforms and opacity only. */
-.top { position: sticky; top: 0; z-index: 40; --t: 1; --u: calc(1 - var(--t));
-  --M: 72px; --k: calc(26 / 72); --Y: 24px; --F: 30px; --kw: calc(22 / 30); }
-@media (min-width: 1080px) { .top { --M: 104px; --k: .25; --Y: 32px; --F: 44px; --kw: .5; } }
-.top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); opacity: var(--t); }
-.top .wrap { position: relative; display: flex; align-items: center; gap: 20px; height: 60px; }
-.brand { position: absolute; left: var(--g); top: 0; width: calc(26px + 11px + 5.2em); height: 60px; color: var(--ink); text-decoration: none; }
-.brand .bm, .brand .bw, .brand .bv { position: absolute; left: 0; top: 0; }
-.brand .bv { pointer-events: none; }
-.brand .bm { width: var(--M); height: var(--M); transform-origin: 0 0; filter: drop-shadow(0 0 22px var(--glow));
-  transform: translate(0, calc(17px + (var(--Y) - 17px) * var(--u))) scale(calc(var(--k) + (1 - var(--k)) * var(--u))); }
-.brand .bm svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.brand .bm rect { fill: var(--brand); transform-box: fill-box; transform-origin: center; }
-.brand .bm.boot rect { animation: px .45s steps(2, end) both; animation-delay: calc(var(--i) * 28ms); }
-.brand .bw { font: 700 var(--F)/1 var(--display); letter-spacing: .02em; white-space: nowrap; transform-origin: 0 50%;
-  transform: translate(calc(37px + (var(--M) - 7px) * var(--u)), calc(30px - var(--F) / 2 + (var(--Y) + var(--M) / 2 - 42px) * var(--u))) scale(calc(var(--kw) + (1 - var(--kw)) * var(--u))); }
-.brand .bv { left: calc(var(--M) + 30px); top: calc(var(--Y) + var(--M) / 2 + 14px); font: 500 11.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); white-space: nowrap;
-  opacity: calc(1 - var(--t) * 2.5); transform: translateY(calc(var(--t) * -12px)); }
-.top nav { display: none; gap: 2px; margin-left: auto; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
-.top nav a { color: var(--ink-2); text-decoration: none; padding: 8px 11px; }
-.top nav a:hover { color: var(--brand); }
-.top nav .gh { display: inline-flex; align-items: center; gap: 7px; }
-.top nav .gh svg { width: 15px; height: 15px; }
-@media (min-width: 1000px) { .top nav { display: flex; } }
+/* The home page's own styles; the shared ones are in base.css. */
 /* ── hero ───────────────────────────────────────────────────────────────────── */
 .hero { display: grid; gap: 44px; padding-block: 64px 72px; align-items: start; }
 .hero > * { min-width: 0; }
@@ -101,14 +22,6 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .copy { align-self: stretch; border: 0; border-left: 1px solid var(--line); background: var(--panel); padding: 0 18px; cursor: pointer; font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .copy:hover { background: var(--brand); color: var(--on-brand); }
 .reqs { margin-top: 10px; font: 12px var(--mono); color: var(--muted); }
-.ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
-.btn { --cut: 10px; display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; font: 600 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; cursor: pointer; border: 0;
-  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))); background: var(--panel-2); color: var(--ink); }
-.btn:hover { background: var(--line-2); }
-.btn.solid { background: var(--brand); color: var(--on-brand); box-shadow: 0 0 24px var(--glow); }
-.btn.solid:hover { filter: brightness(1.08); }
-.btn .play { width: 0; height: 0; border-left: 8px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
-
 /* the live view: your desktop, still; three boxes, busy */
 .live { display: grid; gap: 14px; }
 .screen { position: relative; aspect-ratio: 16 / 10; background: var(--bg-2); overflow: hidden; font: 10.5px/1.3 var(--mono); color: var(--muted); }
@@ -174,12 +87,6 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .pass { position: absolute; left: 5%; bottom: 3%; color: var(--brand); font-size: 9px; opacity: 0; animation: pass 9s steps(1) infinite; }
 @keyframes pass { 0%, 80% { opacity: 0; } 81%, 100% { opacity: 1; } }
 
-/* ── sections ───────────────────────────────────────────────────────────────── */
-.sec { padding-block: clamp(64px, 9vw, 120px); border-top: 1px solid var(--line); scroll-margin-top: 60px; }
-.head { display: grid; gap: 16px; max-width: 50em; margin-bottom: 44px; }
-.grid2, .grid3 { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 860px) { .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.span2 { grid-column: 1 / -1; }
 
 /* parallel: worktrees and their boxes */
 .lanes { display: grid; gap: 10px; }
@@ -214,8 +121,6 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .nv .what { font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
 .nv h3 { font-size: 19px; }
 .nv p { color: var(--ink-2); font-size: 15px; }
-.note { margin-top: 22px; border-left: 2px solid var(--yellow); padding: 4px 0 4px 16px; color: var(--ink-2); max-width: 52em; font-size: 15px; }
-
 /* drive: terminal + peek */
 .drive { display: grid; gap: 22px; align-items: start; }
 @media (min-width: 1000px) { .drive { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
@@ -238,16 +143,11 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .pk .mk::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; background: var(--yellow); border-radius: 50%; }
 .newlist { display: grid; gap: 10px; margin-top: 18px; }
 .newlist div { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: baseline; font-size: 15px; color: var(--ink-2); }
-.code { margin: 0; background: var(--bg-2); border: 1px solid var(--line); padding: 12px 14px; font: 12.5px/1.65 var(--mono); color: var(--ink); overflow-x: auto; white-space: pre; }
-.code .p { color: var(--brand); user-select: none; }
-.code .o { color: var(--muted); }
-
 /* watch: peek, interactive, the widget */
 .watch { display: grid; gap: 22px; }
 @media (min-width: 1080px) { .watch { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; } .watch > :last-child { position: sticky; top: 84px; } }
 .ways { display: grid; gap: 14px; }
 .shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
-.caption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .desk { position: relative; min-height: 510px; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; font: 12px/1.4 var(--mono); }
 .dbar { height: 30px; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: var(--panel); border-bottom: 1px solid var(--line); color: var(--muted); }
 .dbar .ws { display: flex; gap: 9px; }
@@ -338,23 +238,7 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .people a:hover { --fc: var(--brand); }
 .join { --fc: color-mix(in srgb, var(--brand) 60%, transparent); }
 .people img { width: 72px; height: 72px; display: block; clip-path: polygon(0 0, 80% 0, 100% 20%, 100% 100%, 20% 100%, 0 80%); }
-footer { border-top: 1px solid var(--line); padding-block: 40px 56px; display: grid; gap: 16px; }
-footer pre { margin: 0; font: 13px/1.6 var(--mono); color: var(--ink-2); }
-footer pre b { color: var(--brand); font-weight: 500; }
-footer .links { display: flex; gap: 20px; flex-wrap: wrap; font: 500 13px var(--mono); }
-footer small { color: var(--muted); font-size: 13px; }
 
-/* ── motion: sections come in once, a glint runs along their top edge, the header shows progress ── */
-.js .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--d, 0) * 70ms); }
-.js .rv.on { opacity: 1; transform: none; }
-.sec { position: relative; }
-.sec::before { content: ""; position: absolute; top: -1px; left: 0; width: 28%; height: 1px; background: linear-gradient(90deg, transparent, var(--brand), transparent); opacity: 0; transform: translateX(-100%); pointer-events: none; }
-.sec.seen::before { animation: glint 1.8s cubic-bezier(.3,.6,.2,1) both; }
-@keyframes glint { 0% { opacity: 1; transform: translateX(-100%); } 100% { opacity: 0; transform: translateX(360%); } }
-.js .sec .tag::before { transform: scaleX(0); transform-origin: 0 50%; transition: transform .6s .15s cubic-bezier(.2,.8,.2,1); }
-.js .sec.seen .tag::before { transform: none; }
-.prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--brand); box-shadow: 0 0 10px var(--glow); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); pointer-events: none; }
-.top nav a.here { color: var(--brand); }
 
 /* ── the problem: one agent, on your desktop and in a box ─────────────────── */
 .versus { display: grid; gap: 22px; }
@@ -455,15 +339,14 @@ footer small { color: var(--muted); font-size: 13px; }
 .nv.on .what::after, html:not(.js) .nv .what::after { transform: none; }
 
 /* commands */
+.every .in { display: grid; gap: 14px; align-items: center; }
+@media (min-width: 860px) { .every .in { grid-template-columns: 1fr auto; gap: 28px; } }
 .newgrid { display: grid; gap: 14px; margin-top: 22px; }
 @media (min-width: 760px) { .newgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1100px) { .newgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .newgrid .card .in { gap: 10px; }
 .newgrid h3 { display: flex; gap: 10px; align-items: center; font-size: 17px; }
 .newgrid .code { font-size: 11.5px; padding: 9px 11px; }
-.cmds { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr)); gap: 8px 24px; }
-.cmds div { display: grid; grid-template-columns: 9.4em 1fr; gap: 10px; align-items: baseline; font-size: 14.5px; color: var(--ink-2); }
-.cmds code { justify-self: start; }
 .fitmap { position: relative; height: 92px; margin-top: 2px; font: 10px var(--mono); color: var(--muted); }
 .fitmap .big, .fitmap .small { position: absolute; border: 1px solid var(--line-2); background: var(--bg-2); }
 .fitmap .big { left: 0; top: 0; width: 62%; height: 100%; }
@@ -537,8 +420,8 @@ footer small { color: var(--muted); font-size: 13px; }
   <div class="wrap">
     <a class="brand" href="#top" id="brand" aria-label="omabox, back to the top">
       <span class="bm boot" id="mark"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true" id="marksvg"></svg></span>
-      <span class="bw" aria-hidden="true">omabox</span><span class="bv" aria-hidden="true"><span class="ver">0.4.3</span> · for Omarchy</span>
-    </a>
+      <span class="bw" aria-hidden="true">omabox</span></a>
+    <a class="bv" href="changelog.html" title="What changed in each release"><span class="ver">0.4.3</span> · for Omarchy</a>
     <nav aria-label="Sections"><a href="#fixes">What it fixes</a><a href="#never">How it works</a><a href="#drive">Commands</a><a href="#jail">ai-jail</a><a href="#compare">Compare</a><a href="#install">Install</a><a class="gh" href="https://github.com/diogochaves/omabox"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>GitHub</a></nav>
   </div>
   <span class="prog" id="prog" aria-hidden="true"></span>
@@ -719,6 +602,11 @@ footer small { color: var(--muted); font-size: 13px; }
       <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
         <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
       <div class="card cut"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
+      <div class="card cut"><div class="in"><h3>Sign in once, every box starts signed in</h3><p>An app that needs an account, a PIN or a library: set it up in a box once and <code>omabox save</code> it. Boxes started <code>--from</code> the save open with it already set up, keyring included, so an agent never has to sign in.</p>
+        <pre class="code"><span class="p">$ </span>omabox save signed-in
+<span class="p">$ </span>omabox up --from signed-in</pre></div></div>
+      <div class="card cut"><div class="in"><h3>Building for Omarchy?</h3><p>Shell plugins, themes and apps, or a change to Hyprland or Omarchy itself: a box can run your plugin in a bar that isn't yours, say why it didn't load, and run your own Hyprland build or Omarchy checkout.</p>
+        <div><a class="btn" href="develop.html">For developers →</a></div></div></div>
       <div class="card cut span2"><div class="in"><h3>Your projects stay as they are</h3>
         <div class="scrollx"><table class="map"><thead><tr><th>Your project says</th><th>The agent runs</th></tr></thead><tbody>
           <tr><td><code>./build/app</code></td><td><code>omabox run -d -- ./build/app</code></td></tr>
@@ -735,7 +623,7 @@ footer small { color: var(--muted); font-size: 13px; }
       <p class="tag">Commands</p>
       <h2>The agent drives its box the way you drive yours.</h2>
       <p class="lead">Launch, type, click, wait and look, with commands that report what happened. Here are the ones agents
-        reach for most, then the rest.</p>
+        reach for most.</p>
     </div>
     <div class="drive">
       <div class="win cut"><div class="in"><div class="th"><span>claude · ~/code/app-tray</span><button type="button" id="replay">↻ replay</button></div><pre class="tty" id="tty" aria-live="off"></pre></div></div>
@@ -768,22 +656,11 @@ footer small { color: var(--muted); font-size: 13px; }
       <div class="card cut"><div class="in"><h3>Windows as targets</h3>
         <p><code>windows</code> lists the box's windows, where they are and what covers them. <code>--window</code> picks one by class, title, pid or address for <code>shot</code>, <code>click</code> and <code>keys</code>, and never guesses.</p>
         <pre class="code"><span class="p">$ </span>omabox click --window foot 320 160</pre></div></div>
-      <div class="card cut span2"><div class="in"><h3>And the rest</h3>
-        <div class="cmds">
-          <div><code>hyprctl</code><span>the box's Hyprland, never yours</span></div>
-          <div><code>pointer</code><span>raw moves, scrolls and drags</span></div>
-          <div><code>peek</code><span>a live, view-only window of a box</span></div>
-          <div><code>mode</code><span>a box's screen size and refresh rate</span></div>
-          <div><code>gpu</code><span>GPU time of a box's processes</span></div>
-          <div><code>restart-shell</code><span>reload the bar after a plugin edit</span></div>
-          <div><code>env</code><span>point host-side Wayland tools at a box</span></div>
-          <div><code>path</code><span>a box's directory and HOME</span></div>
-          <div><code>ls</code><span>every box, its size, network and idle time</span></div>
-          <div><code>config</code><span>where windows open, close confirm, bar icon</span></div>
-          <div><code>guard</code><span>keep agents' shells off your display</span></div>
-          <div><code>host</code><span>one command on your real desktop, when asked</span></div>
-        </div>
-        <p>A box can also take your plugins (<code>--plugin</code>), an isolated network (<code>--net isolated --allow 8081</code>), a systemd user manager (<code>--systemd</code>), X11 apps (<code>--xwayland</code>), or be a window you drive (<code>--interactive</code>). <code>omabox help</code> has every flag.</p></div></div>
+      <div class="card cut span2 every"><div class="in">
+        <div style="display:grid;gap:10px"><h3>Every other command</h3>
+          <p>Logs and Hyprland's events, saves, drag and drop, Lua in the box's Hyprland, your clipboard into a box, the guard:
+            every command, with its options and examples, read from the omabox you install.</p></div>
+        <a class="btn solid" href="commands.html">All commands →</a></div></div>
     </div>
   </section>
 
@@ -930,7 +807,7 @@ footer small { color: var(--muted); font-size: 13px; }
 omabox: box 'app-tray-5cc72cdc' down
 omabox: box 'app-menu-9f01d2e4' down
 omabox: box 'app-keyring-3b7a6c11' down</pre>
-    <div class="links"><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/CHANGELOG.md">Changelog</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
+    <div class="links"><a href="commands.html">Commands</a><a href="develop.html">Develop</a><a href="changelog.html">Changelog</a><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
     <small>An independent community project, not affiliated with or endorsed by Omarchy. Every screenshot here was taken by omabox, in a box.</small>
   </footer>
 </main>
@@ -1258,7 +1135,7 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   const prog = $("#prog"), top = $(".top"); let ticking = false, lastT = -1;
   const onScroll = () => {
     const h = document.documentElement.scrollHeight - innerHeight; prog.style.setProperty("--p", h > 0 ? Math.min(1, scrollY / h) : 0);
-    const t = Math.min(1, Math.max(0, scrollY / 120)); if (t !== lastT) { top.style.setProperty("--t", t); lastT = t; }
+    const t = Math.min(1, Math.max(0, scrollY / 120)); if (t !== lastT) { top.style.setProperty("--t", t); top.classList.toggle("scrolled", t > .3); lastT = t; }
     ticking = false;
   };
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });

@@ -10,7 +10,13 @@ parts (see `reference/README.md`).
 
 ## What the site has to say
 
-Page order (since 2026-09-29). Nav: What it fixes, How it works, Commands, ai-jail, Compare,
+Four pages since 2026-10-01 (Decisions 2026-10-01): the home page tells the story; `/commands`,
+`/develop` and `/changelog` hold the rest. The other pages' nav: Overview, Commands, Develop,
+Changelog, Install, GitHub, and a row of page links in their head (the nav is hidden on phones).
+The home page links them from the Commands and Agents sections, the version under the big mark
+(to `/changelog`) and the footer.
+
+Home page order (since 2026-09-29). Nav: What it fixes, How it works, Commands, ai-jail, Compare,
 Install, GitHub (with its mark).
 
 1. **Hero: the promise.** The agent never takes control of your system. No windows appearing out
@@ -28,11 +34,11 @@ Install, GitHub (with its mark).
    (named after its repo or worktree plus the session id, e.g. `app-tray-5cc72cdc`), so visual
    checks and desktop tests run side by side without seeing each other.
 5. Agents use it on their own: the skill (Claude Code, Codex, OpenCode, pi, Hermes), the opt-in
-   guard, projects unchanged.
+   guard, saves ("sign in once, every box starts signed in"), a pointer to `/develop`, projects
+   unchanged.
 6. **Commands** (`#drive`): the typed terminal and its peek, then the commands agents use most
-   (up/down, run, shot, keys/click, wait, windows), each with a real example, and "And the rest":
-   every other command with one line, plus `up`'s main options. Not "new in 0.2.0": this is the
-   site's first version, so it shows the whole CLI.
+   (up/down, run, shot, keys/click, wait, windows), each with a real example, then "Every other
+   command" → `/commands`. ("And the rest", a list of the others, moved there on 2026-10-01.)
 7. How you look inside: peek, interactive mode, the bar widget (a playable copy).
 8. **Better together: ai-jail + omabox.** Praise ai-jail (Fabio Akita, AkitaOnRails): it fences what the agent can touch, omabox decides where it draws. The
    tested recipe (ai-jail 2.2.1, omabox 0.4.3, re-run 2026-10-01): `omabox up; eval "$(omabox env)";
@@ -80,8 +86,15 @@ reference parts went stale with it (the checklist: `UPDATE-0.4.3.md`). Agreed wi
 - **omarchy-pkgs (omacom/omarchy-pkgs#754): say nothing until it merges.** "Coming" would promise a
   maintainer's decision. Have the package install block ready for the day it does.
 - **Order:** first fix what was wrong on the single page and ship it (done 2026-10-01: version,
-  ai-jail broker, install, skill, widget keys, keys-to-box, `clip`); then the pages; then re-check
-  the claims in `UPDATE-0.4.3.md` section 3 while building them.
+  ai-jail broker, install, skill, widget keys, keys-to-box, `clip`); then the pages (done
+  2026-10-01); then re-check the claims in `UPDATE-0.4.3.md` section 3.
+- **How the pages came out** (2026-10-01): `/commands` lists all 31 commands of 0.4.3 in six groups,
+  each with a line, examples and its exact synopsis. omabox's main branch already has help per
+  command (`@` lines in the usage heredoc); 0.4.3 doesn't, so for now the rest of `omabox help`
+  shows once, as "The details", and each command gets its own `omabox help CMD` text by itself
+  once a release has it. `/changelog` renders `CHANGELOG.md` at the release. `/develop` is plugins,
+  themes and apps (the stock bar, plugin diagnostics, `ls --json`, saves, `run -d --replace`,
+  `--systemd`, the skill), then Hyprland and Omarchy themselves, and what a box can't test.
 
 ## Decisions (2026-09-27)
 
@@ -185,8 +198,8 @@ aijail.io's plain narrative and compare page as a reference.
 
 ## Open
 
-- The 0.4.3 update: `UPDATE-0.4.3.md` (sections 2-4 still open), then the pages (Decisions
-  2026-10-01).
+- The 0.4.3 update: `UPDATE-0.4.3.md` sections 3 (claims to re-check) and 4 (these files) are
+  still open; the pages are done (Decisions 2026-10-01).
 
 - Not yet checked: the pop-up peeks in a real browser (phone width checked in a box on 2026-09-28).
 - Launched at omabox.app on 2026-09-29, with omabox 0.2.0 out (AGENTS.md, "Hosting").
