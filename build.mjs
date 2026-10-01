@@ -1,14 +1,15 @@
 // Builds the public site into dist/: site/omabox.html (an artifact source, no <html>/<head>) wrapped
 // into a whole document, its media, and the omabox repo's contributors (people only: no bots, no AI
-// agents), with their avatars saved next to the page. No dependencies; Node 18+.
+// agents), with their avatars saved next to the page, and the version of omabox's latest release.
+// No dependencies; Node 18+.
 //
 //   node build.mjs              GITHUB_TOKEN, if set, is used for the API (optional)
 //   SITE_URL=https://x.pages.dev node build.mjs
 //                               builds for another address (links, link card) and keeps search
 //                               engines out: anything but omabox.app gets noindex
 //
-// If GitHub can't be reached, the page keeps the contributors written in the source and the build
-// says so; the rest of the site still builds.
+// If GitHub can't be reached, the page keeps the contributors and the version written in the source
+// and the build says so; the rest of the site still builds.
 
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 
@@ -25,9 +26,10 @@ const isPerson = c => c.type === "User" && !c.login.endsWith("[bot]") && !AGENT.
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 
+const headers = { accept: "application/vnd.github+json", "user-agent": "omabox-site-build" };
+if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+
 async function github(path) {
-  const headers = { accept: "application/vnd.github+json", "user-agent": "omabox-site-build" };
-  if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const out = [];
   for (let page = 1; ; page++) {
     const r = await fetch(`https://api.github.com${path}?per_page=100&page=${page}`, { headers });
@@ -54,6 +56,26 @@ async function contributors() {
   return tiles;
 }
 
+// The latest release, "v0.4.3" → "0.4.3"; the page shows it in every <span class="ver">.
+async function latestVersion() {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, { headers });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const v = String((await r.json()).tag_name || "").replace(/^v/, "");
+  if (!/^\d+\.\d+\.\d+$/.test(v)) throw new Error(`unexpected tag ${JSON.stringify(v)}`);
+  return v;
+}
+
+let page = await readFile("site/omabox.html", "utf8");
+let version = page.match(/<span class="ver">([^<]+)<\/span>/)?.[1];
+if (!version) throw new Error('site/omabox.html: no <span class="ver"> with the version');
+try {
+  version = await latestVersion();
+  page = page.replaceAll(/(<span class="ver">)[^<]+/g, `$1${version}`);
+  console.log(`version: ${version}`);
+} catch (e) {
+  console.warn(`version: kept ${version} from site/omabox.html (${e.message})`);
+}
+
 const head = `<!doctype html>
 <html lang="en">
 <head>
@@ -72,13 +94,12 @@ ${SITE === HOME ? '<meta name="google-site-verification" content="-2jD-QisVYY6Le
 <script type="application/ld+json">${JSON.stringify({
   "@context": "https://schema.org", "@type": "SoftwareApplication", name: "omabox", url: `${SITE}/`,
   description: "A whole Omarchy desktop for every AI agent, invisible and in parallel, so your own desktop stays untouched.",
-  applicationCategory: "DeveloperApplication", operatingSystem: "Linux (Omarchy)", softwareVersion: "0.2.0",
+  applicationCategory: "DeveloperApplication", operatingSystem: "Linux (Omarchy)", softwareVersion: version,
   license: "https://opensource.org/licenses/MIT", codeRepository: `https://github.com/${REPO}`,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 })}</script>
 `;
 
-let page = await readFile("site/omabox.html", "utf8");
 page = page.replace(/<title>[^<]*<\/title>/, "<title>omabox: desktops for AI agents on Omarchy</title>");
 const body = page.indexOf("<svg");   // the <title>, fonts and <style> go in <head>; the rest is the body
 if (body < 0) throw new Error("site/omabox.html: no <svg> sprite where the body starts");

@@ -266,6 +266,7 @@ kbd { font-size: .8em; border: 1px solid var(--line-2); border-bottom-width: 2px
 .phead .sp { margin-left: auto; }
 .ib { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; padding: 3px 7px; }
 .ib:hover { color: var(--ink); border-color: var(--line-2); }
+.ib.on { color: var(--red); }
 .rows { display: grid; gap: 4px; max-height: 212px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid transparent; cursor: pointer; }
 .row[aria-selected="true"] { background: var(--panel-2); border-color: var(--line-2); }
@@ -536,7 +537,7 @@ footer small { color: var(--muted); font-size: 13px; }
   <div class="wrap">
     <a class="brand" href="#top" id="brand" aria-label="omabox, back to the top">
       <span class="bm boot" id="mark"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true" id="marksvg"></svg></span>
-      <span class="bw" aria-hidden="true">omabox</span><span class="bv" aria-hidden="true">0.2.0 · for Omarchy</span>
+      <span class="bw" aria-hidden="true">omabox</span><span class="bv" aria-hidden="true"><span class="ver">0.4.3</span> · for Omarchy</span>
     </a>
     <nav aria-label="Sections"><a href="#fixes">What it fixes</a><a href="#never">How it works</a><a href="#drive">Commands</a><a href="#jail">ai-jail</a><a href="#compare">Compare</a><a href="#install">Install</a><a class="gh" href="https://github.com/diogochaves/omabox"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>GitHub</a></nav>
   </div>
@@ -715,7 +716,7 @@ footer small { color: var(--muted); font-size: 13px; }
       <p class="lead">Install once. Your agents reach for a box whenever a task touches the desktop, without you asking and without changing your projects.</p>
     </div>
     <div class="grid2">
-      <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>install.sh</code> puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
+      <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
         <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
       <div class="card cut"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
       <div class="card cut span2"><div class="in"><h3>Your projects stay as they are</h3>
@@ -794,15 +795,15 @@ footer small { color: var(--muted); font-size: 13px; }
     <div class="watch">
       <div class="ways">
         <div class="card cut"><div class="in"><h3>Peek</h3><p><code>omabox peek</code> opens a live, view-only window of any box on workspace 9, without taking your focus. It only copies frames out, so the agent never notices.</p></div></div>
-        <div class="card cut"><div class="in"><h3>Interactive</h3><p><code>omabox up --interactive</code> makes a box a real window you drive with your own keyboard and mouse. <kbd>SUPER</kbd>+<kbd>ALT</kbd>+<kbd>ESC</kbd> sends SUPER keys into it.</p>
+        <div class="card cut"><div class="in"><h3>Interactive</h3><p><code>omabox up --interactive</code> makes a box a real window you drive with your own keyboard and mouse. <kbd>SUPER</kbd>+<kbd>ALT</kbd>+<kbd>ESC</kbd> sends SUPER keys into it once; with <code>omabox keys-to-box on</code> they follow focus and the pointer into it, and its border turns red while they do. <code>omabox clip</code> hands it your clipboard (a URL, a password), and <code>--from-box</code> brings the box's back.</p>
           <img class="shot" src="media/interactive.webp" alt="An interactive box: a whole Omarchy desktop as a window with the app menu open, next to the terminal that drives it" width="1280" height="720" loading="lazy"></div></div>
-        <div class="card cut"><div class="in"><h3>The bar widget</h3><p>The omabox mark in your Omarchy bar lists every box, with peek, screenshot and down for each. The copy here works: click a box, or focus the panel and use its keys.</p></div></div>
+        <div class="card cut"><div class="in"><h3>The bar widget</h3><p>The omabox mark in your Omarchy bar lists every box, with peek, screenshot and down for each, and keys-to-box and the clipboard in and out for an interactive one. The copy here works: click a box, or focus the panel and use its keys.</p></div></div>
       </div>
       <div>
         <div class="desk">
           <div class="dbar"><svg style="width:13px;height:13px"><use href="#m"/></svg><span class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></span><span class="clock">Sunday 22:19</span>
             <button class="wbtn" id="wbtn" type="button" aria-expanded="true" aria-controls="panel" title="omabox"><svg><use href="#m"/></svg><span id="count">3</span></button></div>
-          <div class="panel" id="panel" tabindex="0" aria-label="omabox boxes. Keys: up and down to move, p peek, s shot, d down, n new, r refresh"></div>
+          <div class="panel" id="panel" tabindex="0" aria-label="omabox boxes. Keys: up and down to move, p peek or show, s shot, f keys to the box, v paste in, c copy out, d down, n new, r refresh"></div>
           <div id="spot"></div>
           <p class="hint" id="hint">Your desktop. The boxes are elsewhere, invisible, until you peek.</p>
         </div>
@@ -843,12 +844,20 @@ footer small { color: var(--muted); font-size: 13px; }
       <div><pre class="code"><span class="p">$ </span>omabox up
 <span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
 <span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app</pre>
-        <p class="caption">Tested with ai-jail 2.2.0 and omabox 0.2.0 on Linux.</p></div>
+        <p class="caption">Tested with ai-jail 2.2.1 and omabox 0.4.3 on Linux.</p></div>
     </div></div>
-    <p class="note">Not yet: an agent inside ai-jail driving omabox itself. The jail has its own process namespace, so the
-      <code>omabox</code> command inside it can't see the box. For now, keep the agent under omabox's guard and put the apps it
-      runs under ai-jail. It's planned in <a href="https://github.com/diogochaves/omabox/issues/16">issue #16</a>, with no change
-      needed in ai-jail.</p>
+    <div class="card cut recipe"><div class="in">
+      <div style="display:grid;gap:10px"><h3>Or jail the agent itself</h3>
+        <p>A jail can't start a box on its own, so its <code>omabox</code> hands each command to a broker outside, with no
+          change to ai-jail. <code>up</code>, <code>shot</code>, <code>keys</code>, <code>click</code> and the rest work in the
+          jail as outside. The broker keeps a jail's boxes to what the jail has: no network when the jail has none, only its own
+          project, only the boxes it started, all gone when it exits.</p></div>
+      <div><pre class="code"><span class="p">$ </span>omabox broker on   <span class="o"># prints the lines to add to ~/.ai-jail</span>
+<span class="p">$ </span>ai-jail claude</pre></div>
+    </div></div>
+    <p class="note">Not for a jailed agent: <code>omabox host</code>, <code>peek</code>, interactive boxes, the guard and
+      <code>config</code> changes. Driving a box is running code in it, so the broker is what keeps a box from being a way out
+      of the jail.</p>
   </section>
 
   <section class="sec" id="compare">
@@ -879,13 +888,14 @@ footer small { color: var(--muted); font-size: 13px; }
       <div class="card cut"><div class="in"><h3>What you need</h3><ul>
         <li>Omarchy 4 on Arch, with Hyprland 0.56+</li>
         <li>A GPU render node. Tested on AMD and Intel iGPUs and NVIDIA RTX 4070 SUPER and 5070 Ti cards.</li>
-        <li>A patched aquamarine until a release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it privately; your system's copy isn't touched.</li></ul></div></div>
+        <li>For headless boxes on NVIDIA and for confirm-close only: aquamarine's fix, until a release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it privately; your system's copy isn't touched, and everything else runs on it.</li></ul></div></div>
       <div class="card cut"><div class="in"><h3>Install</h3>
         <pre class="code"><span class="p">$ </span>git clone https://github.com/diogochaves/omabox && cd omabox
-<span class="p">$ </span>./install.sh           <span class="o"># asks before turning the guard on</span>
-<span class="p">$ </span>./install.sh --check   <span class="o"># starts a box, screenshots it, takes it down</span>
-<span class="p">$ </span>omarchy plugin enable chaves.omabox   <span class="o"># the bar widget</span></pre>
-        <p>Update with <code>git pull &amp;&amp; ./install.sh</code>. To remove it, see the <a href="https://github.com/diogochaves/omabox#remove">README</a>.</p></div></div>
+<span class="p">$ </span>./install.sh           <span class="o"># asks about the bar widget and the guard</span>
+<span class="p">$ </span>./install.sh --check   <span class="o"># then starts a box, screenshots it, takes it down</span></pre>
+        <p>Update with <code>git pull &amp;&amp; ./install.sh</code>. To remove it: <code>omabox down --all</code>, then
+          <code>omabox setup --remove</code> (guard off, widget off, links gone) before you delete the clone. The
+          <a href="https://github.com/diogochaves/omabox#install">README</a> has the details.</p></div></div>
     </div>
     <div class="faq" style="margin-top:56px">
       <h3 style="font-size:26px;margin-bottom:10px">Questions people ask first</h3>
@@ -1111,7 +1121,7 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
     { name: "app-menu-9f01d2e4", mode: "headless", size: "2560x1440@60", age: "6 min", shot: "menu" },
     { name: "app-keyring-3b7a6c11", mode: "headless", size: "1920x1080@60", age: "12 min", shot: "desk" },
   ];
-  let sel = 0, face = "boxes", status = "", armed = null, armedAt = 0, peeking = null, newN = 1;
+  let sel = 0, face = "boxes", status = "", armed = null, armedAt = 0, newAt = 0, peeking = null, newN = 1;
   const cfg = { workspace: "9", confirm: false, always: true };
   const shotOf = b => b.mode === "interactive" ? "media/interactive.webp" : b.shot === "term" ? termShot() : b.shot === "menu" ? "media/menu.webp" : "media/desktop.webp";
   const where = () => cfg.workspace === "special" ? "the scratchpad" : "workspace " + cfg.workspace;
@@ -1130,20 +1140,20 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   function renderPanel() {
     count.textContent = wboxes.length; wbtn.style.opacity = wboxes.length ? 1 : .55;
     if (face === "settings") {
-      panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Settings</h4><small>omabox 0.2.0</small></div><button class="ib sp" data-a="back" type="button">‹ Back</button></div>
+      panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Settings</h4><small>omabox ${$(".ver").textContent}</small></div><button class="ib sp" data-a="back" type="button">‹ Back</button></div>
         <div class="setting"><b>Where windows open</b><span>Interactive boxes and peek windows, never focused.</span><select id="ws" aria-label="Where windows open">${["1","2","3","4","5","6","7","8","9","special"].map(w => `<option value="${w}" ${w === cfg.workspace ? "selected" : ""}>${w === "special" ? "Scratchpad (SUPER+S)" : "Workspace " + w}</option>`).join("")}</select></div>
-        <div class="setting"><b>Confirm before closing</b><span>Closing an interactive box's window asks first.</span><button class="toggle" role="switch" data-a="confirm" aria-checked="${cfg.confirm}" aria-label="Confirm before closing" type="button"></button></div>
-        <div class="setting" style="border:0"><b>Always show in the bar</b><span>Off: the mark shows only while a box is up.</span><button class="toggle" role="switch" data-a="always" aria-checked="${cfg.always}" aria-label="Always show in the bar" type="button"></button></div>
+        <div class="setting"><b>Confirm before closing</b><span>Closing an interactive box's window asks first; closing it again shuts the box down.</span><button class="toggle" role="switch" data-a="confirm" aria-checked="${cfg.confirm}" aria-label="Confirm before closing" type="button"></button></div>
+        <div class="setting" style="border:0"><b>Always show in the bar</b><span>Off: the icon only while a box is up.</span><button class="toggle" role="switch" data-a="always" aria-checked="${cfg.always}" aria-label="Always show in the bar" type="button"></button></div>
         <div class="status" aria-live="polite">${esc(status)}</div>`;
       $("#ws", panel).addEventListener("change", e => { cfg.workspace = e.target.value; status = `omabox config workspace ${e.target.value}`; render(); });
       return;
     }
     panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Boxes</h4><small>${wboxes.length ? wboxes.length + (wboxes.length > 1 ? " boxes up" : " box up") : "No boxes up"}</small></div><button class="ib sp" data-a="settings" type="button" aria-label="Settings">⚙</button></div>
       <div class="rows" role="listbox" aria-label="Boxes">${wboxes.map((b, i) => `<div class="row" role="option" aria-selected="${i === sel}" data-i="${i}">
-        <div><div class="nm">${b.name}</div><div class="meta">${b.mode} · ${b.size} · ${b.age}${peeking === b.name ? " · " + (b.mode === "interactive" ? "shown" : "peeking") : ""}</div></div>
-        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button><button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button><button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
-      <button class="newbtn" data-a="new" type="button">+ New interactive box</button>
-      <div class="keys">↑↓ move · p peek/show · s shot · d down · n new · r refresh</div>
+        <div><div class="nm">${b.name}</div><div class="meta">${b.mode} · ${b.size} · ${b.age}${peeking === b.name ? " · " + (b.mode === "interactive" ? "shown" : "peeking") : ""}${b.keys ? " · keys follow focus" : ""}</div></div>
+        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button>${b.mode === "interactive" ? `<button class="ib ${b.keys ? "on" : ""}" data-a="keys" data-i="${i}" type="button" title="SUPER keys follow focus and the pointer into it: ${b.keys ? "on" : "off"} (f)">⌨</button>` : ""}<button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button>${b.mode === "interactive" ? `<button class="ib" data-a="clip" data-i="${i}" type="button" title="Paste your clipboard into the box (v)">⇲</button><button class="ib" data-a="clipout" data-i="${i}" type="button" title="Copy the box's clipboard out (c)">⇱</button>` : ""}<button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
+      <button class="newbtn" data-a="new" type="button">+ ${Date.now() - newAt < 3000 ? "Press n again to start one" : "New interactive box"}</button>
+      <div class="keys">↑↓&nbsp;move · p&nbsp;peek/show · s&nbsp;shot · f&nbsp;keys · v&nbsp;paste&nbsp;in · c&nbsp;copy&nbsp;out · d&nbsp;down · n&nbsp;new · r&nbsp;refresh</div>
       <div class="status" aria-live="polite">${esc(status)}</div>`;
   }
   function act(a, i = sel) {
@@ -1152,10 +1162,15 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
     else if (a === "back") { face = "boxes"; status = ""; }
     else if (a === "confirm" || a === "always") { cfg[a] = !cfg[a]; status = a === "confirm" ? `omabox config confirm-close ${cfg.confirm ? "on" : "off"}` : `omabox config bar-icon ${cfg.always ? "always" : "auto"}`; }
     else if (a === "refresh") status = "Refreshed: omabox ls --json";
-    else if (a === "new") { const name = `box-${newN++}`; wboxes.push({ name, mode: "interactive", size: "1280x720@60", age: "just now" }); sel = wboxes.length - 1; peeking = name; renderSpot(); status = `omabox up --interactive --new: '${name}' is a window on ${where()}`; }
+    else if (a === "armnew") { newAt = Date.now(); status = ""; setTimeout(() => { if (Date.now() - newAt >= 3000) render(); }, 3050); }
+    else if (a === "new") { newAt = 0; const name = `box-${newN++}`; wboxes.push({ name, mode: "interactive", size: "1280x720@60", age: "just now" }); sel = wboxes.length - 1; peeking = name; renderSpot(); status = `omabox up --interactive --new: '${name}' is a window on ${where()}`; }
     else if (!b) return;
     else if (a === "peek") { sel = i; peeking = b.name; renderSpot(); status = b.mode === "interactive" ? `Show: focused '${b.name}'` : `omabox: peek at box '${b.name}' on ${where()} (view only)`; }
     else if (a === "shot") { sel = i; status = `/tmp/omabox-${b.name}-${stamp()}.png (opened)`; }
+    else if (b.mode !== "interactive" && (a === "keys" || a === "clip" || a === "clipout")) return;   // an interactive box's only, as in the real panel
+    else if (a === "keys") { sel = i; b.keys = !b.keys; status = b.keys ? `omabox: box '${b.name}': SUPER keys go to it while its window has focus and the pointer is over it` : `omabox: box '${b.name}': SUPER keys are your desktop's again`; }
+    else if (a === "clip") { sel = i; status = `omabox: handed text (text/plain;charset=utf-8, 23 bytes) from your clipboard to box '${b.name}'`; }
+    else if (a === "clipout") { sel = i; status = `omabox: handed text (text/plain;charset=utf-8, 41 bytes) from box '${b.name}' to your clipboard`; }
     else if (a === "down") {
       sel = i;
       if (armed === b.name && Date.now() - armedAt < 3000) { wboxes.splice(i, 1); armed = null; if (peeking === b.name) { peeking = null; renderSpot(); } sel = Math.max(0, Math.min(sel, wboxes.length - 1)); status = `omabox: box '${b.name}' down`; }
@@ -1173,7 +1188,7 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
     if (e.target.tagName === "SELECT") return;
     const k = e.key;
     if (face === "settings") { if (k === "Escape") { act("back"); e.preventDefault(); } return; }
-    const map = { p: "peek", Enter: "peek", s: "shot", d: "down", n: "new", r: "refresh" };
+    const map = { p: "peek", Enter: "peek", s: "shot", f: "keys", v: "clip", c: "clipout", d: "down", r: "refresh", n: Date.now() - newAt < 3000 ? "new" : "armnew" };   // n twice, like the real panel
     if (k === "ArrowDown" || k === "j") { sel = Math.min(sel + 1, wboxes.length - 1); armed = null; render(); e.preventDefault(); }
     else if (k === "ArrowUp" || k === "k") { sel = Math.max(sel - 1, 0); armed = null; render(); e.preventDefault(); }
     else if (map[k]) { act(map[k]); e.preventDefault(); }

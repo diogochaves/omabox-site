@@ -12,7 +12,7 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
 - `reference/`: old drafts to mine (`reference/README.md`). Not maintained.
 - `build.mjs`: builds the public site into `dist/` (git-ignored): the page wrapped into a whole
   document (doctype, meta, link card, favicon), its media, and the omabox repo's contributors from
-  the GitHub API, people only (bots and AI agent accounts dropped), avatars saved locally. Between
+  the GitHub API (and the version of its latest release), people only (bots and AI agent accounts dropped), avatars saved locally. Between
   the `<!-- contributors -->` markers the source keeps a hardcoded list, for the artifact and as the
   fallback when GitHub can't be reached. `node build.mjs` (Node 18+, no dependencies;
   `GITHUB_TOKEN` optional).
@@ -66,8 +66,10 @@ One look per change, then publish; Diogo reviews on the live page.
 
 - Keep it light: transform/opacity animations, paused off screen, `prefers-reduced-motion`
   respected; no WebGL scenes, no scroll-jacking (see DIRECTION.md, "Lightweight is a feature").
-- Command output on the page must match the real CLI: `bin/omabox` at the omabox repo's `v0.2.0`
-  tag (<https://github.com/diogochaves/omabox/tree/v0.2.0>). Install steps and README links follow its main branch.
+- Command output on the page must match the real CLI: `bin/omabox` at the omabox repo's latest
+  release tag (`v0.4.3` on 2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.3>). Install
+  steps and README links follow its main branch. The build writes that release's version into every
+  `<span class="ver">` and the JSON-LD; the source keeps the last one as the fallback.
 - Screenshots come from a box (`site/media/README.md`), never from the real desktop, and carry no
   personal details (user or host names, hardware).
 - Copy: plain, active, specific; say "not a security boundary" wherever safety comes up.
