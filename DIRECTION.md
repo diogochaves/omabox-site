@@ -148,7 +148,8 @@ reference parts went stale with it (the checklist: `UPDATE-0.4.3.md`). Agreed wi
 - **Contributors are fetched at build time** from the omabox repo: people only. Bots and AI agent
   accounts (Claude, Codex, Copilot...) are dropped; human first names (devin, jules, cody) are not
   treated as agents.
-- **No marketing video in this version.** The site uses what exists (the 55 s demo, screenshots,
+- **No marketing video made for the site.** It uses what exists (since 2026-10-01 the omabox repo's 43 s
+  clip, `clip-0.2.0.mp4`, in place of the 0.1.0 55 s demo, which was out of date; screenshots,
   CSS scenes). A problem-then-fix video may come in a later version, or only for x.com.
 - **Show the problem before the promise** (the side-by-side scene), and cover all of 0.2.0.
 - **Praise ai-jail and show the two together**, with only what was tested.
@@ -202,7 +203,7 @@ aijail.io's plain narrative and compare page as a reference.
 - Hero live view: your desktop (nvim typing, your cursor still, counters stuck at 0) beside three
   busy box tiles (clicking through an app, checking the launcher, running 42 tests). CSS loops,
   paused off screen.
-- A box opens in place: clicking a tile grows it (~0.4 s) into a real screenshot of a box; the demo
+- A box opens in place: clicking a tile grows it (~0.4 s) into a real screenshot of a box; the clip
   video opens the same way, inside a box, not a new window.
 - Parallel lanes: worktree → agent → box; "+ Start another agent" boots one, "down" ends one; an
   `omabox ls` panel in the real column format updates.
@@ -240,8 +241,6 @@ aijail.io's plain narrative and compare page as a reference.
 
 - The 0.4.3 update: `UPDATE-0.4.3.md` section 3 is done (2026-10-01); what is left there is the
   package install block, waiting for omacom/omarchy-pkgs#754.
-- A newer clip: the omabox README leads with `docs/media/clip-0.2.0.mp4`; the site still plays the
-  55 s demo. Swap only if Diogo wants.
 - Not yet checked: the pop-up peeks in a real browser, and moving between pages inside the artifact
   viewer.
 - Launched at omabox.app on 2026-09-29 (AGENTS.md, "Hosting"). SEO: the build writes a description,

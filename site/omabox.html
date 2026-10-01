@@ -226,13 +226,14 @@
 .steps i::after { content: ""; position: absolute; inset: 0; background: var(--brand); transform: scaleX(0); transform-origin: 0 50%; transition: transform .4s; }
 .steps i.on::after { transform: none; }
 
-/* a box opened in place: peek at a tile, or the demo */
+/* a box opened in place: peek at a tile, or the clip */
 .layer { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgb(4 5 10 / .78); }
 .pop { --cut: 16px; --fc: var(--brand); --fb: var(--bg-2); width: min(1120px, 100%); filter: drop-shadow(0 0 30px var(--glow)); }
 .pop .th { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px; background: color-mix(in srgb, var(--brand) 16%, var(--panel)); font: 12px var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; }
 .pop .th button { background: none; border: 1px solid var(--line-2); color: var(--ink); cursor: pointer; padding: 3px 9px; font: 12px var(--mono); }
 .pop .th button:hover { border-color: var(--brand); }
 .pop video, .pop img { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; object-fit: cover; }
+.pop video { aspect-ratio: 1280 / 808; max-height: calc(100vh - 150px); object-fit: contain; }   /* the clip is 1280x808 */
 .pop .cap { padding: 10px 14px; font: 12px var(--mono); color: var(--muted); border-top: 1px solid var(--line); }
 .pop .cap b { color: var(--brand); font-weight: 500; }
 </style>
@@ -274,7 +275,7 @@
       <div class="install cut"><div class="in"><code id="cmd">git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code><button class="copy" type="button" data-copy="cmd">Copy</button></div></div>
       <p class="reqs">Omarchy 4 · Hyprland 0.56+ · an AMD, Intel or NVIDIA GPU · MIT</p>
       <div class="ctas">
-        <button class="btn solid" type="button" id="demo"><span class="play" aria-hidden="true"></span>Watch the demo · 55 s</button>
+        <button class="btn solid" type="button" id="demo"><span class="play" aria-hidden="true"></span>Watch it · 43 s</button>
         <a class="btn" href="#fixes">What it fixes</a>
       </div>
     </div>
@@ -588,8 +589,8 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   $("#popclose").addEventListener("click", closePop);
   layer.addEventListener("click", e => { if (e.target === layer) closePop(); });
   addEventListener("keydown", e => { if (e.key === "Escape" && !layer.hidden) closePop(); });
-  $("#demo").addEventListener("click", e => openPop(e.currentTarget, "peek · demo · 55 s",
-    `<video controls playsinline preload="auto" poster="media/demo-poster.webp" src="media/demo.mp4"></video>`,
+  $("#demo").addEventListener("click", e => openPop(e.currentTarget, "peek · omabox in 43 s",
+    `<video controls playsinline preload="auto" poster="media/clip-poster.webp" src="media/clip.mp4"></video>`,
     `Recorded inside omabox: one box played the desktop, and every <b>omabox up</b> in it started a box inside that box.`));
   const tiles = [
     { name: "app-tray-5cc72cdc", img: () => termShot(), what: "Claude Code on feat/tray: a terminal open, the app under test next" },
