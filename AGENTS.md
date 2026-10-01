@@ -39,9 +39,9 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
 
 ## Publishing
 
-Draft 5 (the site split into pages, 2026-10-01) is on the branch `draft-5` and lives at
-<https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> until Diogo settles it; draft 4, what omabox.app runs from main, stays at
-<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. To update one from a new session: read it first
+The page lives at <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 5, the site split into
+pages; omabox.app since 2026-10-01). Draft 4, the single page before it, stays at
+<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d> and is no longer updated. To update it from a new session: read it first
 (Artifact `action: "read"` with its `url`), then publish with the same `url` and `file_path:
 site/omabox.html`. The other pages and the shared CSS go in `files`: run `node build.mjs --preview`,
 then pass `{"base.css": "site/base.css", "how-it-works.html": "preview/how-it-works.html",

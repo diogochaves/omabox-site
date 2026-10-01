@@ -4,8 +4,9 @@ The site for [omabox](https://github.com/diogochaves/omabox), launched with omab
 can find it. The domain is `omabox.app` (omabox.com belongs to someone else). This folder is its own project on purpose: contributors to
 omabox never have to deal with site code.
 
-The page we iterate on is **`site/omabox.html`** (draft 5 on the branch `draft-5`, <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d>; draft 4 on main), published as a claude.ai artifact:
-<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>. Older drafts are in `reference/`, to mine for
+The page we iterate on is **`site/omabox.html`** with the pages beside it (draft 5), published as a
+claude.ai artifact: <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 4, the single page:
+<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>). Older drafts are in `reference/`, to mine for
 parts (see `reference/README.md`).
 
 ## Draft 5 (2026-10-01): the site split into pages, like aijail.io
@@ -16,8 +17,8 @@ pages only (Do I need it?, How it works, Compare, Configure, Security, Download,
 page is a short tour where each section is a teaser that links to the page with the whole story;
 every page ends with "Keep reading" and the same call to install.
 
-Agreed: Diogo left the structure to us; omabox.app stays on draft 4 (main) until draft 5 is settled.
-Draft 5 is on the branch `draft-5`, published as its own artifact (AGENTS.md, "Publishing").
+Agreed: Diogo left the structure to us. Draft 5 was published as its own artifact (AGENTS.md,
+"Publishing") and went live on omabox.app on 2026-10-01, with omabox 0.4.4.
 
 - **Nav, on every page:** How it works · Commands · Develop · Compare · Changelog · Install · GitHub.
   Pages only; under 1000 px a Menu button (a `<details>`, no script). Written once in the home page.
@@ -39,7 +40,7 @@ Draft 5 is on the branch `draft-5`, published as its own artifact (AGENTS.md, "P
 
 ## What the site has to say
 
-(Draft 4, what omabox.app runs until draft 5 is settled.)
+(Draft 4, the single page before draft 5; kept for its reasoning.)
 
 Four pages since 2026-10-01 (Decisions 2026-10-01): the home page tells the story; `/commands`,
 `/develop` and `/changelog` hold the rest. The other pages' nav: Overview, Commands, Develop,
@@ -237,9 +238,6 @@ aijail.io's plain narrative and compare page as a reference.
 
 ## Open
 
-- **Draft 5 waits for Diogo's review** (its artifact, AGENTS.md "Publishing"); then merge `draft-5`
-  into main, which deploys it. After that, the omabox README's `omabox.app/#compare` link can point
-  to `/compare` (the old anchor redirects meanwhile).
 - The 0.4.3 update: `UPDATE-0.4.3.md` section 3 is done (2026-10-01); what is left there is the
   package install block, waiting for omacom/omarchy-pkgs#754.
 - A newer clip: the omabox README leads with `docs/media/clip-0.2.0.mp4`; the site still plays the
