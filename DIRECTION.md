@@ -247,5 +247,7 @@ aijail.io's plain narrative and compare page as a reference.
 - Launched at omabox.app on 2026-09-29 (AGENTS.md, "Hosting"). SEO: the build writes a description,
   canonical, Open Graph and Twitter cards, JSON-LD, `robots.txt` and, for omabox.app only,
   `sitemap.xml` (every page). The omabox repo's website field and README link the site. Google Search
-  Console: Diogo's step, once; the sitemap then brings in new pages by itself.
+  Console: the `https://omabox.app/` property is verified (the meta tag the build writes) and
+  `/sitemap.xml` was submitted on 2026-09-29 (processed 2026-09-30, one page then); Google rereads it
+  by itself and finds the new pages.
 - Light theme? (Dark only was a choice in drafts 3-5; revisit if asked.)
