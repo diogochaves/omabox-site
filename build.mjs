@@ -273,6 +273,8 @@ const ending = cur => `${more.replace(new RegExp(`\\n[^\\n]*href="${cur.out}"[^\
     <div class="ctas"><a class="btn solid" href="install.html">Install guide</a><a class="btn gh" href="https://github.com/${REPO}">${ghMark}GitHub</a></div>
   </section>`}`;
 const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^]*?<\/pre>/, "");
+// Landing on a linked section once the fonts are in (written once, in the home page, like the nav).
+const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
 
 const notes = JSON.parse(await readFile("site/commands.json", "utf8"));
 const generated = {
@@ -316,7 +318,7 @@ for (const page of PAGES) {
   } else {
     const src = fill(await readFile(`site/${page.src}`, "utf8"), page);
     const style = src.match(/<style>[^]*?<\/style>/)?.[0] || "";
-    const main = src.slice(src.indexOf("<main")).replace(/<\/main>\s*$/, `${ending(page)}\n\n${footer}\n</main>`);
+    const main = src.slice(src.indexOf("<main")).replace(/<\/main>\s*$/, `${ending(page)}\n\n${footer}\n${landing}\n</main>`);
     doc = `${head(page)}${fonts}\n${style}\n</head>\n<body>\n${sprite}\n\n${header(page)}\n\n${main}\n</body>\n</html>\n`;
   }
   await writeFile(`${OUT}/${page.out}`, links(doc));

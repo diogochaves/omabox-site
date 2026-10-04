@@ -498,6 +498,25 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
   </footer>
 </main>
 
+<!-- landing: build.mjs puts this at the end of every other page -->
+<script>
+/* A link to a section (/commands#ports) scrolls there before the web fonts swap in, and the page then
+   gets shorter under it, so it ended past the section. While the page settles, land on it again each
+   time its height changes, until you scroll yourself. */
+(() => {
+  let el = null;
+  try { el = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch {}
+  if (!el || !window.ResizeObserver) return;
+  const ro = new ResizeObserver(() => el.scrollIntoView({ behavior: "instant" }));
+  const evs = ["wheel", "touchstart", "keydown", "pointerdown"];
+  const stop = () => { ro.disconnect(); evs.forEach(t => removeEventListener(t, stop)); };
+  evs.forEach(t => addEventListener(t, stop, { passive: true }));
+  ro.observe(document.body);
+  setTimeout(stop, 4000);
+})();
+</script>
+<!-- /landing -->
+
 <div class="layer" id="layer" hidden>
   <div class="pop cut" role="dialog" aria-modal="true" aria-labelledby="poptitle"><div class="in">
     <div class="th"><span id="poptitle">peek</span><button type="button" id="popclose">Close · Esc</button></div>

@@ -15,7 +15,8 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   page's `<script>` goes inside its `<main>`); the build adds the head, header, "Keep reading", an
   install call to action (not on /install) and footer, and fills their `<!-- markers -->`. The nav
   (between `<!-- nav -->` markers), "Keep reading" (`<section class="sec more">`, one card per line)
-  and the footer are written once, in the home page, and copied from it. Every page but `/commands`
+  the footer and the script that lands a link on its section once the fonts are in (between
+  `<!-- landing -->` markers) are written once, in the home page, and copied from it. Every page but `/commands`
   and `/changelog` is written by hand. `/commands` and `/changelog` are
   read from the omabox repo at its latest release tag: every command and its help from `bin/omabox`
   (the usage heredoc, not run), the changelog from `CHANGELOG.md`. `site/commands.json` is the
