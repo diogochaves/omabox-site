@@ -5,7 +5,7 @@
     { "id": "run", "title": "Run, look and wait", "commands": ["run", "shot", "windows", "wait", "log", "events", "gpu"] },
     { "id": "input", "title": "Keys and the pointer", "commands": ["keys", "click", "drag", "pointer"] },
     { "id": "hyprland", "title": "The box's Hyprland and shell", "commands": ["hyprctl", "lua", "restart-shell"] },
-    { "id": "you", "title": "You and your desktop", "commands": ["peek", "keys-to-box", "clip", "env", "host", "config"] },
+    { "id": "you", "title": "You and your desktop", "commands": ["peek", "keys-to-box", "clip", "env", "ports", "host", "config"] },
     { "id": "setup", "title": "Setting up", "commands": ["setup", "guard", "broker", "--version"] }
   ],
   "commands": {
@@ -59,6 +59,8 @@
       "examples": ["omabox clip", "omabox clip --from-box"] },
     "env": { "say": "Exports that point Wayland tools on your side at a box, so their windows open in it.",
       "examples": ["eval \"$(omabox env)\""] },
+    "ports": { "say": "Every box's servers, and who has each port on your `127.0.0.1`: that box, another box, one of your own processes, or nothing yet. When a dev server says the address is in use, this names who has it.",
+      "examples": ["omabox ports", "omabox ports --json"] },
     "host": { "say": "One command on your real desktop, when you asked for it: the one way past the guard, on the record.",
       "examples": ["omabox host -- hyprctl reload"] },
     "config": { "say": "Your settings: where windows open, confirm before closing, the bar icon.",

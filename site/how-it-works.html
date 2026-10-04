@@ -99,7 +99,8 @@
       </div>
       <p class="note">A box keeps an agent's apps off your desktop and out of your config, and never gets your secrets or input
         devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network. To fence the agent in,
-        pair it with <a href="compare.html#jail">ai-jail</a>.</p>
+        pair it with <a href="compare.html#jail">ai-jail</a>. <a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">SECURITY.md</a>
+        lists each rule that keeps a box off your desktop, where it is enforced and the test that proves it.</p>
     </section>
 
     <section class="grp" id="agents">
@@ -125,6 +126,9 @@
         <div class="card cut"><div class="in"><h3>Separate session buses</h3><p>Tray icons, notifications, D-Bus names and the keyring are per box, so one agent's test never sees another's, or yours.</p></div></div>
         <div class="card cut"><div class="in"><h3>Separate lifetimes</h3><p>One agent's <code>omabox down</code> never ends another's box. A throwaway <code>omabox run -- ctest</code> gets a box of its own, too.</p></div></div>
       </div>
+      <p class="note">One thing they share: their servers reach you on your <code>127.0.0.1</code>, one box per port. A server
+        on a port you or another box already use fails to start (address in use), and <code>omabox ports</code> says who has it. With
+        <code>--net isolated</code> a box keeps its ports to itself.</p>
       <p class="reqs">Each box: about 500 MB, up in about 4 s, down when its agent exits or after 2 h idle.</p>
     </section>
 
@@ -146,7 +150,7 @@
             <div id="spot"></div>
             <p class="hint" id="hint">Your desktop. The boxes are elsewhere, invisible, until you peek.</p>
           </div>
-          <p class="caption">A working copy of the panel in omabox <span class="ver">0.4.4</span>. The boxes are made up; the screenshots are real.</p>
+          <p class="caption">A working copy of the panel in omabox <span class="ver">0.4.8</span>. The boxes are made up; the screenshots are real.</p>
         </div>
       </div>
     </section>

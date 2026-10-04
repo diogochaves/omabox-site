@@ -70,6 +70,16 @@ the project and their DNS pointed at it. www only redirects to omabox.app (301),
 `functions/_middleware.js`; `dist/_routes.json` keeps `/media/*` out of it. The build adds noindex for any other `SITE_URL`. The artifact
 stays where Diogo reviews.
 
+## A new omabox release
+
+The daily deploy picks up a release by itself: the version, `/changelog` and every command on
+`/commands`. The hand-written pages it can't know about. `reviewed-release` holds the release the
+site was last checked against; `.github/workflows/release-check.yml` (daily at 06:47 UTC) opens an
+issue "Review the site for omabox vX" when a newer one is out, and closes it once `reviewed-release`
+on main catches up. `/sync-release` (`.claude/skills/sync-release/`) does the review: what changed
+since that release, sorted into what the build has, pages to touch and claims to test again, then
+the edits, a look, the artifact and the marker.
+
 ## Checking a change
 
 Never open the page on Diogo's real desktop unless he asks (then `omabox host -- xdg-open ...`).
@@ -95,7 +105,7 @@ One look per change, then publish; Diogo reviews on the live page.
 - Keep it light: transform/opacity animations, paused off screen, `prefers-reduced-motion`
   respected; no WebGL scenes, no scroll-jacking (see DIRECTION.md, "Lightweight is a feature").
 - Command output on the page must match the real CLI: `bin/omabox` at the omabox repo's latest
-  release tag (`v0.4.4` on 2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.4>). Install
+  release tag (`v0.4.8` on 2026-10-03, <https://github.com/diogochaves/omabox/tree/v0.4.8>). Install
   steps and README links follow its main branch. The build writes that release's version into every
   `<span class="ver">` and the JSON-LD; the source keeps the last one as the fallback.
 - Screenshots come from a box (`site/media/README.md`), never from the real desktop, and carry no

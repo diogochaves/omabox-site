@@ -93,6 +93,21 @@ Install, GitHub (with its mark).
 Audience: Omarchy users who run coding agents; plugin, theme and app developers on Omarchy; people
 arriving from the computer-use crowd (tell them early that omabox is Omarchy-only).
 
+## Decisions (2026-10-04): every release, reviewed
+
+Diogo: a release can change more than the changelog, and asking each time is easy to forget. Agreed:
+
+- **The build keeps following releases by itself** (version, `/changelog`, `/commands`), daily.
+- **The rest is reviewed per release, with `/sync-release`, in this repo** (not in omabox: the
+  pages and the facts to keep right live here; omabox's tags and CHANGELOG.md are all it needs from
+  there). `reviewed-release` records the last release reviewed, so skipping a few loses nothing.
+- **A nudge:** the `release-check` workflow opens an issue when omabox has a newer release, and closes
+  it when the marker reaches main.
+- First run, 0.4.4 → 0.4.8: `omabox ports` on `/commands` (under You and your desktop); SECURITY.md
+  linked from /how-it-works and /install; /how-it-works says boxes share your `127.0.0.1`, one box per
+  port; the home page's `omabox ls` STATE column is 7 wide. The broker didn't change, so /compare's
+  "tested with omabox 0.4.4" stands.
+
 ## Decisions (2026-10-01): the 0.4.3 update, and pages
 
 omabox went from 0.2.0 to 0.4.3 in three days (three releases on 2026-10-01 alone), and the page's
@@ -213,9 +228,10 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.4.4` on
-  2026-10-01, <https://github.com/diogochaves/omabox/tree/v0.4.4>).
-  The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS`. Default idle is 2h
+- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.4.8` on
+  2026-10-03, <https://github.com/diogochaves/omabox/tree/v0.4.8>; the site reviewed against it on
+  2026-10-04, `reviewed-release`).
+  The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS` (STATE 7 wide since 0.4.7). Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (to re-capture
   from 0.4.3, or confirm unchanged: `UPDATE-0.4.3.md` section 3) (window titles

@@ -1,0 +1,67 @@
+# Opens an issue when omabox has a release newer than the one the site was last reviewed against
+# (reviewed-release), so the hand-written pages get checked (/sync-release, in
+# .claude/skills/sync-release). The build already picks up the version, the changelog and the
+# commands by itself. One issue at a time: a newer release retitles it; it is closed once
+# reviewed-release on main catches up.
+
+name: release-check
+
+on:
+  schedule:
+    - cron: "47 6 * * *"
+  push:
+    branches: [main]
+    paths: [reviewed-release]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PREFIX: "Review the site for omabox"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Compare the latest release with reviewed-release
+        run: |
+          reviewed=$(tr -d '[:space:]' < reviewed-release)
+          latest=$(gh release view -R diogochaves/omabox --json tagName -q .tagName)
+          echo "reviewed $reviewed, latest $latest"
+          open=$(gh issue list --state open --search "\"$PREFIX\" in:title" --json number,title \
+            -q "map(select(.title | startswith(env.PREFIX))) | .[0].number // empty")
+
+          if [ "$(printf '%s\n%s\n' "$latest" "$reviewed" | sort -V | tail -1)" = "$reviewed" ]; then
+            [ -z "$open" ] || gh issue close "$open" -c "The site was reviewed against omabox $reviewed ($GITHUB_SHA)."
+            exit 0
+          fi
+
+          releases=$(gh release list -R diogochaves/omabox -L 50 --json tagName,publishedAt \
+            -q '.[] | "\(.tagName) \(.publishedAt[:10])"' |
+            while read -r tag date; do
+              if [ "$tag" != "$reviewed" ] && [ "$(printf '%s\n%s\n' "$tag" "$reviewed" | sort -V | tail -1)" = "$tag" ]; then
+                echo "- [$tag](https://github.com/diogochaves/omabox/releases/tag/$tag), $date"
+              fi
+            done)
+          title="$PREFIX $latest (reviewed: $reviewed)"
+          body="omabox has releases the site wasn't reviewed against:
+
+          $releases
+
+          The daily deploy already shows the version, the changelog and every command. What it can't know:
+          the hand-written pages, \`site/commands.json\` and the claims in DIRECTION.md.
+
+          In this repo, run \`/sync-release\` in Claude Code. It reads what changed
+          ([$reviewed...$latest](https://github.com/diogochaves/omabox/compare/$reviewed...$latest)), updates the
+          pages and \`reviewed-release\`; this issue closes when that reaches main."
+
+          if [ -n "$open" ]; then
+            gh issue edit "$open" --title "$title" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
