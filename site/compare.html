@@ -61,7 +61,7 @@
     <section class="grp" id="pick">
       <div class="pick">
         <div class="card cut ours"><div class="in"><p class="if">Your agents build and test GUI apps, plugins or themes on Omarchy, several at once</p><p class="then">omabox</p>
-          <p>Parallel, invisible Omarchy desktops, up in about 4 s for about 500 MB each, and your own untouched. Omarchy on Linux only, and not a security boundary.</p></div></div>
+          <p>Parallel, invisible Omarchy desktops, up in 3 to 5 s for 400 to 700 MB each, and your own untouched. Omarchy on Linux only, and not a security boundary.</p></div></div>
         <div class="card cut"><div class="in"><p class="if">You want an agent on your own desktop, beside you, or cloud machines for agents at scale</p><p class="then">Cua</p>
           <p>Cua's fleets run computer-use agents on cloud Linux, Windows, macOS and Android machines for training and evals, and it now runs sandboxes on your own machine too. Its Driver works on your own macOS, Windows or Linux desktop, through a CLI, MCP or SDKs, and can click and type without taking your cursor or focus where the app allows it (on Hyprland, still experimental and a few apps). omabox does the opposite: it keeps agents off your desktop.</p>
           <div class="links"><a href="https://cua.ai">cua.ai ↗</a><a href="https://github.com/trycua/cua">github.com/trycua/cua ↗</a></div></div></div>
@@ -105,7 +105,7 @@
         <div><pre class="code"><span class="p">$ </span>omabox up
 <span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
 <span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app</pre>
-          <p class="caption">Tested with ai-jail 2.6.2 and omabox 0.4.3 on Linux.</p></div>
+          <p class="caption">Tested with ai-jail 2.2.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.6.2.</p></div>
       </div></div>
       <div class="card cut recipe"><div class="in">
         <div style="display:grid;gap:10px"><h3>Or jail the agent itself</h3>

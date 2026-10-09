@@ -42,6 +42,7 @@
 .ib { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; padding: 3px 7px; }
 .ib:hover { color: var(--ink); border-color: var(--line-2); }
 .ib.on { color: var(--red); }
+.ib.slot { visibility: hidden; }   /* every row has its buttons in the same places */
 .rows { display: grid; gap: 4px; max-height: 212px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid transparent; cursor: pointer; }
 .row[aria-selected="true"] { background: var(--panel-2); border-color: var(--line-2); }
@@ -94,11 +95,12 @@
       <h2>What a box gets</h2>
       <p class="lead">Enough of your setup to look and behave like your desktop, and nothing that would let it reach yours.</p>
       <div class="grid2 fence">
-        <div class="card cut in-box"><div class="in"><h3>In the box</h3><ul><li>The repo you started it from, read-only, at the same path</li><li>Your theme, bar layout and terminal settings</li><li>mise's toolchains, so node, python and uv work as on the host</li><li>Its own screen, session bus and throwaway keyring</li></ul></div></div>
+        <div class="card cut in-box"><div class="in"><h3>In the box</h3><ul><li>The repo you started it from, read-only, at the same path (from a git worktree too, so git works there)</li><li>Your theme, bar layout and terminal settings</li><li>mise's toolchains, so node, python and uv work as on the host</li><li>Its own screen, session bus and throwaway keyring</li></ul></div></div>
         <div class="card cut ask"><div class="in"><h3>Off until you ask</h3><ul><li>Network isolation: <code>--net isolated --allow 8081</code></li><li>A systemd user manager: <code>--systemd</code></li><li>X11 apps: <code>--xwayland</code></li><li>Your real desktop, one command at a time: <code>omabox host</code></li></ul></div></div>
       </div>
       <p class="note">A box keeps an agent's apps off your desktop and out of your config, and never gets your secrets or input
-        devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network. To fence the agent in,
+        devices: nothing of <code>~/.config/omarchy</code> but its plugins and themes reaches a box, so not
+        <code>api-keys.env</code> nor your hooks. It is not a security boundary: it shares your kernel, GPU and, by default, your network. To fence the agent in,
         pair it with <a href="compare.html#jail">ai-jail</a>. <a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">SECURITY.md</a>
         lists each rule that keeps a box off your desktop, where it is enforced and the test that proves it.</p>
     </section>
@@ -107,13 +109,16 @@
       <h2>Agents use it on their own</h2>
       <p class="lead">Install once. Your agents reach for a box whenever a task touches the desktop, without you asking and
         without changing your projects.</p>
-      <div class="grid3">
-        <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop.</p>
+      <div class="grid2">
+        <div class="card cut"><div class="in"><h3>A skill they already load</h3><p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop, for about 4k tokens.</p>
           <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
         <div class="card cut"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
         <div class="card cut"><div class="in"><h3>Sign in once, every box starts signed in</h3><p>An app that needs an account, a PIN or a library: set it up in a box once and <code>omabox save</code> it. Boxes started <code>--from</code> the save open with it already set up, keyring included.</p>
           <pre class="code"><span class="p">$ </span>omabox save signed-in
 <span class="p">$ </span>omabox up --from signed-in</pre></div></div>
+        <div class="card cut"><div class="in"><h3>Small shots, so the context lasts</h3><p>Screenshots are most of what a session spends. <code>shot --changed</code> sends only what changed since the last one: a menu opening is about 65 image tokens instead of 1.5k, 6.7 times less over 17 measured actions, and nothing at all when nothing changed. <code>pixel</code> reads a colour as text.</p>
+          <pre class="code"><span class="p">$ </span>omabox shot --changed --window myapp
+<span class="p">$ </span>omabox pixel 40 12   <span class="o"># the colour there, as #rrggbb</span></pre></div></div>
       </div>
     </section>
 
@@ -129,7 +134,7 @@
       <p class="note">One thing they share: their servers reach you on your <code>127.0.0.1</code>, one box per port. A server
         on a port you or another box already use fails to start (address in use), and <code>omabox ports</code> says who has it. With
         <code>--net isolated</code> a box keeps its ports to itself.</p>
-      <p class="reqs">Each box: about 500 MB, up in about 4 s, down when its agent exits or after 2 h idle.</p>
+      <p class="reqs">Each box: 400 to 700 MB, up in 3 to 5 s (it depends on the GPU), down when its agent exits or after 2 h idle.</p>
     </section>
 
     <section class="grp" id="inside">
@@ -150,7 +155,7 @@
             <div id="spot"></div>
             <p class="hint" id="hint">Your desktop. The boxes are elsewhere, invisible, until you peek.</p>
           </div>
-          <p class="caption">A working copy of the panel in omabox <span class="ver">0.4.8</span>. The boxes are made up; the screenshots are real.</p>
+          <p class="caption">A working copy of the panel in omabox <span class="ver">0.5.2</span>. The boxes are made up; the screenshots are real.</p>
         </div>
       </div>
     </section>
@@ -172,6 +177,7 @@
   const cfg = { workspace: "9", confirm: false, always: true };
   const shotOf = b => b.mode === "interactive" ? "media/interactive.webp" : b.shot === "term" ? "media/term-tokyo-night.webp" : b.shot === "menu" ? "media/menu.webp" : "media/desktop.webp";
   const where = () => cfg.workspace === "special" ? "the scratchpad" : "workspace " + cfg.workspace;
+  const slot = icon => `<button class="ib slot" type="button" tabindex="-1" aria-hidden="true">${icon}</button>`;
   function stamp() { const d = new Date(), z = n => String(n).padStart(2, "0"); return `${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}-${String(d.getMilliseconds()).padStart(3, "0")}`; }
   function renderSpot() {
     const b = wboxes.find(x => x.name === peeking);
@@ -198,7 +204,7 @@
     panel.innerHTML = `<div class="phead"><svg><use href="#m"/></svg><div><h4>Boxes</h4><small>${wboxes.length ? wboxes.length + (wboxes.length > 1 ? " boxes up" : " box up") : "No boxes up"}</small></div><button class="ib sp" data-a="settings" type="button" aria-label="Settings">⚙</button></div>
       <div class="rows" role="listbox" aria-label="Boxes">${wboxes.map((b, i) => `<div class="row" role="option" aria-selected="${i === sel}" data-i="${i}">
         <div><div class="nm">${b.name}</div><div class="meta">${b.mode} · ${b.size} · ${b.age}${peeking === b.name ? " · " + (b.mode === "interactive" ? "shown" : "peeking") : ""}${b.keys ? " · keys follow focus" : ""}</div></div>
-        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button>${b.mode === "interactive" ? `<button class="ib ${b.keys ? "on" : ""}" data-a="keys" data-i="${i}" type="button" title="SUPER keys follow focus and the pointer into it: ${b.keys ? "on" : "off"} (f)">⌨</button>` : ""}<button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button>${b.mode === "interactive" ? `<button class="ib" data-a="clip" data-i="${i}" type="button" title="Paste your clipboard into the box (v)">⇲</button><button class="ib" data-a="clipout" data-i="${i}" type="button" title="Copy the box's clipboard out (c)">⇱</button>` : ""}<button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
+        <span class="acts"><button class="ib" data-a="peek" data-i="${i}" type="button" title="${b.mode === "interactive" ? "Show" : "Peek"} (p)">◉</button>${b.mode === "interactive" ? `<button class="ib ${b.keys ? "on" : ""}" data-a="keys" data-i="${i}" type="button" title="SUPER keys follow focus and the pointer into it: ${b.keys ? "on" : "off"} (f)">⌨</button>` : slot("⌨")}<button class="ib" data-a="shot" data-i="${i}" type="button" title="Screenshot (s)">▣</button>${b.mode === "interactive" ? `<button class="ib" data-a="clip" data-i="${i}" type="button" title="Paste your clipboard into the box (v)">⇲</button><button class="ib" data-a="clipout" data-i="${i}" type="button" title="Copy the box's clipboard out (c)">⇱</button>` : slot("⇲") + slot("⇱")}<button class="ib ${armed === b.name ? "armed" : ""}" data-a="down" data-i="${i}" type="button" title="Down (d, twice)">✕</button></span></div>`).join("")}</div>
       <button class="newbtn" data-a="new" type="button">+ ${Date.now() - newAt < 3000 ? "Press n again to start one" : "New interactive box"}</button>
       <div class="keys">↑↓&nbsp;move · p&nbsp;peek/show · s&nbsp;shot · f&nbsp;keys · v&nbsp;paste&nbsp;in · c&nbsp;copy&nbsp;out · d&nbsp;down · n&nbsp;new · r&nbsp;refresh</div>
       <div class="status" aria-live="polite">${esc(status)}</div>`;
@@ -220,6 +226,7 @@
     else if (a === "clipout") { sel = i; status = `omabox: handed text (text/plain;charset=utf-8, 41 bytes) from box '${b.name}' to your clipboard`; }
     else if (a === "down") {
       sel = i;
+      if (armed === b.name && Date.now() - armedAt < 400) return;   // a double-click is not a confirmation, as in the real panel
       if (armed === b.name && Date.now() - armedAt < 3000) { wboxes.splice(i, 1); armed = null; if (peeking === b.name) { peeking = null; renderSpot(); } sel = Math.max(0, Math.min(sel, wboxes.length - 1)); status = `omabox: box '${b.name}' down`; }
       else { armed = b.name; armedAt = Date.now(); status = `Press d again to take '${b.name}' down`; }
     }

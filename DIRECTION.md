@@ -108,6 +108,32 @@ Diogo: a release can change more than the changelog, and asking each time is eas
   port; the home page's `omabox ls` STATE column is 7 wide. The broker didn't change, so /compare's
   "tested with omabox 0.4.4" stands.
 
+## Decisions (2026-10-09): 0.5.0 to 0.5.2, several monitors in a box
+
+0.5.0 (released with 0.5.1 and 0.5.2 the same day) lets a box have as many monitors as a test needs.
+Agreed with Diogo: **no new home page section** (draft 5 made the home page a short tour); the whole
+story goes on `/develop`, and the home page gets a teaser that adds no length.
+
+- **`/develop#monitors`, "Every desk you don't have"**, first on the page: a real shot of a box with
+  three monitors (`media/monitors.webp`), `up --monitor` and `monitor add/remove`, `output drop
+  --cycles` with `gdb` and the SHELL column ("find the crash before your users do"), and what an
+  interactive box does with monitors (windows, scaled down; the pointer across them needs omabox's
+  aquamarine build). The themes card has `--theme-dir` and `--theme`.
+- **Home:** the hero's second tile is a box with three monitors (CSS, transform/opacity only), its
+  peek the same shot; step 2 of How it works links `/develop#monitors`; the `omabox ls` panel has
+  the SHELL column and an app-menu box of `3 monitors`; one line says git works in a box started from
+  a worktree.
+- **/how-it-works:** a card for `shot --changed` (6.7x fewer image tokens, the omabox changelog's
+  measure) and `pixel`; the skill is about 4k tokens; nothing of `~/.config/omarchy` but plugins
+  and themes reaches a box; the widget copy keeps every button slot and ignores a second Down within
+  0.4 s, as `plugin/Panel.qml` does.
+- **/install and /develop's limits:** a box's monitors are virtual, so real ones (modes, HDR, VRR, a
+  real hotplug) and suspend don't run in one, and the lock screen runs but takes no real password.
+  /install has `omabox config gpu`, `gpu release` and `omabox reload`.
+- `/commands`: monitor, output, reload, pixel, gdb, scroll and which in `site/commands.json`.
+- No highlight for the security fixes, the GPU picker and the rest (no "new in" on the site); they
+  land where a list was incomplete.
+
 ## Decisions (2026-10-01): the 0.4.3 update, and pages
 
 omabox went from 0.2.0 to 0.4.3 in three days (three releases on 2026-10-01 alone), and the page's
@@ -228,10 +254,10 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.4.8` on
-  2026-10-03, <https://github.com/diogochaves/omabox/tree/v0.4.8>; the site reviewed against it on
-  2026-10-04, `reviewed-release`).
-  The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE NET IDLE PLUGINS` (STATE 7 wide since 0.4.7). Default idle is 2h
+- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.5.2` on
+  2026-10-09, <https://github.com/diogochaves/omabox/tree/v0.5.2>; the site reviewed against it on
+  2026-10-09, `reviewed-release`).
+  The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE SHELL NET IDLE PLUGINS` (STATE 7 wide since 0.4.7, SHELL 14 since 0.5.0; NET is `connected` or `isolated`; SIZE is `N monitors` for a box with more than one). Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (to re-capture
   from 0.4.3, or confirm unchanged: `UPDATE-0.4.3.md` section 3) (window titles
@@ -242,15 +268,18 @@ aijail.io's plain narrative and compare page as a reference.
   works beside you on your desktop (experimental on Hyprland and Omarchy, LibreOffice Calc and
   Inkscape; its README now leads with Driver sessions on an Omarchy desktop); ai-jail runs on Linux,
   macOS and Windows through WSL2 (2.6.2 is current; the app recipe passes with 2.6.2 and omabox
-  0.4.3); omarchy-in-omarchy installs itself in about 30 minutes once, then boots in about 18 s,
+  0.4.3, and with 2.2.1 and omabox 0.5.2 on 2026-10-09: a jailed foot opened in the box); omarchy-in-omarchy installs itself in about 30 minutes once, then boots in about 18 s,
   8 GB of RAM by default (its README doesn't mention audio or suspend).
 - The ai-jail broker (`omabox broker on`) broke with ai-jail 2.6.2, which passes bwrap's options
   through a memfd (`--args FD`, ai-jail #147) instead of its command line, where the broker read the
   jail's limits. omabox 0.4.4 (2026-10-01) reads them from that memfd; checked with ai-jail 2.2.1
   and 2.6.2 (a jailed agent ran up, run -d, windows, shot, lua, ls, down; host, peek, interactive
   boxes, guard and clip refused).
-- A box (0.4.3, default `up`) measured on 2026-10-01: up in 4.2 s every time, 400–500 MB (PSS). The
-  site says "about 500 MB, up in about 4 s".
+- A box (default `up`) measured on 2026-10-09 with omabox 0.5.2, three starts each: on an AMD iGPU
+  up in 4.9–5.2 s and 409 MB (PSS, every process carrying `OMABOX_BOX`), on an NVIDIA RTX dGPU up in
+  3.1–3.2 s and 704 MB. The site says "400 to 700 MB, up in 3 to 5 s". (0.4.3 on 2026-10-01: 4.2 s,
+  400–500 MB.) The broker recipe was not re-run for 0.5.x: it needs `omabox broker on`, Diogo's call;
+  /compare still says "tested with omabox 0.4.4".
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open

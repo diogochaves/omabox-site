@@ -25,9 +25,12 @@
         <div class="card cut"><div class="in"><h3>On NVIDIA</h3>
           <p>Headless boxes on NVIDIA, and the confirm-close setting, need a fix to aquamarine (Hyprland's backend library) until a
             release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it
-            privately inside the clone; your system's copy isn't touched, and everything else runs on it.</p>
-          <p>An interactive box renders on the GPU your desktop renders on. With several GPUs, point a headless box at one with
-            <code>OMABOX_RENDER_NODE</code>.</p></div></div>
+            privately inside the clone; your system's copy isn't touched, and everything else runs on it. A system copy patched
+            with the fix counts too. The private build also carries omabox's own fixes for boxes you drive (a held key, your
+            pointer across a box's monitor windows), so it is built even when your system's copy has the fix.</p>
+          <p>An interactive box renders on the GPU your desktop renders on. With several GPUs, <code>omabox config gpu</code>
+            (or the bar widget's Settings) picks the one headless boxes render on, and <code>omabox gpu release</code> takes
+            down the boxes on one before you hand it to a VM.</p></div></div>
       </div>
     </section>
 
@@ -54,7 +57,8 @@
         <div class="card cut"><div class="in"><h3>Update</h3>
           <pre class="code"><span class="p">$ </span>git pull && ./install.sh</pre>
           <p>Run it after a Hyprland upgrade too. <code>omabox --version</code> says which aquamarine boxes use. After an
-            upgrade the bar runs the old widget until the shell restarts; its panel says so. What changed in each release is in the
+            upgrade the bar runs the old widget until the shell restarts; its panel says so. Boxes already up keep the Hyprland
+            config they started with: <code>omabox reload</code> gives one the new one. What changed in each release is in the
             <a href="changelog.html">changelog</a>.</p></div></div>
         <div class="card cut"><div class="in"><h3>Remove</h3>
           <pre class="code"><span class="p">$ </span>omabox down --all                         <span class="o"># every box</span>
@@ -74,7 +78,8 @@
       <ul class="lim">
         <li>Apps that need system services over the system bus (disks, NetworkManager, bluetooth, power) open with errors or not
           at all: a box has no system bus, by design.</li>
-        <li>No real hardware: monitors, HDR and VRR, input devices, audio, suspend and lock never run in a box. For the
+        <li>No real hardware: a box's monitors are virtual (as many as you like), so real ones (their modes, HDR and VRR, a
+          real hotplug), input devices, audio and suspend never run in it, and its lock screen takes no real password. For the
           installer, system services or a reboot, <a href="compare.html#pick">a whole machine in a VM</a> is the tool.</li>
         <li>It is not a security boundary: it shares your kernel, GPU and, by default, your network. For a fence around the
           agent, use <a href="compare.html#jail">ai-jail</a> with it. What a box does keep out, and the test for each rule:

@@ -106,7 +106,7 @@ One look per change, then publish; Diogo reviews on the live page.
 - Keep it light: transform/opacity animations, paused off screen, `prefers-reduced-motion`
   respected; no WebGL scenes, no scroll-jacking (see DIRECTION.md, "Lightweight is a feature").
 - Command output on the page must match the real CLI: `bin/omabox` at the omabox repo's latest
-  release tag (`v0.4.8` on 2026-10-03, <https://github.com/diogochaves/omabox/tree/v0.4.8>). Install
+  release tag (`v0.5.2` on 2026-10-09, <https://github.com/diogochaves/omabox/tree/v0.5.2>). Install
   steps and README links follow its main branch. The build writes that release's version into every
   `<span class="ver">` and the JSON-LD; the source keeps the last one as the fallback.
 - Screenshots come from a box (`site/media/README.md`), never from the real desktop, and carry no
