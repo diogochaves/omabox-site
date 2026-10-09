@@ -22,9 +22,10 @@ Agreed: Diogo left the structure to us. Draft 5 was published as its own artifac
 
 - **Nav, on every page:** How it works · Commands · Develop · Compare · Changelog · Install · GitHub.
   Pages only; under 1000 px a Menu button (a `<details>`, no script). Written once in the home page.
-- **Home (`/`), direct:** hero (unchanged); What it fixes (the side-by-side); How it works in four
-  steps (reach for a box, `up`, work in it, gone with the agent), linking to /how-it-works and
-  /commands; parallel boxes (the lanes and `omabox ls`); What it is not (not a sandbox, not for your
+- **Home (`/`), direct:** hero (unchanged); The problem (the side-by-side; "What it fixes" until
+  2026-10-09); How it works in four steps (reach for a box, `up`, work in it, gone with the agent),
+  linking to /how-it-works and /commands; parallel boxes (the lanes and `omabox ls`); New in (a tab
+  per release, since 2026-10-09); What it is not (not a sandbox, not for your
   own desktop, not a whole machine, only for Omarchy), linking to /compare and /install; Keep reading
   (a card per page); FAQ; install and Built by; footer.
 - **`/how-it-works`:** what it keeps off your desktop and how; what a box gets and what stays off
@@ -131,8 +132,27 @@ story goes on `/develop`, and the home page gets a teaser that adds no length.
   real hotplug) and suspend don't run in one, and the lock screen runs but takes no real password.
   /install has `omabox config gpu`, `gpu release` and `omabox reload`.
 - `/commands`: monitor, output, reload, pixel, gdb, scroll and which in `site/commands.json`.
-- No highlight for the security fixes, the GPU picker and the rest (no "new in" on the site); they
-  land where a list was incomplete.
+- No highlight for the security fixes, the GPU picker and the rest; they land where a list was
+  incomplete.
+
+## Decisions (2026-10-09, later): "New in" on the home page
+
+Diogo, after the 0.5.0 update: the home page gets a **"New in 0.5.0" section** that changes with each
+release that has a cool feature, with a way back through every earlier one, a history of what omabox
+gained. This replaces the rule "no 'new in' on the home page" (2026-10-01).
+
+- **`#new`, after Parallel boxes, before What it is not.** A tab per release with something to show,
+  newest first (0.5.0, 0.4.3, 0.4.2, 0.4.0, 0.3.0, 0.2.0, 0.1.1, 0.1.0); the heading says "New in"
+  the chosen one. Each panel: the release, its date, a few words, a link to its `/changelog` entry,
+  and two to four highlights (a title, a line, a command or a link to the page with the story).
+  Fix-only releases (0.4.8, 0.4.7, 0.4.6, 0.4.5, 0.4.4, 0.4.1, 0.3.2, 0.3.1, 0.2.1, 0.1.2, 0.5.1,
+  0.5.2) get no tab. Without script every release shows, one under the other.
+- Hand-written in `site/omabox.html` (the artifact has no build); `/sync-release` adds a tab when a
+  release has something worth one. Security fixes stay off it: they are not a feature, and the
+  site says "not a security boundary".
+- **"What it fixes" is now "The problem"**, its heading "Without omabox, an agent testing a desktop app
+  tests it on your desktop.": read alone, the old heading seemed to say omabox did that. The id stays
+  `#fixes` and the hero's button still says "What it fixes".
 
 ## Decisions (2026-10-01): the 0.4.3 update, and pages
 
@@ -155,7 +175,8 @@ reference parts went stale with it (the checklist: `UPDATE-0.4.3.md`). Agreed wi
   - `/changelog`: generated from the omabox `CHANGELOG.md`.
 - **The version is fetched at build time** (the latest release), with the source's as the fallback,
   like the contributors. In the hero it will link to `/changelog`.
-- **No "new in" on the home page** (the rule stays); what's new lives on `/changelog`.
+- **No "new in" on the home page** (the rule stays); what's new lives on `/changelog`. (Replaced on
+  2026-10-09: the home page has a "New in" section.)
 - **omarchy-pkgs (omacom/omarchy-pkgs#754): say nothing until it merges.** "Coming" would promise a
   maintainer's decision. Have the package install block ready for the day it does.
 - **Order:** first fix what was wrong on the single page and ship it (done 2026-10-01: version,

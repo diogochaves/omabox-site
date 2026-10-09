@@ -134,6 +134,26 @@
 .steps4 .code { font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 12px/1 var(--mono); padding: 6px 9px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); }
+/* what's new: a tab per release that added something to show, newest first */
+.rtabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.rtabs button { flex: none; font: 500 12.5px var(--mono); padding: 7px 12px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); cursor: pointer; }
+.rtabs button:hover { color: var(--ink); border-color: var(--brand); }
+.rtabs button[aria-selected="true"] { color: var(--on-brand); background: var(--brand); border-color: var(--brand); box-shadow: 0 0 14px var(--glow); }
+html:not(.js) .rel + .rel { margin-top: 44px; }   /* without script every release shows, one under the other */
+.rmeta { font: 12px var(--mono); color: var(--muted); margin: 0 0 14px; }
+.rmeta b { color: var(--ink); font-weight: 500; }
+.rbody { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 980px) { .rbody.fig { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; } }
+.rfig { --cut: 14px; --fc: var(--brand); margin: 0; }
+.rfig .in { padding: 10px; display: grid; gap: 8px; }
+.rfig img { display: block; width: 100%; height: auto; }
+.hls { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (min-width: 760px) { .rbody:not(.fig) .hls { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rbody:not(.fig) .hls li:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+.hls li { background: var(--bg-2); padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.hls h3 { font-size: 17px; margin: 0; }
+.hls p { margin: 0; color: var(--ink-2); font-size: 15px; }
+.hls a { font: 500 12.5px var(--mono); text-decoration: none; }
+.hls .code { font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
 /* what it is not */
 .isnot .card a { font: 500 13px var(--mono); text-decoration: none; }
 
@@ -328,8 +348,8 @@
 
   <section class="sec" id="fixes">
     <div class="head">
-      <p class="tag">What it fixes</p>
-      <h2>An agent testing a desktop app tests it on <span class="hl">your</span> desktop.</h2>
+      <p class="tag">The problem</p>
+      <h2>Without omabox, an agent testing a desktop app tests it on <span class="hl">your</span> desktop.</h2>
       <p class="lead">Ask an agent to check a GUI change and it runs the app where you are working. Windows land on top of your
         editor, your keystrokes go into its app, your workspace switches, your cursor jumps, a password prompt waits for you.
         Here is the same agent, twice.</p>
@@ -434,6 +454,99 @@
       <span class="reqs" style="margin:0">Each box: 400 to 700 MB, up in 3 to 5 s, down when its agent exits.</span>
     </div>
     <div class="ls cut"><div class="in"><div class="th">~/code/app · your terminal</div><pre id="ls"></pre></div></div>
+  </section>
+
+  <section class="sec" id="new">
+    <div class="head">
+      <p class="tag">What's new</p>
+      <h2>New in <span class="hl" id="newv">0.5.0</span></h2>
+      <p class="lead">What each release added that you would notice, newest first. Every fix is in the
+        <a href="changelog.html">changelog</a>.</p>
+    </div>
+    <div class="rtabs" role="tablist" aria-label="Releases">
+      <button type="button" role="tab" id="t-050" aria-controls="r-050" data-v="0.5.0">0.5.0</button>
+      <button type="button" role="tab" id="t-043" aria-controls="r-043" data-v="0.4.3">0.4.3</button>
+      <button type="button" role="tab" id="t-042" aria-controls="r-042" data-v="0.4.2">0.4.2</button>
+      <button type="button" role="tab" id="t-040" aria-controls="r-040" data-v="0.4.0">0.4.0</button>
+      <button type="button" role="tab" id="t-030" aria-controls="r-030" data-v="0.3.0">0.3.0</button>
+      <button type="button" role="tab" id="t-020" aria-controls="r-020" data-v="0.2.0">0.2.0</button>
+      <button type="button" role="tab" id="t-011" aria-controls="r-011" data-v="0.1.1">0.1.1</button>
+      <button type="button" role="tab" id="t-010" aria-controls="r-010" data-v="0.1.0">0.1.0</button>
+    </div>
+    <div class="rel" id="r-050" role="tabpanel" aria-labelledby="t-050" tabindex="0">
+      <p class="rmeta"><b>0.5.0</b> · 2026-10-09 · several monitors in one box · <a href="changelog.html#v0.5.0">changelog →</a></p>
+      <div class="rbody fig">
+      <figure class="rfig cut"><div class="in"><img src="media/monitors.webp" alt="One box with three monitors, each with its own Omarchy bar: the app menu on the main one, Neovim on a scaled one below it, a portrait one beside them" width="1600" height="1056" loading="lazy"><p class="caption" style="margin:0">One box, three monitors, taken in the box with <code>omabox shot</code>.</p></div></figure>
+      <ul class="hls">
+        <li><h3>Several monitors in one box</h3><p>As many as a test needs, any size, scale and place, a bar on each. Add and unplug them while the box runs.</p><pre class="code"><span class="p">$ </span>omabox up --monitor 1080x1920 --monitor 2560x1440,scale=1.6,below</pre><a href="develop.html#monitors">Every desk you don't have →</a></li>
+        <li><h3>A monitor that drops off and comes back</h3><p><code>output drop --cycles</code> does what a monitor waking up does, again and again, until your shell crashes: it found a real crash in a shell plugin. <code>gdb</code> gives the backtrace.</p></li>
+        <li><h3>Your theme, live</h3><p><code>--theme-dir</code> puts the theme you are editing in the box, every save with it; <code>--theme</code> starts a box on the theme you name, whatever your desktop is on.</p><a href="develop.html">Themes on /develop →</a></li>
+        <li><h3>Only what changed</h3><p><code>shot --changed</code> sends an agent only what an action changed: a menu opening is about 65 image tokens instead of 1.5k. <code>shot --burst</code> catches a transition in frames.</p><a href="how-it-works.html#agents">Small shots →</a></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-043" role="tabpanel" aria-labelledby="t-043" tabindex="0">
+      <p class="rmeta"><b>0.4.3</b> · 2026-10-01 · plugin and app work · <a href="changelog.html#v0.4.3">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>It says why a plugin isn't in the bar</h3><p><code>up --plugin</code> and <code>restart-shell</code> print why the shell didn't load it: a manifest it refuses, a QML error.</p></li>
+        <li><h3>The box says what it tested</h3><p><code>ls --json</code> records the Omarchy version, the theme and each plugin's commit, so a screenshot in a pull request says exactly what it shows.</p></li>
+        <li><h3>Steps written for your desktop, done in a box</h3><p>The agent skill maps "link the plugin", "edit shell.json" and the rest to the box, where they can't change your bar.</p><a href="develop.html">Plugins on /develop →</a></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-042" role="tabpanel" aria-labelledby="t-042" tabindex="0">
+      <p class="rmeta"><b>0.4.2</b> · 2026-10-01 · an Omarchy checkout in a box · <a href="changelog.html#v0.4.2">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>Your Omarchy checkout, not installed</h3><p><code>up --omarchy DIR</code> runs a box on that tree's config, shell and scripts, as <code>omarchy dev link</code> would, without touching your system.</p><pre class="code"><span class="p">$ </span>omabox up dev --omarchy ~/src/omarchy</pre></li>
+        <li><h3>Omarchy's own binds work in a box</h3><p>The browser bind opens the browser in the box, and Omarchy's shell restart restarts the box's shell.</p></li>
+        <li><h3>The bar widget, offered at setup</h3><p><code>omabox setup</code> asks to put it in your bar, and the widget says when it is older than the omabox installed.</p></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-040" role="tabpanel" aria-labelledby="t-040" tabindex="0">
+      <p class="rmeta"><b>0.4.0</b> · 2026-10-01 · set up in one command · <a href="changelog.html#v0.4.0">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>One command to set up, one to undo</h3><p><code>omabox setup</code> links omabox, the agent skill and the bar widget and offers the guard; <code>setup --remove</code> undoes all of it.</p><a href="install.html">Install →</a></li>
+        <li><h3>Your system's aquamarine</h3><p>Boxes run on the aquamarine you have, and use the private build only for what needs its fix.</p></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-030" role="tabpanel" aria-labelledby="t-030" tabindex="0">
+      <p class="rmeta"><b>0.3.0</b> · 2026-09-30 · agents see inside a box · <a href="changelog.html#v0.3.0">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>Inside the box's Hyprland</h3><p><code>omabox lua</code> evaluates Lua in it, <code>log</code> reads its logs, <code>events</code> stamps what it reports: an agent checks without a screenshot.</p><pre class="code"><span class="p">$ </span>omabox lua 'hl.get_active_window()'</pre></li>
+        <li><h3>Sign in once, every box starts signed in</h3><p><code>omabox save</code> keeps a box's HOME, keyring included; boxes started <code>--from</code> it open already set up.</p></li>
+        <li><h3>Agents inside ai-jail drive boxes of their own</h3><p><code>omabox broker on</code>, with no change to ai-jail: the jail's boxes get only what the jail has.</p><a href="compare.html#jail">ai-jail with omabox →</a></li>
+        <li><h3>Your Hyprland build in a box</h3><p><code>up --hyprland PATH</code> runs a build of yours instead of the installed one, beside a stock box to compare.</p></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-020" role="tabpanel" aria-labelledby="t-020" tabindex="0">
+      <p class="rmeta"><b>0.2.0</b> · 2026-09-29 · windows, waits and a box per agent · <a href="changelog.html#v0.2.0">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>Windows as targets</h3><p><code>omabox windows</code> lists where each window is and what covers it; <code>shot</code>, <code>click</code> and <code>keys</code> take <code>--window</code>.</p></li>
+        <li><h3>Wait for the screen, not a timer</h3><p><code>omabox wait</code> returns when the screen holds still, a window opens or a command succeeds: no more <code>sleep</code>.</p></li>
+        <li><h3>A box per agent session</h3><p>Two agents in one repo get a box each, named after the session, and each goes down when its agent exits.</p></li>
+        <li><h3>A network of its own</h3><p>Every box gets its own network: it reaches the internet and your servers, and you reach its. Much of this release is Tyler South's (<a href="https://github.com/btsouth">@btsouth</a>).</p></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-011" role="tabpanel" aria-labelledby="t-011" tabindex="0">
+      <p class="rmeta"><b>0.1.1</b> · 2026-09-25 · NVIDIA · <a href="changelog.html#v0.1.1">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>NVIDIA GPUs</h3><p>Headless boxes on NVIDIA, thanks to Tyler South (<a href="https://github.com/btsouth">@btsouth</a>).</p></li>
+      </ul></div>
+    </div>
+    <div class="rel" id="r-010" role="tabpanel" aria-labelledby="t-010" tabindex="0">
+      <p class="rmeta"><b>0.1.0</b> · 2026-09-25 · the first release · <a href="changelog.html#v0.1.0">changelog →</a></p>
+      <div class="rbody">
+      <ul class="hls">
+        <li><h3>Boxes</h3><p><code>omabox up</code>: a whole Omarchy desktop, invisible, for an agent to launch, click, type and screenshot in.</p></li>
+        <li><h3>Tests that touch the desktop</h3><p><code>omabox run -- ctest</code> runs them against a box's own tray, notifications and keyring.</p></li>
+        <li><h3>Peek, or drive it yourself</h3><p><code>omabox peek</code> watches a box; <code>up --interactive</code> makes one a window you drive.</p></li>
+        <li><h3>The skill, the guard and the bar widget</h3><p>Agents reach for a box on their own, the opt-in guard catches a window they forget to box, and the widget lists every box in your bar.</p></li>
+      </ul></div>
+    </div>
   </section>
 
   <section class="sec" id="not">
@@ -670,6 +783,19 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
     const l = { ...n, idle: "0m/2h", st: "booting" }; lanes.push(l); renderLanes();
     await sleep(motion ? 1400 : 0); l.st = "up"; renderLanes();
   });
+
+  /* what's new: one release at a time, the newest first; the arrow keys move between them */
+  const rtabs = $$('.rtabs [role="tab"]');
+  const showRel = (t, focus) => {
+    rtabs.forEach(b => { const on = b === t; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; document.getElementById(b.getAttribute("aria-controls")).hidden = !on; });
+    $("#newv").textContent = t.dataset.v;
+    if (focus) t.focus();
+  };
+  rtabs.forEach((t, i) => {
+    t.addEventListener("click", () => showRel(t));
+    t.addEventListener("keydown", e => { const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key]; if (d) { e.preventDefault(); showRel(rtabs[(i + d + rtabs.length) % rtabs.length], true); } });
+  });
+  if (rtabs.length) showRel(rtabs[0]);
 
   /* the problem: the same five steps, on your desktop and in a box; played once when you get there */
   const scBad = $("#sc-bad"), scGood = $("#sc-good"), msGood = $("#ms-good"), steps = $$("#steps i");

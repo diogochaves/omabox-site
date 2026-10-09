@@ -46,11 +46,16 @@ Go through the changelog entry by entry, plus the README and skill diffs, and pu
   - install steps and requirements (/install), against the README on **main** (AGENTS.md, Rules);
   - the bar widget's keys, rows and settings face against `plugin/Panel.qml`;
   - the agents the skill supports; anything for plugin, theme or Omarchy developers (/develop);
-  - the ai-jail recipe and broker (/compare) when `broker`, `env` or the jail detection changed.
+  - the ai-jail recipe and broker (/compare) when `broker`, `env` or the jail detection changed;
+  - **"New in" on the home page** (`#new`): a release with a feature people would notice gets a tab,
+    first in the row, and the heading's `#newv` and the first tab become its version. Two to four
+    highlights, each a title, one line and a command or a link to the page with the story; the
+    release's date and its `/changelog` anchor (`changelog.html#vX.Y.Z`). A fix-only release gets
+    none; a later patch with a feature gets its own tab. Security fixes never go there.
 - **A claim to test again** in a box (load the omabox skill): a measured number (boot time, memory),
   a tested recipe, captured terminal output. Re-run it and record the date in DIRECTION.md.
 - **Not for the site**: internal fixes, tests, NOTES.md. Most fixes land here: the site isn't a
-  changelog (DIRECTION.md: no "new in" on the home page).
+  changelog: only a release's features reach "New in", and only the ones people would notice.
 
 Show Diogo the sorted list before editing when anything is his call: new copy on the home page, a
 promise about what omabox does, dropping something. Plain additions to /commands, a link, an output
