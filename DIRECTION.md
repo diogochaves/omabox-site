@@ -150,6 +150,10 @@ gained. This replaces the rule "no 'new in' on the home page" (2026-10-01).
 - Hand-written in `site/omabox.html` (the artifact has no build); `/sync-release` adds a tab when a
   release has something worth one. Security fixes stay off it: they are not a feature, and the
   site says "not a security boundary".
+- **The section stays after Parallel boxes** (Diogo asked about moving it first, 2026-10-09: it would
+  put release notes before the problem they solve and split the hero from its side-by-side). The hero
+  instead opens with one line, "New in 0.5.0 · several monitors in one box →", which jumps to `#new`
+  on that release's tab and follows each release with it.
 - **"What it fixes" is now "The problem"**, its heading "Without omabox, an agent testing a desktop app
   tests it on your desktop.": read alone, the old heading seemed to say omabox did that. The id stays
   `#fixes` and the hero's button still says "What it fixes".

@@ -48,7 +48,8 @@ Go through the changelog entry by entry, plus the README and skill diffs, and pu
   - the agents the skill supports; anything for plugin, theme or Omarchy developers (/develop);
   - the ai-jail recipe and broker (/compare) when `broker`, `env` or the jail detection changed;
   - **"New in" on the home page** (`#new`): a release with a feature people would notice gets a tab,
-    first in the row, and the heading's `#newv` and the first tab become its version. Two to four
+    first in the row, and the heading's `#newv` and the first tab become its version; the hero's
+    `.newpill` (its `data-rel`, "New in X.Y.Z" and its few words) follows it. Two to four
     highlights, each a title, one line and a command or a link to the page with the story; the
     release's date and its `/changelog` anchor (`changelog.html#vX.Y.Z`). A fix-only release gets
     none; a later patch with a feature gets its own tab. Security fixes never go there.

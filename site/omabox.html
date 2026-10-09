@@ -11,6 +11,11 @@
 @media (min-width: 1080px) { .hero { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 56px; padding-block: 104px 96px; } }
 @keyframes px { from { opacity: 0; } 50% { opacity: 1; fill: #fff; } }
 .hero h1 { margin: 16px 0 18px; }
+/* the newest release's highlight, a jump to What's new (it follows the release, with #new's first tab) */
+.newpill { display: inline-flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; max-width: 100%; margin-bottom: 22px; padding: 6px 12px; font: 500 12px/1.5 var(--mono); color: var(--ink-2); text-decoration: none; border: 1px solid color-mix(in srgb, var(--brand) 45%, var(--line-2)); background: color-mix(in srgb, var(--brand) 8%, var(--panel)); }
+.newpill b { color: var(--brand); font-weight: 500; }
+.newpill i { font-style: normal; color: var(--brand); }
+.newpill:hover { border-color: var(--brand); box-shadow: 0 0 14px var(--glow); color: var(--ink); }
 .never { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 8px 22px; font-size: 15px; color: var(--ink-2); }
 @media (min-width: 560px) { .never { grid-template-columns: 1fr 1fr; } }
 .never li { display: flex; gap: 10px; align-items: baseline; }
@@ -294,6 +299,7 @@ html:not(.js) .rel + .rel { margin-top: 44px; }   /* without script every releas
 <main class="wrap" id="top">
   <section class="hero">
     <div>
+      <a class="newpill" href="#new" data-rel="0.5.0"><b>New in 0.5.0</b><span>several monitors in one box</span><i>→</i></a>
       <p class="tag">Agents, off your desktop</p>
       <h1>Your agents get desktops of their own. <span class="hl">Yours stays untouched.</span></h1>
       <p class="lead">omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel, to launch, click, type and
@@ -796,6 +802,7 @@ omabox: box 'app-keyring-3b7a6c11' down</pre>
     t.addEventListener("keydown", e => { const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key]; if (d) { e.preventDefault(); showRel(rtabs[(i + d + rtabs.length) % rtabs.length], true); } });
   });
   if (rtabs.length) showRel(rtabs[0]);
+  $(".newpill")?.addEventListener("click", e => { const t = rtabs.find(b => b.dataset.v === e.currentTarget.dataset.rel); if (t) showRel(t); });
 
   /* the problem: the same five steps, on your desktop and in a box; played once when you get there */
   const scBad = $("#sc-bad"), scGood = $("#sc-good"), msGood = $("#ms-good"), steps = $$("#steps i");
