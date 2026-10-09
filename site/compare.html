@@ -105,7 +105,7 @@
         <div><pre class="code"><span class="p">$ </span>omabox up
 <span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
 <span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" --env WAYLAND_DISPLAY -- ./build/app</pre>
-          <p class="caption">Tested with ai-jail 2.2.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.6.2.</p></div>
+          <p class="caption">Tested with ai-jail 2.8.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.2.1 and 2.6.2.</p></div>
       </div></div>
       <div class="card cut recipe"><div class="in">
         <div style="display:grid;gap:10px"><h3>Or jail the agent itself</h3>
@@ -115,7 +115,7 @@
             project, only the boxes it started, all gone when it exits.</p></div>
         <div><pre class="code"><span class="p">$ </span>omabox broker on   <span class="o"># prints the lines to add to ~/.ai-jail</span>
 <span class="p">$ </span>ai-jail claude</pre>
-          <p class="caption">Tested with ai-jail 2.2.1 and 2.6.2 and omabox 0.4.4 on Linux.</p></div>
+          <p class="caption">Tested with ai-jail 2.8.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.2.1 and 2.6.2.</p></div>
       </div></div>
       <p class="note">Not for a jailed agent: <code>omabox host</code>, <code>peek</code>, interactive boxes, the guard and
         <code>config</code> changes. Driving a box is running code in it, so the broker is what keeps a box from being a way out

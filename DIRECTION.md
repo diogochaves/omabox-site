@@ -305,8 +305,10 @@ aijail.io's plain narrative and compare page as a reference.
 - A box (default `up`) measured on 2026-10-09 with omabox 0.5.2, three starts each: on an AMD iGPU
   up in 4.9–5.2 s and 409 MB (PSS, every process carrying `OMABOX_BOX`), on an NVIDIA RTX dGPU up in
   3.1–3.2 s and 704 MB. The site says "400 to 700 MB, up in 3 to 5 s". (0.4.3 on 2026-10-01: 4.2 s,
-  400–500 MB.) The broker recipe was not re-run for 0.5.x: it needs `omabox broker on`, Diogo's call;
-  /compare still says "tested with omabox 0.4.4".
+  400–500 MB.) Both /compare recipes re-run on 2026-10-09 with ai-jail 2.8.1 and omabox 0.5.2 (the
+  broker on for the run, then off): a jailed `claude -p` drove its own box (up, ls `isolated`, run -d,
+  windows, shot -o into its project, down; host refused) with only ai-jail 2.8's default egress to
+  its API, and foot in a jail drew in a box and saw no `~/.ssh`. Both captions say 2.8.1 and 0.5.2.
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open
