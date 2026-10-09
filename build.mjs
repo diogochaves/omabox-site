@@ -15,7 +15,10 @@
 // source and the build says so. The commands and changelog pages can't be made without the release,
 // so then the build stops, and the site keeps its last deploy.
 
+import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+// The link card's address changes with the card: X and others keep a card by its URL for days.
+const OG_V = createHash("sha256").update(await readFile("site/media/og.png")).digest("hex").slice(0, 8);
 
 const REPO = "diogochaves/omabox";
 const HOME = "https://omabox.app";
@@ -229,7 +232,7 @@ ${SITE === HOME ? (page.home ? '<meta name="google-site-verification" content="-
 <meta property="og:url" content="${SITE}${page.path}">
 <meta property="og:title" content="${esc(page.title)}">
 <meta property="og:description" content="${esc(page.card || page.desc)}">
-<meta property="og:image" content="${SITE}/media/og.png">
+<meta property="og:image" content="${SITE}/media/og.png?v=${OG_V}">
 <meta name="twitter:card" content="summary_large_image">
 ${page.home ? `<script type="application/ld+json">${JSON.stringify({
   "@context": "https://schema.org", "@type": "SoftwareApplication", name: "omabox", url: `${SITE}/`,
