@@ -153,7 +153,9 @@ gained. This replaces the rule "no 'new in' on the home page" (2026-10-01).
 - **The section stays after Parallel boxes** (Diogo asked about moving it first, 2026-10-09: it would
   put release notes before the problem they solve and split the hero from its side-by-side). The hero
   instead opens with one line, "New in 0.5.0 · several monitors in one box →", which jumps to `#new`
-  on that release's tab and follows each release with it.
+  on that release's tab and follows each release with it. From 1080 px up it sits at the top right,
+  on the big wordmark's row, right-aligned with the nav (Diogo, 2026-10-09); narrower, the Menu
+  button has that corner, so it stays above the hero's tag.
 - **"What it fixes" is now "The problem"**, its heading "Without omabox, an agent testing a desktop app
   tests it on your desktop.": read alone, the old heading seemed to say omabox did that. The id stays
   `#fixes` and the hero's button still says "What it fixes".
