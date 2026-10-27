@@ -19,7 +19,9 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   on /install), the "what's coming" strip (not on /next) and footer, and fills their
   `<!-- markers -->`. The nav (between `<!-- nav -->` markers), the footer and the script that lands
   a link on its section once the fonts are in (between `<!-- landing -->` markers) are written once,
-  in the home page, and copied from it. Every page but `/commands`
+  in the home page, and copied from it. So is the script of the side rail (`<!-- rail -->`); each
+  other page's rail is made from its sections (a `.grp` with an id: 1 is the page's head, then one
+  entry per section, named by the id or by a `data-rail="..."` right after it). Every page but `/commands`
   and `/changelog` is written by hand. `/commands` and `/changelog` are
   read from the omabox repo at its latest release tag: every command and its help from
   `crates/omabox/src/help.txt` (before 1.0, `bin/omabox`'s usage heredoc; never run), the changelog from `CHANGELOG.md`. `site/commands.json` is the

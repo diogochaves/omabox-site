@@ -11,16 +11,6 @@
 /* every section after the hero: room above it */
 .wrap > section { padding-block: 150px 0; }
 
-/* the rail: the sections as Hyprland workspaces, the one on screen named */
-.rail { position: fixed; left: max(14px, env(safe-area-inset-left, 0px)); top: 50%; transform: translateY(-50%); z-index: 40; display: grid; gap: 8px; font: 500 11px/1 var(--mono); color: var(--muted); }
-.rail a { text-decoration: none; display: flex; align-items: center; gap: 8px; }
-.rail b { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; transition: background .25s, color .25s; }
-.rail span { opacity: 0; transform: translateX(-4px); transition: opacity .25s, transform .25s; white-space: nowrap; }
-.rail a.on b { background: var(--ink); color: #000; }
-.rail a.on span, .rail:hover span { opacity: 1; transform: none; }
-.rail a.on span { color: var(--ink); }
-@media (max-width: 1330px) { .rail { display: none; } }
-
 /* hero: under the big mark, the heading across the page; under it the lead and the topics share
    one top line; then the desk scene across the whole width */
 .hero { padding-block: calc(var(--Mh, 112px) + 4px) 0; display: grid; gap: 30px; }
@@ -378,8 +368,6 @@
 .agents span, .rels button b { font-family: var(--display); font-weight: 600; letter-spacing: .01em; }
 .use h3, .gcard h3, .sooncards h3, .hls h3, .cols h3, .recipes h3 { font-family: var(--display); font-weight: 600; letter-spacing: .01em; }
 .gcard a { font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); border-bottom-color: rgb(125 207 255 / .35); }
-.rail a.on b { background: var(--box); }
-.rail span { text-transform: uppercase; letter-spacing: .12em; }
 .use, .hls li, .gcard { box-shadow: 0 24px 50px -28px rgb(0 0 0 / .8); }
 .scene { border-color: var(--line-2); background: radial-gradient(60% 70% at 50% 30%, rgb(158 206 106 / .07), transparent 70%), linear-gradient(180deg, #10111a, #0b0c13); }
 .use, .hls li, .sooncards article { background: var(--s1); border-color: var(--line-2); }
@@ -777,6 +765,26 @@ your bar and theme left out</span></div>
 </script>
 <!-- /landing -->
 
+<!-- rail: build.mjs puts this on every other page, beside a rail made from its sections -->
+<script>
+/* The rail marks the section on screen: the last one whose top has passed 45% of the window, else the
+   first entry (the top of the page). Read on scroll, once a frame at most. */
+(() => {
+  const links = [...document.querySelectorAll(".rail a")], secs = links.map(a => document.getElementById(a.hash.slice(1)));
+  if (!links.length) return;
+  let queued = false;
+  const mark = () => {
+    queued = false;
+    let on = 0;
+    secs.forEach((s, i) => { if (i && s && s.getBoundingClientRect().top <= innerHeight * .45) on = i; });
+    links.forEach((a, i) => a.classList.toggle("on", i === on));
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
+  mark();
+})();
+</script>
+<!-- /rail -->
+
 
 
 <script>
@@ -842,11 +850,6 @@ your bar and theme left out</span></div>
   });
   const rectsOK = () => !!$("#marksvg rect")?.animate;
   $$(".menu a").forEach(a => a.addEventListener("click", () => a.closest("details").open = false));
-
-  /* the rail marks the section on screen */
-  const railLinks = $$(".rail a"), secs = railLinks.map(a => $(a.getAttribute("href")));
-  const railIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) railLinks.forEach((a, i) => a.classList.toggle("on", secs[i] === e.target)); }), { rootMargin: "-45% 0px -50% 0px" });
-  secs.forEach(s => s && railIO.observe(s));
 
   /* animations pause off screen; loops ask whether their scene is on screen */
   const io = new IntersectionObserver(es => es.forEach(e => { e.target.classList.toggle("paused", !e.isIntersecting); e.target._on = e.isIntersecting; e.target.dispatchEvent(new Event(e.isIntersecting ? "shown" : "hidden")); }));
