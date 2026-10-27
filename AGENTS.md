@@ -58,21 +58,18 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
 
 ## Publishing
 
-**Draft 6, the 1.0 site** (branch `site-1.0`, not merged: omabox.app follows `main` and the pages
-describe 1.0, so it goes live the day 1.0 ships) is at
-<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid>. Update it from that branch the same way as
-below, with its `url`, `site/omabox.html` and every page in `files` (`uses.html`, `omarchy.html`,
-`next.html` too). Draft 5, below, keeps showing what is live until then.
-
-The page lives at <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 5, the site split into
-pages; omabox.app since 2026-10-01). Draft 4, the single page before it, stays at
-<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d> and is no longer updated. To update it from a new session: read it first
+The page lives at <https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid> (draft 6, the 1.0 site;
+omabox.app since 2026-10-27, with omabox 1.0.0). Draft 5, the site split into pages
+(<https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d>, live 2026-10-01 to 2026-10-27), and draft 4,
+the single page before it (<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>), are retired and no
+longer updated. To update it from a new session: read it first
 (Artifact `action: "read"` with its `url`), then publish with the same `url` and `file_path:
 site/omabox.html`. The other pages and the shared CSS go in `files`: run `node build.mjs --preview`,
 then pass `{"base.css": "site/base.css", "how-it-works.html": "preview/how-it-works.html",
-"commands.html": "preview/commands.html", "develop.html": "preview/develop.html", "compare.html":
-"preview/compare.html", "changelog.html": "preview/changelog.html", "install.html":
-"preview/install.html"}` (the ones that changed). Pass media only when new or changed
+"uses.html": "preview/uses.html", "omarchy.html": "preview/omarchy.html", "commands.html":
+"preview/commands.html", "develop.html": "preview/develop.html", "compare.html":
+"preview/compare.html", "next.html": "preview/next.html", "changelog.html":
+"preview/changelog.html", "install.html": "preview/install.html"}` (the ones that changed). Pass media only when new or changed
 (`{"media/x.webp": "site/media/x.webp"}`); files left out are kept. Don't publish without `url`
 (that makes a separate artifact) unless Diogo asks for a new draft, as he did for draft 4.
 

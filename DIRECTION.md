@@ -4,8 +4,10 @@ The site for [omabox](https://github.com/diogochaves/omabox), launched with omab
 can find it. The domain is `omabox.app` (omabox.com belongs to someone else). This folder is its own project on purpose: contributors to
 omabox never have to deal with site code.
 
-The page we iterate on is **`site/omabox.html`** with the pages beside it (draft 5), published as a
-claude.ai artifact: <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 4, the single page:
+The page we iterate on is **`site/omabox.html`** with the pages beside it (draft 6, the 1.0 site,
+live since 2026-10-27), published as a claude.ai artifact:
+<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid> (retired: draft 5,
+<https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d>; draft 4, the single page,
 <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>). Older drafts are in `reference/`, to mine for
 parts (see `reference/README.md`).
 
@@ -78,8 +80,9 @@ next.
 Look H is the look (Diogo: "this is the final version"). `site/base.css` carries it, the home page
 is Look H, and every page was rebuilt from `COPY-1.0.md` in it, with three new ones: `/uses`,
 `/omarchy`, `/next`. `/compare` is omabox and ai-jail. Review artifact:
-<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid>. It stays off `main` until 1.0 ships, then the
-re-check list in `COPY-1.0.md` runs against the tag before it goes live.
+<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid>. It stayed off `main` until 1.0 shipped; the
+re-check list in `COPY-1.0.md` ran against v1.0.0 (omabox#390), and it went live on 2026-10-27, with
+a side rail on every page (Diogo, at the last review).
 
 ## Draft 5 (2026-10-01): the site split into pages, like aijail.io
 
@@ -355,7 +358,7 @@ aijail.io's plain narrative and compare page as a reference.
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
 - Command output shown must match the CLI at the latest release tag (`v1.0.0` on 2026-10-27,
   <https://github.com/diogochaves/omabox/tree/v1.0.0>; the 1.0 site, branch `site-1.0`, reviewed
-  against it on 2026-10-27; `reviewed-release` moves to it when that branch merges).
+  against it on 2026-10-27, `reviewed-release`).
   The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE SHELL NET IDLE PLUGINS` (STATE 7 wide since 0.4.7, SHELL 14 since 0.5.0; NET is `connected` or `isolated`; SIZE is `N monitors` for a box with more than one). Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (to re-capture
