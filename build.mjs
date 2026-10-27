@@ -2,7 +2,8 @@
 // whole document, with what changes at every omabox release read from the omabox repo at its latest
 // release tag: the version, every command and its help (bin/omabox), the changelog (CHANGELOG.md).
 // The home page also gets the repo's contributors (people only: no bots, no AI agents), their avatars
-// saved next to it. No dependencies; Node 18+.
+// saved next to it. For agents, each page also gets a Markdown twin (/uses.md...), /install.md is
+// the setup guide (site/install-agent.md), and /llms.txt lists them. No dependencies; Node 18+.
 //
 //   node build.mjs              into dist/, for omabox.app; GITHUB_TOKEN, if set, is used for the API
 //   SITE_URL=https://x.pages.dev node build.mjs
@@ -65,6 +66,13 @@ const PAGES = [
   { src: "install.html", out: "install.html", path: "/install", name: "Install",
     title: "Install omabox",
     desc: "What omabox needs, how to install and check it, upgrade to 1.0, update and remove it, and the questions people ask." },
+];
+
+// What omabox is, in three lines, at the top of /llms.txt (the home page's words).
+const LLMS_SUMMARY = [
+  "omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is.",
+  "Your own desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts. Built for agents to drive; not a security boundary.",
+  "Today on Omarchy 4 with Hyprland 0.56 or later, on AMD, Intel or NVIDIA GPUs. MIT, every line.",
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -161,7 +169,9 @@ function inline(s) {
 const code = lines => `<pre class="code">${lines.map(l => `<span class="p">$ </span>${esc(l)}`).join("\n")}</pre>`;
 const anchor = name => name.replace(/^-+/, "");
 
-function commandsHtml(help, notes) {
+// The commands by group, as site/commands.json sorts them; one the help has and the file hasn't goes
+// under Other. Shared by the page and its Markdown twin.
+function groupCommands(help, notes) {
   const byName = new Map(help.cmds.map(c => [c.name, c]));
   const known = new Set(notes.groups.flatMap(g => g.commands));
   for (const n of known) if (!byName.has(n)) console.warn(`commands: ${n} is in site/commands.json but not in omabox help (left out)`);
@@ -171,6 +181,10 @@ function commandsHtml(help, notes) {
     console.warn(`commands: not in site/commands.json yet, listed under Other: ${other.join(", ")}`);
     groups.push({ id: "other", title: "Other", commands: other });
   }
+  return { byName, groups };
+}
+
+function commandsHtml(help, notes, { byName, groups }) {
   const card = name => {
     const c = byName.get(name), n = notes.commands[name] || {}, id = anchor(name);
     const paras = help.blocks.filter(b => b.tags.includes(name));
@@ -227,6 +241,204 @@ function changelogHtml(md) {
   return out.join("\n      ");
 }
 
+// ── Markdown twins, for agents ───────────────────────────────────────────────────────────────────
+// Every page also goes out as Markdown (/uses.md...), made from the same source as the page so the
+// two never drift: a small HTML-to-Markdown pass over its <main> that keeps the words, the commands
+// and the links (made absolute), and leaves out what is only drawn: scripts, styles, inline SVG,
+// buttons, the page's own navigation, anything aria-hidden, a figure with no picture in it, the
+// mock-ups whose classes are in DRAWN, and any element marked data-md="skip" (the build takes that
+// mark out of the HTML). /commands' list and /changelog's log are written from omabox's help and
+// CHANGELOG.md directly, as their pages are.
+const DRAWN = new Set([
+  "scene", "lg", "fleet", "feed", "tabpane", "pic", "desk", "mach", "graph", "licp", "viz", "ws-bar",
+  "wsl", "pill", "you2", "ports", "rels", "drive", "wd", "ver45", "num", "pjump",
+]);
+const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
+const UNSAID = new Set(["script", "style", "svg", "button", "nav", "footer", "template", "noscript", "input", "select", "textarea"]);
+const BLOCK = new Set(["article", "aside", "blockquote", "details", "div", "dl", "figcaption", "figure", "footer", "header",
+  "h1", "h2", "h3", "h4", "h5", "h6", "hr", "li", "main", "nav", "ol", "p", "pre", "section", "summary", "table", "ul"]);
+const ENTITY = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+const decode = s => s.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (m, e) => e[0] !== "#" ? ENTITY[e] ?? m
+  : String.fromCodePoint(e[1].toLowerCase() === "x" ? parseInt(e.slice(2), 16) : Number(e.slice(1))));
+
+// Enough of an HTML parser for pages written by hand: elements, text and comments, in a tree.
+function parseHtml(html) {
+  const root = { tag: "#root", attrs: {}, kids: [] }, stack = [root];
+  const re = /<!--([^]*?)-->|<(\/?)([a-zA-Z][\w-]*)((?:"[^"]*"|'[^']*'|[^'">])*)>|[^<]+|</g;
+  for (let m; (m = re.exec(html));) {
+    const top = stack[stack.length - 1];
+    if (m[1] !== undefined) top.kids.push({ comment: m[1].trim() });
+    else if (!m[3]) top.kids.push({ text: m[0] });
+    else if (m[2]) {
+      const i = stack.findLastIndex(n => n.tag === m[3].toLowerCase());
+      if (i > 0) stack.length = i;
+    } else {
+      const el = { tag: m[3].toLowerCase(), attrs: {}, kids: [], parent: top };
+      for (const a of m[4].matchAll(/([^\s=/]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)) el.attrs[a[1].toLowerCase()] = decode(a[2] ?? a[3] ?? a[4] ?? "");
+      top.kids.push(el);
+      if (el.tag === "script" || el.tag === "style") {
+        const end = html.toLowerCase().indexOf(`</${el.tag}`, re.lastIndex);
+        re.lastIndex = end < 0 ? html.length : html.indexOf(">", end) + 1;
+      } else if (!VOID.has(el.tag) && !m[4].endsWith("/")) stack.push(el);
+    }
+  }
+  return root;
+}
+
+const classes = el => (el?.attrs?.class || "").split(/\s+/);
+const textOf = n => n.text !== undefined ? decode(n.text) : n.kids ? n.kids.map(textOf).join("") : "";
+const holds = (n, test) => (n.kids || []).some(k => test(k) || holds(k, test));
+const unsaid = el => el.attrs["aria-hidden"] === "true" || el.attrs["data-md"] === "skip"
+  || UNSAID.has(el.tag) && !(el.tag === "button" && el.attrs.role === "tab")
+  || classes(el).some(c => DRAWN.has(c))
+  || classes(el).includes("tag") && classes(el.parent).includes("head")   // the page's name above its h1
+  || el.tag === "figure" && !holds(el, k => k.tag === "img" || k.tag === "video")
+  || el.tag === "img" && !el.attrs.alt;
+const isBlock = n => !!n.tag && (BLOCK.has(n.tag) || n.tag === "a" && n.kids.some(isBlock));
+const ticks = s => { const f = "`".repeat(Math.max(0, ...(s.match(/`+/g) || []).map(t => t.length)) + 1); return `${f}${/^`|`$/.test(s) ? ` ${s} ` : s}${f}`; };
+const fenced = s => { const f = "`".repeat(Math.max(2, ...(s.match(/`+/g) || []).map(t => t.length)) + 1); return `${f}\n${s}\n${f}`; };
+
+function markdown(html, page, raw = {}) {
+  const url = href => /^[a-z][\w+.-]*:/i.test(href) ? href
+    : href.startsWith("#") ? `${SITE}${page.path}${href}`
+    : href.replace(/^([\w-]+)\.html(#.*)?$/, (_, p, h = "") => `/${p === "index" ? "" : p}${h}`).replace(/^(?!\/)/, "/").replace(/^/, SITE);
+
+  // Inline: text with **bold**, `code` and [links](...). Two pieces that would touch word to word
+  // (a label and its title, two names in a row) get a " · " between them, as the page sets them apart.
+  const inline = nodes => {
+    let out = "", prev = null;
+    for (const n of nodes) {
+      const s = piece(n);
+      if (!s) continue;
+      const a = prev && textOf(prev).slice(-1), b = textOf(n)[0];
+      if (prev && (prev.tag || n.tag) && a && b && !/\s/.test(a + b) && !/\s$/.test(out)) {
+        if (/[\p{L}\p{N}]/u.test(a) && /[\p{L}\p{N}]/u.test(b) || prev.tag && n.tag && !/[.,;:!?)\]]/.test(b)) out += " · ";
+        else if (/[.,;:!?]/.test(a) && /[\p{L}\p{N}]/u.test(b)) out += " ";
+      }
+      out += s;
+      prev = n;
+    }
+    return out;
+  };
+  const piece = n => {
+    if (n.text !== undefined) return decode(n.text).replace(/\s+/g, " ");
+    if (!n.tag || unsaid(n)) return "";
+    switch (n.tag) {
+      case "br": return "\n";
+      case "b": case "strong": { const s = inline(n.kids); return s.trim() ? s.replace(/^(\s*)(.*?)(\s*)$/s, "$1**$2**$3") : s; }
+      case "code": case "kbd": { const s = textOf(n).replace(/\s+/g, " "); return s.trim() ? ticks(s) : ""; }
+      case "img": return `![${n.attrs.alt}](${url(n.attrs.src)})`;
+      case "video": return `[Video](${url(n.attrs.src)})`;
+      case "a": {
+        const only = n.kids.filter(k => k.tag || textOf(k).trim());
+        const s = only.length === 1 && only[0].tag === "img" ? only[0].attrs.alt : inline(n.kids).trim();
+        return s && n.attrs.href ? `[${s}](${url(n.attrs.href)})` : s;
+      }
+      default: return inline(n.kids);
+    }
+  };
+  const para = nodes => inline(nodes).split("\n").map(l => l.replace(/ {2,}/g, " ").trim()).join("\n").replace(/^\n+|\n+$/g, "");
+
+  // Blocks: a run of inline nodes is a paragraph; each block element is rendered by kind. A short
+  // label right above a heading (a step's number, a card's tag) joins it: "### 1. It starts one".
+  const isLabel = s => s.length <= 40 && !/\n|[.!?:]$|\]\(|^([#*`!]|- )/.test(s);
+  const blocks = (nodes, ctx) => {
+    const out = [];
+    let run = [], label = false;
+    const push = (b, lab) => { if (b) { out.push(b); label = lab && isLabel(b); } };
+    const flush = () => { if (run.length) push(para(run), true); run = []; };
+    for (const n of nodes) {
+      if (n.comment !== undefined && n.comment in raw) { flush(); push(raw[n.comment], false); }
+      else if (n.tag && !unsaid(n) && (isBlock(n) || n.attrs.role === "tablist")) {
+        flush();
+        if (/^h[1-6]$/.test(n.tag) && label) push(block(n, ctx, out.pop()), false);
+        else push(block(n, ctx), n.tag === "p");
+      } else run.push(n);
+    }
+    flush();
+    return out;
+  };
+  const list = (items, ordered) => {
+    const out = items.map((bs, i) => {
+      const mark = ordered ? `${i + 1}. ` : "- ";
+      return bs.join("\n\n").split("\n").map((l, j) => j === 0 ? mark + l : l && " ".repeat(mark.length) + l).join("\n");
+    });
+    return out.join(out.some(s => s.includes("\n\n")) ? "\n\n" : "\n");
+  };
+  const block = (n, ctx, label) => {
+    const h = /^h([1-6])$/.exec(n.tag);
+    if (h) {
+      let t = para(n.kids).replace(/\n/g, " ").replace(/\*\*/g, "");
+      if (t && label) t = `${label.startsWith("-") ? ticks(label) : label}${/^\d+$/.test(label) ? "." : ":"} ${t}`;
+      // The page's h1 is its headline; the twin's own "# " is the page's title.
+      return !t ? "" : n.tag === "h1" || ctx.list ? `**${t}**` : `${"#".repeat(Number(h[1]))} ${t}`;
+    }
+    if (n.attrs.role === "tablist") return list(n.kids.filter(k => k.tag && !unsaid(k)).map(k => [para(k.kids)]).filter(([s]) => s), false);
+    switch (n.tag) {
+      case "p": { const t = para(n.kids); return t && classes(n).includes("who") ? `**${t}**` : t; }
+      case "figcaption": return para(n.kids);
+      case "pre": return fenced(textOf(n).replace(/^\n|\s+$/g, ""));
+      case "hr": return "---";
+      case "ul": case "ol": return list(n.kids.filter(k => k.tag === "li" && !unsaid(k)).map(li => blocks(li.kids, { ...ctx, list: true })).filter(bs => bs.length), n.tag === "ol");
+      case "details": {
+        const sum = n.kids.find(k => k.tag === "summary");
+        return [sum && `**${para(sum.kids)}**`, ...blocks(n.kids.filter(k => k !== sum), ctx)].filter(Boolean).join("\n\n");
+      }
+      case "table": {
+        const rows = [], walk = el => el.kids.forEach(k => k.tag === "tr" ? rows.push(k) : k.kids && walk(k));
+        walk(n);
+        const cells = rows.map(r => r.kids.filter(k => k.tag === "td" || k.tag === "th"));
+        const cell = c => para(c.kids).replace(/\n/g, " ").replace(/\|/g, "\\|");
+        if (cells[0]?.every(c => c.tag === "th")) {
+          const line = cs => `| ${cs.map(cell).join(" | ")} |`;
+          return [line(cells[0]), `|${cells[0].map(() => " --- |").join("")}`, ...cells.slice(1).map(line)].join("\n");
+        }
+        return list(cells.map(cs => [cs.map(cell).join(": ")]), false);
+      }
+      case "a": {
+        // A card that is a link: its heading carries the link, or a line under it does.
+        const md = blocks(n.kids, ctx).join("\n\n"), to = url(n.attrs.href);
+        return /^#+ /m.test(md) ? md.replace(/^(#+ )(.*)$/m, `$1[$2](${to})`) : `${md}\n\n[More](${to})`;
+      }
+      default: return blocks(n.kids, ctx).join("\n\n");
+    }
+  };
+
+  const at = html.indexOf("<main"), end = html.lastIndexOf("</main>");
+  if (at < 0) throw new Error(`site/${page.src}: no <main> for its Markdown twin`);
+  const main = parseHtml(html.slice(at, end < 0 ? undefined : end + 7)).kids.find(k => k.tag === "main");
+  return blocks(main.kids, {}).join("\n\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+// /commands' list for agents: each command's line and examples from site/commands.json, then its
+// lines and paragraphs from omabox help, as the page has them.
+function commandsMd(help, notes, { byName, groups }) {
+  const shell = lines => fenced(lines.map(l => `$ ${l}`).join("\n"));
+  const names = help.blocks.find(b => b.lines[0]?.startsWith("NAME defaults to"));
+  const cmd = name => {
+    const c = byName.get(name), n = notes.commands[name] || {};
+    const up = name === "run" ? byName.get("up")?.lines || [] : [];
+    const paras = help.blocks.filter(b => b.tags.includes(name)).map(b => b.lines.join(" ").trim());
+    return [`#### omabox ${name}`, n.say, n.examples?.length && `Examples:\n\n${shell(n.examples)}`, fenced(c.lines.join("\n")),
+      (paras.length || up.length) && `\`omabox help ${name}\` adds:`, up.length && fenced(up.join("\n")), ...paras]
+      .filter(Boolean).join("\n\n");
+  };
+  return [names && names.lines.join(" ").trim(),
+    ...groups.map(g => [`### ${g.title}`, ...g.commands.map(cmd)].join("\n\n")),
+    help.rest && `### The details\n\nThe rest of \`omabox help\`: names, networks, windows, waiting, idle boxes and more, as the CLI prints it.\n\n${fenced(help.rest)}`,
+  ].filter(Boolean).join("\n\n");
+}
+
+// /changelog's log for agents: CHANGELOG.md itself from its first version on, each heading a level
+// down so the versions sit under the page's own "Every change" heading.
+const changelogMd = md => md.slice(md.search(/^## /m)).replace(/^(#{2,}) /gm, "#$1 ").trim();
+
+// Where each page's twin goes: /install.md is the setup guide (site/install-agent.md), so /install's
+// own twin is /install-page.md.
+const twin = page => page.home ? "index.md" : page.out === "install.html" ? "install-page.md" : page.out.replace(/\.html$/, ".md");
+// What a page's head points an agent to: its twin, but /install points to the setup guide.
+const alternate = page => page.out === "install.html" ? "install.md" : twin(page);
+
 // ── pages ────────────────────────────────────────────────────────────────────────────────────────
 const head = page => `<!doctype html>
 <html lang="en">
@@ -237,7 +449,7 @@ const head = page => `<!doctype html>
 <meta name="description" content="${esc(page.desc)}">
 <meta name="theme-color" content="#0b0c13">
 ${SITE === HOME ? (page.home ? '<meta name="google-site-verification" content="-2jD-QisVYY6LeZz7BjqZh5F_TZoDvAYAb3ViPGuCUQ">\n' : "") : '<meta name="robots" content="noindex">\n'}<link rel="canonical" href="${SITE}${page.path}">
-<link rel="icon" href="media/icon.svg" type="image/svg+xml">
+${PREVIEW ? "" : `<link rel="alternate" type="text/markdown" href="/${alternate(page)}">\n`}<link rel="icon" href="media/icon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${SITE}${page.path}">
 <meta property="og:title" content="${esc(page.title)}">
@@ -291,14 +503,22 @@ const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^
 const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
 
 const notes = JSON.parse(await readFile("site/commands.json", "utf8"));
+const help = parseHelp(helpText(await atRelease("bin/omabox"))), grouped = groupCommands(help, notes);
+const changelog = await atRelease("CHANGELOG.md");
+// What fills each page's <!-- markers -->, as HTML for the page and as Markdown for its twin.
 const generated = {
-  "commands.html": { commands: commandsHtml(parseHelp(helpText(await atRelease("bin/omabox"))), notes) },
-  "changelog.html": { changelog: changelogHtml(await atRelease("CHANGELOG.md")) },
+  "commands.html": { commands: commandsHtml(help, notes, grouped) },
+  "changelog.html": { changelog: changelogHtml(changelog) },
 };
+const generatedMd = {
+  "commands.html": { commands: commandsMd(help, notes, grouped) },
+  "changelog.html": { changelog: changelogMd(changelog) },
+};
+const release = html => html.replaceAll(/(<span class="ver">)[^<]+/g, `$1${version}`)
+  .replaceAll("<!-- release-url -->", `https://github.com/${REPO}/releases/tag/v${version}`)
+  .replaceAll("<!-- changelog-url -->", `https://github.com/${REPO}/blob/v${version}/CHANGELOG.md`);
 const fill = (html, page) => {
-  html = html.replaceAll(/(<span class="ver">)[^<]+/g, `$1${version}`)
-    .replaceAll("<!-- release-url -->", `https://github.com/${REPO}/releases/tag/v${version}`)
-    .replaceAll("<!-- changelog-url -->", `https://github.com/${REPO}/blob/v${version}/CHANGELOG.md`);
+  html = release(html);
   for (const [k, v] of Object.entries(generated[page.src] || {})) {
     if (!html.includes(`<!-- ${k} -->`)) throw new Error(`site/${page.src}: no <!-- ${k} --> marker`);
     html = html.replace(`<!-- ${k} -->`, v);
@@ -313,6 +533,7 @@ const links = html => PREVIEW ? html : html
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
 
+const twinSource = new Map();   // page → the HTML its Markdown twin is made from
 for (const page of PAGES) {
   if (PREVIEW && page.home) continue;   // the artifact's page is site/omabox.html itself
   let doc;
@@ -328,18 +549,54 @@ for (const page of PAGES) {
     } catch (e) {
       console.warn(`contributors: kept the list in site/omabox.html (${e.message})`);
     }
+    twinSource.set(page, rest);
     doc = `${head(page)}${home.slice(0, body).replace(/<title>[^<]*<\/title>\n?/, "")}</head>\n<body>\n${rest}\n</body>\n</html>\n`;
   } else {
-    const src = fill(await readFile(`site/${page.src}`, "utf8"), page);
+    const source = await readFile(`site/${page.src}`, "utf8");
+    twinSource.set(page, release(source));
+    const src = fill(source, page);
     const style = src.match(/<style>[^]*?<\/style>/)?.[0] || "";
     const main = src.slice(src.indexOf("<main")).replace(/<\/main>\s*$/, `${ending(page)}\n\n${footer}\n${landing}\n</main>`);
     doc = `${head(page)}${fonts}\n${style}\n</head>\n<body>\n${sprite}\n\n${header(page)}\n\n${main}\n</body>\n</html>\n`;
   }
-  await writeFile(`${OUT}/${page.out}`, links(doc));
+  await writeFile(`${OUT}/${page.out}`, links(doc).replace(/ data-md="[^"]*"/g, ""));
   console.log(`built ${OUT}/${page.out}`);
 }
 
 if (PREVIEW) process.exit(0);
+
+// The pages as Markdown, for agents (the artifact doesn't need them): a twin of each, the setup
+// guide at /install.md, and /llms.txt, which lists them all.
+const pointer = page => `This is ${SITE}${page.path} as Markdown, for agents. Every page: ${SITE}/llms.txt`;
+for (const page of PAGES) {
+  const md = markdown(twinSource.get(page), page, generatedMd[page.src]);
+  await writeFile(`${OUT}/${twin(page)}`, `# ${page.title}\n\n${pointer(page)}\n\n${md}\n`);
+  console.log(`built ${OUT}/${twin(page)}`);
+}
+// The guide is written by hand; its <!-- check --> notes are for the site's authors, not for agents.
+await writeFile(`${OUT}/install.md`, (await readFile("site/install-agent.md", "utf8")).replace(/[ \t]*<!--[^]*?-->/g, ""));
+const listed = page => `- [${page.title}](${SITE}/${twin(page)}): ${page.desc}`;
+await writeFile(`${OUT}/llms.txt`, `# omabox
+
+> ${LLMS_SUMMARY.join("\n> ")}
+
+Every page of ${SITE} is also Markdown: the links below, or any page's address fetched with \`Accept: text/markdown\`.
+
+## Setup
+
+- [Installing omabox, for an agent](${SITE}/install.md): the setup guide for an agent installing omabox with its user: what to check first, what to leave to the user, how to check it works
+
+## Pages
+
+${PAGES.filter(p => p.out !== "changelog.html").map(listed).join("\n")}
+
+## Optional
+
+${PAGES.filter(p => p.out === "changelog.html").map(listed).join("\n")}
+- [omabox on GitHub](https://github.com/${REPO}): the code, its README and SECURITY.md
+`);
+console.log(`built ${OUT}/install.md and ${OUT}/llms.txt`);
+
 await cp("site/media", `${OUT}/media`, { recursive: true, filter: src => !src.endsWith("README.md") });
 await cp("site/base.css", `${OUT}/base.css`);
 if (SITE !== HOME) await writeFile(`${OUT}/_headers`, "/*\n  X-Robots-Tag: noindex\n");
@@ -347,6 +604,7 @@ if (SITE !== HOME) await writeFile(`${OUT}/_headers`, "/*\n  X-Robots-Tag: noind
 await writeFile(`${OUT}/_routes.json`, JSON.stringify({ version: 1, include: ["/*"], exclude: ["/media/*"] }) + "\n");
 // without these, Pages answers /robots.txt and /sitemap.xml with the page itself
 await writeFile(`${OUT}/robots.txt`, SITE === HOME ? `User-agent: *\nAllow: /\nSitemap: ${HOME}/sitemap.xml\n` : "User-agent: *\nDisallow: /\n");
+// The pages only: the Markdown twins and llms.txt say the same words for agents, not for search.
 const today = new Date().toISOString().slice(0, 10);
 if (SITE === HOME) await writeFile(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${PAGES.map(p => `<url><loc>${HOME}${p.path}</loc><lastmod>${today}</lastmod></url>`).join("")}</urlset>\n`);
 console.log(`built ${OUT}/ for ${SITE}${SITE === HOME ? "" : " (noindex)"}`);

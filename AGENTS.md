@@ -39,6 +39,18 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   keeps its last deploy. `node build.mjs` (Node 18+, no dependencies; `GITHUB_TOKEN` optional);
   `node build.mjs --preview` writes the other pages into `preview/` (git-ignored) for the artifact;
   `OUT=DIR` writes them elsewhere (one folder per builder when several work at once).
+- **For agents** (`dist/` only, not the preview): `build.mjs` also writes a Markdown twin of every
+  page (`/index.md`, `/uses.md`, `/next.md`...), made from the page's own `<main>` by a small
+  HTML-to-Markdown pass, so the two never drift. It keeps words, commands and links (made absolute)
+  and leaves out scripts, SVG, buttons, navigation, anything `aria-hidden`, figures with no picture,
+  the mock-ups whose classes are in its `DRAWN` list, and any element marked `data-md="skip"` (prose
+  about a mock-up; the build strips the mark from the HTML). A new drawn mock-up needs its class in
+  `DRAWN` or `aria-hidden`: read the twin after a page change. `/commands.md` and `/changelog.md` take
+  their lists from the omabox repo at the tag, as their pages do. `/install.md` is the setup guide for
+  an agent installing omabox with its user, written by hand in `site/install-agent.md` (its HTML
+  comments are dropped); `/install`'s own twin is `/install-page.md`. `/llms.txt` lists them all, the
+  guide first. Each page's head links its twin (`<link rel="alternate" type="text/markdown">`;
+  `/install`'s links the guide). None of it is in the sitemap: the same words as the pages, for agents.
 - The home page sends links to sections that moved to pages (`/#compare`, `/#jail`, `/#never`...)
   on to them, so old links keep working (the omabox README links `/#compare`).
 
