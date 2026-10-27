@@ -12,6 +12,10 @@ live.
   - diogochaves/omabox#390, for the omabox side: measure and confirm the site's claims at the 1.0
     tag, a `check` report shot for `/develop`, and omabox.app for agents (`/install.md`,
     `/llms.txt`, Markdown twins).
+  - **2026-10-27: #390 is answered** (its comment: every fact, measured on port-rust f4f13bb; several
+    claims change: entry ~3 ms, the stock bar 26 px, ai-jail captions). Part 3 is built on this branch:
+    `/install.md` from `site/install-agent.md`, `/llms.txt`, a `.md` twin per page, Accept:
+    text/markdown in the middleware. `site/media/check-report.webp` is in; /develop still draws it.
   - diogochaves/omabox-site#3, for this repo once 1.0 is out: rebuild against the tag, apply #390's
     answers to the `<!-- check: ... -->` comments, date the 1.0 tab, remake the link card, one
     look, the last review, then merge to `main` on Diogo's go.
