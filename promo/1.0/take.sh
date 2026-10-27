@@ -15,6 +15,7 @@
 #   use-monitors  a still: one box, three monitors.
 #   use-notify    a still: a notification on a desktop (its corner, 16:9).
 #   use-web       a still: omabox.app (built from this checkout into assets/site) in Chromium.
+#   use-interactive  a still: an interactive box on your desktop, the agent rebuilding in it.
 # Not take.sh: box/check/ (the check scenario, run with omabox check at 8K, README.md says how) and
 # the 28 omaseed screens (a copy of omaseed's .local/visual baseline, thumbnailed).
 #
@@ -185,6 +186,35 @@ take_still() {
   [ "$1" != use-notify ] || magick "$HERE/assets/stills/$1.png" -crop 1280x720+2560+0 +repage "$HERE/assets/stills/$1.png"
 }
 
+# use-interactive: a still for post 5. Your desktop (a stage box); the agent asks for a box you can
+# drive (an interactive box, its window on your workspace), starts omaseed in it, then rebuilds and
+# replaces it while the window stays yours to click.
+take_interactive() {
+  stage_desk
+  ob run -- omabox config workspace 1 >/dev/null
+  # The agent's box: interactive, with its own library.
+  agent $'omabox up --interactive --size 1220x760 --ro-bind .\tomabox up --interactive --size 1220x760 --ro-bind . 2>&1 | grep -v -e "^omabox: note" -e "^omabox: up:"'
+  until_ok 30 agent_done
+  # Its window, floated large over your editor, where you would put it to drive it (omabox places an
+  # interactive window itself, so a window rule does not win: dispatches, once it is there).
+  local e
+  for e in 'hl.dsp.window.float({ action = "enable", window = "class:aquamarine" })' \
+           'hl.dsp.window.resize({ x = 1220, y = 760, window = "class:aquamarine" })' \
+           'hl.dsp.window.move({ x = 30, y = 290, window = "class:aquamarine" })'; do
+    ob hyprctl dispatch "$e" >/dev/null
+  done
+  agent $'omabox run -d -- qbittorrent-nox   # a demo library\t'"/home/sbx/library.sh \$(omabox path --home) 8090 200 $BIGLIB && omabox run -d -- qbittorrent-nox --profile=/home/sbx/.local/share/qbt >/dev/null 2>&1 && omabox wait --timeout 60s until -- curl -sf http://127.0.0.1:8090/api/v2/app/version >/dev/null"
+  until_ok 60 agent_done
+  agent $'omabox run -d --wait -- ./build-release/omaseed\tomabox run -d --wait -- '"$BIN"' 2>&1 | grep "^satisfied" | sed "s/ (last change[^)]*)//"'
+  until_ok 30 agent_done
+  agent $'# you try it; I rebuild\ttrue'
+  until_ok 10 agent_done
+  agent $'omabox run -d --replace --wait -- ./build-release/omaseed\tomabox run -d --replace --wait -- '"$BIN"' 2>&1 | grep "^satisfied" | sed "s/ (last change[^)]*)//"'
+  until_ok 30 agent_done
+  ob wait still --timeout 10s >/dev/null || true
+  ob shot -o "$HERE/assets/stills/use-interactive.png" >/dev/null
+}
+
 # --- The takes -------------------------------------------------------------------------------------
 
 act_desk_problem() {
@@ -240,6 +270,7 @@ trap cleanup EXIT
 case $NAME in
   use-monitors) take_monitors; [ -n "${KEEP:-}" ] || ob down >/dev/null; exit 0 ;;
   use-notify | use-web) take_still "$NAME"; [ -n "${KEEP:-}" ] || ob down >/dev/null; exit 0 ;;
+  use-interactive) take_interactive; exit 0 ;;
   desk-problem) stage_desk ;;
   desk-boxed) stage_desk; stage_boxes ;;
   *) echo "take: no take named $NAME" >&2; exit 2 ;;
