@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #a2-root { position: absolute; inset: 0; }
+        #a2-intro { position: absolute; left: 0; right: 0; top: calc(150 * var(--u)); text-align: center; font-size: calc(70 * var(--u)); letter-spacing: 0.12em; }
+        #a2-lock { position: absolute; left: 0; right: 0; top: calc(290 * var(--u)); height: calc(190 * var(--u));
+          display: flex; align-items: center; justify-content: center; gap: calc(50 * var(--u)); }
+        #a2-mark { position: relative; width: calc(180 * var(--u)); height: calc(180 * var(--u)); }
+        #a2-word { font-size: calc(200 * var(--u)); }
+        #a2-new { left: calc(1440 * var(--u)); top: calc(170 * var(--u)); width: calc(250 * var(--u)); height: calc(250 * var(--u)); }
+        #a2-new .t { font-size: calc(54 * var(--u)); color: #fff; }
+        #a2-new .t b { font-size: calc(80 * var(--u)); font-weight: 400; display: block; color: var(--tv-yellow); -webkit-text-stroke: calc(4 * var(--u)) #000; paint-order: stroke fill; }
+        #a2-pitch { position: absolute; left: 0; right: 0; top: calc(600 * var(--u)); text-align: center; font-size: calc(78 * var(--u)); }
+        #a2-p2 { color: var(--good); margin-top: calc(10 * var(--u)); }
+        #a2-flash { position: absolute; inset: 0; background: #fff; transform-origin: 50% 50%; }
+      </style>
+      <!-- Act 2: Introducing. The set switches to colour: the mark, the name, a NEW! starburst, the pitch. -->
+      <div id="a2-root" data-composition-id="a2" data-width="1920" data-height="1080">
+        <div id="a2-intro" class="cap">Introducing</div>
+        <div id="a2-lock">
+          <div id="a2-mark" class="mark"></div>
+          <div id="a2-word" class="wordmark">omabox</div>
+        </div>
+        <div id="a2-new" class="burst"><div class="t">NEW!<b>1.0</b></div></div>
+        <div id="a2-pitch" class="display">
+          <div id="a2-p1">Your agents get desktops of their own.</div>
+          <div id="a2-p2">Yours stays untouched.</div>
+        </div>
+        <div id="a2-flash"></div>
+      </div>
+      <script>
+        const px = omaboxMark.draw(document.getElementById("a2-mark"), 12);
+        info.burst(document.getElementById("a2-new"), "#e5243b", 18, 0.78);
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#a2-flash", { scaleY: 0.004, opacity: 1 }, { scaleY: 1, duration: 0.12, ease: "power2.out" }, 0);
+        tl.to("#a2-flash", { opacity: 0, duration: 0.3, ease: "power2.out" }, 0.12);
+        tl.fromTo("#a2-intro", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.15);
+        tl.fromTo(px, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(2.4)", stagger: 0.03 }, 0.25);
+        tl.fromTo("#a2-word", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.45, ease: "expo.out" }, 0.45);
+        tl.fromTo("#a2-new", { opacity: 0, scale: 0, rotation: -120 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 0.8);
+        tl.to("#a2-new", { rotation: 14, duration: 3, ease: "sine.inOut" }, 1.25);
+        tl.fromTo("#a2-p1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 1.1);
+        tl.fromTo("#a2-p2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 1.8);
+        tl.to("#a2-root", { opacity: 0, duration: 0.25, ease: "power2.in" }, 3.75);
+        window.__timelines["a2"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

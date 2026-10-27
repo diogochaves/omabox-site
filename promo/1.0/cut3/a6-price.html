@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: Anton; font-weight: 400; src: url(assets/fonts/Anton-Regular.ttf); }
+        #a6-root { position: absolute; inset: 0; }
+        #a6-now { position: absolute; left: calc(80 * var(--u)); top: calc(70 * var(--u)); font-size: calc(110 * var(--u)); }
+        .a6-l { position: absolute; left: calc(90 * var(--u)); font-size: calc(54 * var(--u)); color: var(--ink); }
+        .a6-l .k { color: var(--tv-yellow); margin-right: calc(20 * var(--u)); }
+        #a6-ask { position: absolute; left: 0; right: 0; top: calc(90 * var(--u)); text-align: center; font-size: calc(110 * var(--u)); }
+        .tag { position: absolute; top: calc(300 * var(--u)); width: calc(400 * var(--u)); text-align: center; font-family: Anton, sans-serif; font-size: calc(130 * var(--u)); color: #fff; }
+        .tag .x { position: absolute; left: 2%; top: 56%; width: 96%; height: calc(12 * var(--u)); transform: rotate(-12deg); }
+        .tag .xi { position: absolute; inset: 0; background: var(--tv-red); transform-origin: 0 50%; border-radius: 4px; box-shadow: 0 0 0 3px #000; }
+        #a6-free { left: calc(560 * var(--u)); top: calc(470 * var(--u)); width: calc(800 * var(--u)); height: calc(500 * var(--u)); }
+        #a6-free .t { font-size: calc(210 * var(--u)); color: #fff; -webkit-text-stroke: calc(8 * var(--u)) #000; paint-order: stroke fill; }
+        #a6-free .t small { display: block; font-size: calc(52 * var(--u)); color: var(--tv-yellow); -webkit-text-stroke: calc(5 * var(--u)) #000; margin-top: calc(6 * var(--u)); }
+        #a6-stores { position: absolute; left: 0; right: 0; bottom: calc(40 * var(--u)); text-align: center; font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(36 * var(--u)); color: var(--muted); }
+      </style>
+      <!-- Act 6: How much would you pay? First what is new in 1.0 (true, CHANGELOG and #390), then the
+           price gag: the prices are the joke, the FREE is not. -->
+      <div id="a6-root" data-composition-id="a6" data-width="1920" data-height="1080">
+        <div id="a6-a">
+          <div id="a6-now" class="cap">Now in 1.0!</div>
+          <div class="a6-l display" style="top: calc(330 * var(--u))"><span class="k">★</span>one Rust binary</div>
+          <div class="a6-l display" style="top: calc(460 * var(--u))"><span class="k">★</span>about 3 ms to step into a box</div>
+          <div class="a6-l display" style="top: calc(590 * var(--u))"><span class="k">★</span>exit codes and --json you can count on, all of 1.x</div>
+        </div>
+        <div id="a6-b">
+          <div id="a6-ask" class="cap">How much would you pay?</div>
+          <div id="a6-t1" class="tag" style="left: calc(160 * var(--u))">$99.99<div class="x"><div class="xi"></div></div></div>
+          <div id="a6-t2" class="tag" style="left: calc(760 * var(--u))">$49.99<div class="x"><div class="xi"></div></div></div>
+          <div id="a6-t3" class="tag" style="left: calc(1360 * var(--u))">$19.99<div class="x"><div class="xi"></div></div></div>
+          <div id="a6-free" class="burst"><div class="t">FREE!<small>MIT, every line</small></div></div>
+          <div id="a6-stores">Not sold in stores. Not sold anywhere.</div>
+        </div>
+      </div>
+      <script>
+        info.burst(document.getElementById("a6-free"), "#e5243b", 26, 0.82);
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#a6-now", { opacity: 0, scale: 1.5, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(2.5)" }, 0.05);
+        tl.fromTo("#a6-a .a6-l", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)", stagger: 0.5 }, 0.45);
+        tl.to("#a6-a", { opacity: 0, duration: 0.2 }, 2.95);
+        tl.set("#a6-b", { opacity: 0 }, 0);
+        tl.set("#a6-b", { opacity: 1 }, 3.0);
+        tl.fromTo("#a6-ask", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(2.5)" }, 3.05);
+        ["#a6-t1", "#a6-t2", "#a6-t3"].forEach((t, i) => {
+          tl.fromTo(t, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 3.45 + i * 0.5);
+          tl.fromTo(`${t} .xi`, { scaleX: 0 }, { scaleX: 1, duration: 0.15, ease: "power2.out" }, 3.7 + i * 0.5);
+        });
+        tl.fromTo("#a6-free", { opacity: 0, scale: 0, rotation: -200 }, { opacity: 1, scale: 1, rotation: -6, duration: 0.45, ease: "back.out(1.8)" }, 5.0);
+        tl.to("#a6-free", { scale: 1.06, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, 5.5);
+        tl.fromTo("#a6-stores", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.6);
+        tl.to("#a6-root", { opacity: 0, duration: 0.2, ease: "power2.in" }, 7.3);
+        window.__timelines["a6"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

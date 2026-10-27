@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #s4b-root { position: absolute; inset: 0; }
+        #s4b-head { top: calc(64 * var(--u)); font-size: calc(54 * var(--u)); color: var(--accent); }
+        .pv { position: absolute; left: calc(80 * var(--u)); width: calc(640 * var(--u)); height: calc(360 * var(--u)); overflow: hidden;
+          border-radius: calc(16 * var(--u)); background: var(--ground); box-shadow: 0 calc(20 * var(--u)) calc(60 * var(--u)) rgba(0,0,0,0.5), 0 0 0 2px var(--edge); }
+        .pv video, .pv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .pv .chip { left: calc(12 * var(--u)); bottom: calc(12 * var(--u)); font-size: calc(24 * var(--u)); color: var(--ink); letter-spacing: 0.02em; }
+        .it { position: absolute; left: calc(800 * var(--u)); right: calc(60 * var(--u)); font-size: calc(46 * var(--u)); color: var(--ink); }
+        .it .k { color: var(--accent); margin-right: calc(18 * var(--u)); }
+      </style>
+      <!-- Frame 5b: more uses, quickly: two previews (both shot in boxes) and a list from the
+           site's Uses and Develop pages. -->
+      <div id="s4b-root" data-composition-id="s4b" data-width="1920" data-height="1080">
+        <div id="s4b-head" class="pad display">And much more, none of it on your desktop:</div>
+        <div id="s4b-p1" class="pv" style="top: calc(190 * var(--u))">
+          <video id="s4b-v1" src="assets/footage/box-themes-7d20e815.mp4" muted
+                 data-start="0.3" data-duration="6.2" data-media-start="6.5" data-track-index="0"></video>
+          <div class="chip mono">any theme, without changing yours</div></div>
+        <!-- omabox.app's interactive.webp: an interactive box beside the terminal that drives it. -->
+        <div id="s4b-p2" class="pv" style="top: calc(590 * var(--u))">
+          <img src="assets/stills/interactive.webp" alt="">
+          <div class="chip mono">drive a box yourself, or peek in</div></div>
+        <div class="it display" style="top: calc(200 * var(--u))"><span class="k">→</span>film with sound nobody hears</div>
+        <div class="it display" style="top: calc(320 * var(--u))"><span class="k">→</span>a web page, off your screen</div>
+        <div class="it display" style="top: calc(440 * var(--u))"><span class="k">→</span>find the crash before your users do</div>
+        <div class="it display" style="top: calc(560 * var(--u))"><span class="k">→</span>tray icons, notifications, a keyring</div>
+        <div class="it display" style="top: calc(680 * var(--u))"><span class="k">→</span>your bar plugin, in every theme</div>
+        <div class="it display" style="top: calc(800 * var(--u))"><span class="k">→</span>4K shots on any monitor</div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#s4b-head", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 0);
+        tl.fromTo(["#s4b-p1", "#s4b-p2"], { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out", stagger: 0.2 }, 0.3);
+        tl.fromTo(".it", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out", stagger: 0.38 }, 0.7);
+        tl.to("#s4b-root", { opacity: 0, duration: 0.3, ease: "power2.in" }, 6.2);
+        window.__timelines["s4b"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

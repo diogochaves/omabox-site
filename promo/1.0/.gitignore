@@ -1,0 +1,7 @@
+renders/
+.hyperframes/
+node_modules/
+# Media are made by take.sh (and box/check/): kept out of git, re-recorded when needed.
+assets/footage/
+assets/stills/
+assets/site/

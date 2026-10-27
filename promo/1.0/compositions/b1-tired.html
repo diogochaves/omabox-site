@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #b1-root { position: absolute; inset: 0; background: #1b140c; }
+        /* Sepia: the same footage, warm and faded, a soft vignette and a light grain. Readable. */
+        #b1-tv { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; filter: sepia(0.9) saturate(0.85) contrast(1.06) brightness(0.96); }
+        .b1-fx { position: absolute; inset: 0; pointer-events: none; }
+        #b1-grain { opacity: 0.07; mix-blend-mode: screen; background-size: 384px 384px; }
+        #b1-vig { background: radial-gradient(ellipse at 50% 50%, rgba(27,20,12,0) 50%, rgba(27,20,12,0.7) 100%); }
+        .b1-cap { position: absolute; left: 0; right: 0; bottom: calc(80 * var(--u)); text-align: center; font-size: calc(104 * var(--u)); opacity: 0; }
+        #b1-jump { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+      </style>
+      <!-- Act A: the problem, in sepia. The real desk-problem take, legible: your sentence, the window
+           landing, your keys in its field, your pointer jumping. -->
+      <div id="b1-root" data-composition-id="b1" data-width="1920" data-height="1080">
+        <div id="b1-tv">
+          <div id="b1-full" class="full"><div id="b1-z" class="zoom" data-layout-allow-overflow>
+            <!-- desk-problem: pop at 6.22 s, stolen 6.65 s, the pointer's jump 9.94 s (to its add
+                 button, from your editor). In at 4.42 s: the pop at 1.8 s, the jump at 5.52 s. -->
+            <video id="b1-v" src="assets/footage/desk-problem.mp4" muted
+                   data-start="0" data-duration="5.8" data-media-start="4.42" data-track-index="0"></video>
+          </div></div>
+          <svg id="b1-jump" viewBox="0 0 1920 1080" data-layout-allow-overflow>
+            <path id="b1-line" d="M 330 350 Q 760 330 1150 785" fill="none" stroke="#ffd60a" stroke-width="10" stroke-linecap="round"/>
+            <circle id="b1-hit" cx="1150" cy="785" r="34" fill="none" stroke="#ffd60a" stroke-width="8"/>
+          </svg>
+        </div>
+        <div id="b1-grain" class="b1-fx"></div>
+        <div id="b1-vig" class="b1-fx"></div>
+        <div id="b1-c1" class="b1-cap cap">Are you tired of your agent stealing your focus…</div>
+        <div id="b1-c2" class="b1-cap cap">…your keystrokes…</div>
+        <div id="b1-c3" class="b1-cap cap">…and your mouse?</div>
+      </div>
+      <script>
+        const FRAME = { srcW: 3840, srcH: 2160, cardW: 1920, cardH: 1080 };
+        const aim = (s, sx, sy) => director.aim(s, sx, sy, FRAME);
+        document.getElementById("b1-grain").style.backgroundImage = `url(${info.noise(128, 7)})`;
+        const line = document.getElementById("b1-line");
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#b1-grain", { backgroundPosition: "0px 0px" }, { backgroundPosition: "1913px 1187px", duration: 5.8, ease: "steps(46)" }, 0);
+        // 1. Your sentence, close; the window lands and the camera pulls back.
+        tl.set("#b1-z", aim(2.0, 760, 330), 0);
+        tl.fromTo("#b1-c1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.25);
+        tl.to("#b1-z", { ...aim(1, 1920, 1080), duration: 0.35, ease: "power3.out" }, 1.8);
+        tl.fromTo("#b1-full", { x: 0 }, { x: 12, duration: 0.04, yoyo: true, repeat: 5, ease: "none" }, 1.8);
+        tl.to("#b1-c1", { opacity: 0, duration: 0.1 }, 2.55);
+        // 2. Your keys, in its field.
+        tl.to("#b1-z", { ...aim(1.75, 1920, 760), duration: 0.35, ease: "power3.inOut" }, 2.6);
+        tl.fromTo("#b1-c2", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 2.7);
+        tl.to("#b1-c2", { opacity: 0, duration: 0.1 }, 4.35);
+        // 3. Your pointer, jumping to its add button: a dotted line along the jump.
+        tl.to("#b1-z", { ...aim(1, 1920, 1080), duration: 0.35, ease: "power3.inOut" }, 4.4);
+        tl.fromTo("#b1-c3", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 4.5);
+        tl.set("#b1-jump", { opacity: 0 }, 0);
+        tl.set("#b1-jump", { opacity: 1 }, 5.5);
+        const L = line.getTotalLength ? line.getTotalLength() : 1000;
+        tl.fromTo(line, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.25, ease: "power2.out" }, 5.5);
+        tl.fromTo("#b1-hit", { scale: 0.2, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.25, ease: "back.out(3)" }, 5.7);
+        tl.to(["#b1-c3", "#b1-jump"], { opacity: 0, duration: 0.15 }, 5.8);
+        tl.to("#b1-root", { opacity: 0, duration: 0.12 }, 5.68);
+        window.__timelines["b1"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

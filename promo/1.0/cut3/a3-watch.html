@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #a3-root { position: absolute; inset: 0; }
+        .bx { position: absolute; width: calc(420 * var(--u)); height: calc(236 * var(--u)); overflow: hidden;
+          border-radius: calc(14 * var(--u)); box-shadow: 0 calc(20 * var(--u)) calc(50 * var(--u)) rgba(0,0,0,0.5), 0 0 0 2px var(--edge); }
+        .bx .chip { left: calc(10 * var(--u)); bottom: calc(10 * var(--u)); font-size: calc(24 * var(--u)); color: var(--accent); letter-spacing: 0.02em; }
+        #a3-watch { left: calc(60 * var(--u)); top: calc(70 * var(--u)); font-size: calc(96 * var(--u)); }
+        .a3-cap { position: absolute; left: 0; right: 0; bottom: calc(80 * var(--u)); text-align: center; font-size: calc(110 * var(--u)); }
+        #a3-four { position: absolute; left: calc(60 * var(--u)); top: calc(700 * var(--u)); font-size: calc(92 * var(--u)); }
+        #a3-quote { position: absolute; left: calc(1170 * var(--u)); top: calc(690 * var(--u)); width: calc(690 * var(--u)); padding: calc(26 * var(--u)) calc(34 * var(--u));
+          border-radius: calc(16 * var(--u)); background: #fff; color: #111; box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 #000; }
+        #a3-quote .s { font-size: calc(40 * var(--u)); color: var(--tv-gold); letter-spacing: 0.1em; -webkit-text-stroke: 1px #7a5c00; }
+        #a3-quote .q { font-family: Montserrat, sans-serif; font-weight: 900; font-size: calc(44 * var(--u)); line-height: 1.1; margin-top: calc(6 * var(--u)); }
+        #a3-quote .by { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: calc(26 * var(--u)); margin-top: calc(12 * var(--u)); color: #444; }
+      </style>
+      <!-- Act 3: Watch this! The same desktop and sentence, typed straight through while the agent
+           works in a box; then the four agents' boxes, their list, and a word from your desktop. -->
+      <div id="a3-root" data-composition-id="a3" data-width="1920" data-height="1080">
+        <div id="a3-desk" class="full"><div id="a3-z" class="zoom" data-layout-allow-overflow>
+          <!-- desk-boxed: typing from 3.06 s; the agent's ls at 17.64 s. Two pieces, cut where the
+               desktop shrinks. -->
+          <video id="a3-va" src="assets/footage/desk-boxed.mp4" muted
+                 data-start="0" data-duration="4.7" data-media-start="3.0" data-track-index="0"></video>
+          <video id="a3-vb" src="assets/footage/desk-boxed.mp4" muted
+                 data-start="4.7" data-duration="5.8" data-media-start="14.44" data-track-index="1"></video>
+        </div></div>
+        <div id="a3-chip" class="chip mono" style="right: calc(40 * var(--u)); top: calc(70 * var(--u)); color: var(--good)">YOUR DESKTOP</div>
+        <div id="a3-chip2" class="chip mono" style="left: calc(70 * var(--u)); top: calc(600 * var(--u)); font-size: calc(24 * var(--u)); color: var(--good)">YOUR DESKTOP</div>
+        <div id="a3-watch" class="banner"><span class="bi">Watch!</span></div>
+        <div id="a3-c1" class="a3-cap cap">Same desktop. Same sentence.</div>
+        <div id="a3-c2" class="a3-cap cap">Not one key lost!</div>
+
+        <div id="a3-b1" class="bx" style="left: calc(990 * var(--u)); top: calc(150 * var(--u))">
+          <video id="a3-v1" src="assets/footage/box-omaseed-5cc72cdc.mp4" muted style="width: 100%; height: 100%"
+                 data-start="4.7" data-duration="5.8" data-media-start="6.0" data-track-index="2"></video>
+          <div class="chip mono">omaseed-5cc72cdc</div></div>
+        <div id="a3-b2" class="bx" style="left: calc(1430 * var(--u)); top: calc(150 * var(--u))">
+          <video id="a3-v2" src="assets/footage/box-add-sheet-9f01d2e4.mp4" muted style="width: 100%; height: 100%"
+                 data-start="4.7" data-duration="5.8" data-media-start="7.0" data-track-index="3"></video>
+          <div class="chip mono">add-sheet-9f01d2e4</div></div>
+        <div id="a3-b3" class="bx" style="left: calc(990 * var(--u)); top: calc(406 * var(--u))">
+          <video id="a3-v3" src="assets/footage/box-themes-7d20e815.mp4" muted style="width: 100%; height: 100%"
+                 data-start="4.7" data-duration="5.8" data-media-start="8.0" data-track-index="4"></video>
+          <div class="chip mono">themes-7d20e815</div></div>
+        <div id="a3-b4" class="bx" style="left: calc(1430 * var(--u)); top: calc(406 * var(--u))">
+          <video id="a3-v4" src="assets/footage/box-tray-icon-3b7a6c11.mp4" muted style="width: 100%; height: 100%"
+                 data-start="4.7" data-duration="5.8" data-media-start="7.0" data-track-index="5"></video>
+          <div class="chip mono">tray-icon-3b7a6c11</div></div>
+
+        <div id="a3-four" class="cap">
+          <div class="w">Four agents! Four boxes!</div>
+          <div>Zero windows on yours!</div>
+        </div>
+        <div id="a3-quote"><div class="s">★★★★★</div><div class="q">“I haven't been touched in weeks.”</div><div class="by">— Your Desktop</div></div>
+      </div>
+      <script>
+        const FRAME = { srcW: 3840, srcH: 2160, cardW: 1920, cardH: 1080 };
+        const aim = (s, sx, sy) => director.aim(s, sx, sy, FRAME);
+        const tl = gsap.timeline({ paused: true });
+        tl.set("#a3-z", aim(1.06, 1100, 500), 0);
+        tl.to("#a3-z", { ...aim(1, 1920, 1080), duration: 4.4, ease: "sine.inOut" }, 0.1);
+        tl.fromTo("#a3-chip", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+        tl.fromTo("#a3-watch", { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)" }, 0.15);
+        tl.fromTo("#a3-c1", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 0.4);
+        tl.to("#a3-c1", { opacity: 0, duration: 0.1 }, 2.4);
+        tl.fromTo("#a3-c2", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 2.5);
+        tl.to(["#a3-c2", "#a3-watch", "#a3-chip"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 4.3);
+        // The desktop steps aside; the four boxes fan in.
+        tl.to("#a3-desk", { scale: 900 / 1920, x: 60, y: 150, borderRadius: 14, boxShadow: "0 0 0 2px #292e42", duration: 0.6, ease: "power3.inOut" }, 4.5);
+        tl.fromTo("#a3-chip2", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 5.0);
+        tl.fromTo(["#a3-b1", "#a3-b2", "#a3-b3", "#a3-b4"], { opacity: 0, x: 140, rotation: 4 },
+          { opacity: 1, x: 0, rotation: 0, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 4.8);
+        tl.fromTo("#a3-four > div", { opacity: 0, scale: 1.4, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", stagger: 0.55 }, 5.4);
+        // The agent's list: its box and the other three (ls at 17.64 s in the take = 7.9 s here).
+        tl.to("#a3-z", { ...aim(1.9, 2750, 760), duration: 0.6, ease: "power3.inOut" }, 7.9);
+        tl.fromTo("#a3-quote", { opacity: 0, scale: 0.4, rotation: -8 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.4, ease: "back.out(2)" }, 7.4);
+        tl.to("#a3-root", { opacity: 0, duration: 0.25, ease: "power2.in" }, 10.25);
+        window.__timelines["a3"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

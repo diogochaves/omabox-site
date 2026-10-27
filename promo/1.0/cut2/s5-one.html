@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #s5-root { position: absolute; inset: 0; }
+        #s5-big { top: calc(250 * var(--u)); font-size: calc(170 * var(--u)); line-height: 1; }
+        #s5-big .v { color: var(--good); }
+        .s5-line { position: absolute; left: calc(88 * var(--u)); font-size: calc(46 * var(--u)); color: var(--ink); }
+        .s5-line .k { color: var(--accent); }
+      </style>
+      <!-- Frame 6: 1.0. Three lines, each true of 1.0.0 (CHANGELOG, #390). -->
+      <div id="s5-root" data-composition-id="s5" data-width="1920" data-height="1080">
+        <div id="s5-big" class="pad"><span class="wordmark">omabox</span> <span class="v display">1.0</span></div>
+        <div id="s5-l1" class="s5-line mono" style="top: calc(560 * var(--u))"><span class="k">→</span> one Rust binary</div>
+        <div id="s5-l2" class="s5-line mono" style="top: calc(640 * var(--u))"><span class="k">→</span> about 3 ms to step into a box</div>
+        <div id="s5-l3" class="s5-line mono" style="top: calc(720 * var(--u))"><span class="k">→</span> exit codes and --json: a contract for all of 1.x</div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#s5-big", { opacity: 0, scale: 1.18 }, { opacity: 1, scale: 1, transformOrigin: "0% 50%", duration: 0.45, ease: "expo.out" }, 0.05);
+        tl.fromTo(["#s5-l1", "#s5-l2", "#s5-l3"], { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", stagger: 0.55 }, 0.6);
+        tl.to("#s5-root", { opacity: 0, duration: 0.3, ease: "power2.in" }, 4.7);
+        window.__timelines["s5"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

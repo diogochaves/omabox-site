@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #b5-root { position: absolute; inset: 0; }
+        #b5-ban { left: 0; right: 0; top: calc(430 * var(--u)); text-align: center; font-size: calc(130 * var(--u)); }
+        #b5-head { top: calc(60 * var(--u)); font-size: calc(54 * var(--u)); color: var(--accent); }
+        .pv { position: absolute; width: calc(400 * var(--u)); height: calc(225 * var(--u)); overflow: hidden;
+          border-radius: calc(14 * var(--u)); background: var(--ground); box-shadow: 0 calc(16 * var(--u)) calc(50 * var(--u)) rgba(0,0,0,0.5), 0 0 0 2px var(--edge); }
+        .pv video, .pv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .pv .chip { left: calc(10 * var(--u)); bottom: calc(10 * var(--u)); font-size: calc(24 * var(--u)); color: var(--ink); letter-spacing: 0.02em; }
+        .pv .rec { left: calc(10 * var(--u)); top: calc(10 * var(--u)); bottom: auto; color: var(--warn); }
+        .it { position: absolute; left: calc(980 * var(--u)); right: calc(60 * var(--u)); font-size: calc(44 * var(--u)); color: var(--ink); }
+        .it .k { color: var(--accent); margin-right: calc(16 * var(--u)); }
+      </style>
+      <!-- Act E: more uses, quickly, after a BUT WAIT banner (a gag). Six previews, all shot in boxes
+           (the interactive one is omabox.app's), and a list from the site's Uses, Develop and home pages. -->
+      <div id="b5-root" data-composition-id="b5" data-width="1920" data-height="1080">
+        <div id="b5-ban" class="banner"><span class="bi">But wait… there's more!</span></div>
+        <div id="b5-head" class="pad display">And much more, none of it on your desktop:</div>
+        <div id="b5-p1" class="pv" style="left: calc(80 * var(--u)); top: calc(190 * var(--u))">
+          <video id="b5-v1" src="assets/footage/box-add-sheet-9f01d2e4.mp4" muted data-start="1.0" data-duration="6.5" data-media-start="8.0" data-track-index="0"></video>
+          <div class="chip mono rec">● REC</div>
+          <div class="chip mono">film demos</div></div>
+        <div id="b5-p2" class="pv" style="left: calc(500 * var(--u)); top: calc(190 * var(--u))">
+          <img src="assets/stills/use-monitors.png" alt="">
+          <div class="chip mono">monitors you don't own</div></div>
+        <div id="b5-p3" class="pv" style="left: calc(80 * var(--u)); top: calc(435 * var(--u))">
+          <video id="b5-v3" src="assets/footage/box-themes-7d20e815.mp4" muted data-start="1.0" data-duration="6.5" data-media-start="7.5" data-track-index="1"></video>
+          <div class="chip mono">any theme, not yours</div></div>
+        <div id="b5-p4" class="pv" style="left: calc(500 * var(--u)); top: calc(435 * var(--u))">
+          <img src="assets/stills/interactive.webp" alt="">
+          <div class="chip mono">drive one yourself</div></div>
+        <div id="b5-p5" class="pv" style="left: calc(80 * var(--u)); top: calc(680 * var(--u))">
+          <img src="assets/stills/use-notify.png" alt="">
+          <div class="chip mono">notifications</div></div>
+        <div id="b5-p6" class="pv" style="left: calc(500 * var(--u)); top: calc(680 * var(--u))">
+          <img src="assets/stills/use-web.png" alt="">
+          <div class="chip mono">a web page</div></div>
+        <div class="it display" style="top: calc(220 * var(--u))"><span class="k">→</span>film with sound nobody hears</div>
+        <div class="it display" style="top: calc(330 * var(--u))"><span class="k">→</span>find the crash before your users do</div>
+        <div class="it display" style="top: calc(440 * var(--u))"><span class="k">→</span>your bar plugin, in every theme</div>
+        <div class="it display" style="top: calc(550 * var(--u))"><span class="k">→</span>4K shots on any monitor</div>
+        <div class="it display" style="top: calc(660 * var(--u))"><span class="k">→</span>a box for every subagent</div>
+        <div class="it display" style="top: calc(770 * var(--u))"><span class="k">→</span>tray icons and a keyring of its own</div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#b5-ban", { opacity: 0, x: 2200, rotation: -4 }, { opacity: 1, x: 0, rotation: -3, duration: 0.3, ease: "power3.out" }, 0.0);
+        tl.to("#b5-ban", { x: -2200, opacity: 0, duration: 0.3, ease: "power3.in" }, 0.8);
+        tl.fromTo("#b5-head", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 1.0);
+        tl.fromTo(".pv", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)", stagger: 0.12 }, 1.1);
+        tl.fromTo(".it", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out", stagger: 0.32 }, 1.5);
+        tl.to("#b5-root", { opacity: 0, duration: 0.25, ease: "power2.in" }, 7.25);
+        window.__timelines["b5"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #a4-root { position: absolute; inset: 0; }
+        #a4-wait { left: 0; right: 0; top: calc(420 * var(--u)); text-align: center; font-size: calc(150 * var(--u)); }
+        .a4-use { position: absolute; left: calc(80 * var(--u)); top: calc(50 * var(--u)); }
+        .a4-use .cap { font-size: calc(110 * var(--u)); }
+        .a4-use .quip { font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(40 * var(--u)); color: var(--ink); margin-top: calc(14 * var(--u)); }
+        #a4-only { left: calc(960 * var(--u)); top: calc(215 * var(--u)); width: calc(200 * var(--u)); height: calc(200 * var(--u)); }
+        #a4-only .t { font-size: calc(44 * var(--u)); color: #000; }
+        .a4-card { position: absolute; left: calc(370 * var(--u)); top: calc(290 * var(--u)); width: calc(1180 * var(--u)); height: calc(664 * var(--u));
+          overflow: hidden; border-radius: calc(22 * var(--u)); background: var(--ground);
+          box-shadow: 0 calc(30 * var(--u)) calc(90 * var(--u)) rgba(0,0,0,0.55), 0 0 0 2px var(--edge); }
+        .a4-card .fit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+        #a4-rec { left: calc(24 * var(--u)); top: calc(24 * var(--u)); color: var(--warn); }
+
+        /* The check report, laid out as omabox's report.png, from the run's own 8K shots. */
+        .rep { position: absolute; left: calc(50 * var(--u)); font-size: calc(30 * var(--u)); white-space: pre; }
+        .fig { position: absolute; top: calc(300 * var(--u)); width: calc(512 * var(--u)); height: calc(272 * var(--u)); }
+        .fig img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: calc(10 * var(--u)); }
+        .fig .cap { position: absolute; left: 0; top: calc(-44 * var(--u)); font-size: calc(24 * var(--u)); color: var(--muted); letter-spacing: 0.1em; }
+        .brk { position: absolute; left: calc(226 * var(--u)); top: calc(78 * var(--u)); width: calc(240 * var(--u)); height: calc(152 * var(--u)); }
+        .brk i { position: absolute; width: calc(30 * var(--u)); height: calc(30 * var(--u)); border: 0 solid var(--warn); }
+        .brk i:nth-child(1) { left: 0; top: 0; border-left-width: 5px; border-top-width: 5px; }
+        .brk i:nth-child(2) { right: 0; top: 0; border-right-width: 5px; border-top-width: 5px; }
+        .brk i:nth-child(3) { left: 0; bottom: 0; border-left-width: 5px; border-bottom-width: 5px; }
+        .brk i:nth-child(4) { right: 0; bottom: 0; border-right-width: 5px; border-bottom-width: 5px; }
+
+        /* The tokens: the same window, read as text and seen as a screenshot. */
+        #a4-term { position: absolute; left: calc(36 * var(--u)); top: calc(40 * var(--u)); width: calc(1110 * var(--u)); height: calc(157 * var(--u)); overflow: hidden; }
+        #a4-term img { position: absolute; left: 0; top: 0; width: calc(1110 * var(--u)); height: calc(157 * var(--u)); }
+        .a4-mask { position: absolute; left: 0; right: 0; background: var(--ground); }
+        .row { position: absolute; left: calc(40 * var(--u)); right: calc(40 * var(--u)); height: calc(170 * var(--u)); }
+        .row .lab { position: absolute; left: 0; bottom: calc(6 * var(--u)); width: calc(250 * var(--u)); font-size: calc(28 * var(--u)); line-height: 1.3; }
+        .row .bar { position: absolute; left: calc(270 * var(--u)); bottom: calc(10 * var(--u)); height: calc(56 * var(--u)); border-radius: 4px; transform-origin: 0 50%; }
+        .row .val { position: absolute; font-size: calc(110 * var(--u)); color: var(--ink); white-space: nowrap; }
+        .row .val small { font-size: calc(40 * var(--u)); letter-spacing: 0; margin-left: calc(14 * var(--u)); color: var(--muted); }
+        #a4-r1 { top: calc(225 * var(--u)); }
+        #a4-r2 { top: calc(430 * var(--u)); }
+        #a4-b1 { width: calc(10 * var(--u)); background: var(--good); }
+        #a4-b2 { width: calc(830 * var(--u)); background: var(--warn); }
+        #a4-v1 { left: calc(390 * var(--u)); bottom: calc(-6 * var(--u)); }
+        #a4-v2 { right: 0; bottom: calc(76 * var(--u)); font-size: calc(76 * var(--u)); }
+        #a4-v2 small { font-size: calc(34 * var(--u)); }
+        #a4-thumb { position: absolute; left: 0; bottom: calc(76 * var(--u)); width: calc(160 * var(--u)); border-radius: 6px; box-shadow: 0 0 0 2px var(--edge); }
+        #a4-glow { position: absolute; left: calc(400 * var(--u)); top: calc(260 * var(--u)); width: calc(530 * var(--u)); height: calc(150 * var(--u));
+          border-radius: calc(20 * var(--u)); box-shadow: 0 0 0 4px var(--good), 0 0 calc(60 * var(--u)) rgba(158,206,106,0.35); }
+      </style>
+      <!-- Act 4: But wait, there's more! Four uses, one card each; the last (text, not pixels) gets
+           the time to show its difference. -->
+      <div id="a4-root" data-composition-id="a4" data-width="1920" data-height="1080">
+        <div id="a4-wait" class="banner"><span class="bi">But wait… there's more!</span></div>
+        <div id="a4-u1" class="a4-use"><div class="cap">It films!</div><div class="quip">Lights, camera, no action on your screen.</div></div>
+        <div id="a4-u2" class="a4-use"><div class="cap">Monitors you don't even own!</div><div class="quip">Three of them. Your desk still has one.</div></div>
+        <div id="a4-u3" class="a4-use"><div class="cap">It checks its own work!</div><div class="quip">It spots 6 pixels. Your optometrist is jealous.</div></div>
+        <div id="a4-u4" class="a4-use"><div class="cap">It reads apps as text!</div><div class="quip">That's not a typo. That's a tree.</div></div>
+
+        <!-- A box recording itself while an agent switches its theme (the themes box of frame 4). -->
+        <div id="a4-c1" class="a4-card">
+          <video id="a4-vid1" class="fit" src="assets/footage/box-themes-7d20e815.mp4" muted
+                 data-start="1.4" data-duration="3.2" data-media-start="12.2" data-track-index="0"></video>
+          <div id="a4-rec" class="chip mono">● REC  omabox record</div>
+        </div>
+        <!-- One box, three monitors: 1080p, a 1440p at scale 1.6 below, a portrait beside. -->
+        <div id="a4-c2" class="a4-card"><img id="a4-mon" class="fit" data-layout-allow-overflow src="assets/stills/use-monitors.png" alt=""></div>
+        <!-- A real omabox check (box/check/: Save moved 6 px), run in 8K boxes: its lines as it printed
+             them, the baseline's and this run's shots cropped round the changed region. -->
+        <div id="a4-c3" class="a4-card">
+          <div id="a4-q1" class="rep mono" style="top: calc(50 * var(--u)); color: var(--muted)">❯ omabox check run -- ./visual.sh</div>
+          <div id="a4-q2" class="rep mono" style="top: calc(100 * var(--u)); color: var(--ink)">changed  prefs: 1 region</div>
+          <div id="a4-q3" class="rep mono" style="top: calc(150 * var(--u)); color: var(--warn)">  tree: moved +0,+6  button "Save"</div>
+          <div id="a4-f1" class="fig" style="left: calc(50 * var(--u))"><div class="cap mono">BASELINE</div>
+            <img src="assets/stills/check-base.png" alt=""><div class="brk"><i></i><i></i><i></i><i></i></div></div>
+          <div id="a4-f2" class="fig" style="left: calc(618 * var(--u))"><div class="cap mono">THIS RUN</div>
+            <img src="assets/stills/check-run.png" alt=""><div id="a4-brk2" class="brk"><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <!-- tree --find from the agent's terminal in frame 4, and what the same window costs as a
+             screenshot (#390: about 17 tokens against about 1.5k). -->
+        <div id="a4-c4" class="a4-card">
+          <div id="a4-term"><img src="assets/stills/tree-find.png" alt="">
+            <div id="a4-m1" class="a4-mask" style="top: calc(37 * var(--u)); height: calc(120 * var(--u))"></div>
+            <div id="a4-m2" class="a4-mask" style="top: calc(75 * var(--u)); height: calc(82 * var(--u))"></div>
+            <div id="a4-m3" class="a4-mask" style="top: calc(113 * var(--u)); height: calc(44 * var(--u))"></div>
+          </div>
+          <div id="a4-glow"></div>
+          <div id="a4-only" class="burst"><div class="t">Only<br>~17!</div></div>
+          <div id="a4-r1" class="row">
+            <div class="lab mono" style="color: var(--good)">as text<br><span style="color: var(--muted)">omabox tree</span></div>
+            <div id="a4-b1" class="bar"></div>
+            <div id="a4-v1" class="val display">~17<small>tokens</small></div>
+          </div>
+          <div id="a4-r2" class="row">
+            <img id="a4-thumb" src="assets/stills/shot-thumb.png" alt="">
+            <div class="lab mono" style="color: var(--warn)">as a<br>screenshot</div>
+            <div id="a4-b2" class="bar"></div>
+            <div id="a4-v2" class="val display">~<span id="a4-num">0</span><small>tokens</small></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        info.burst(document.getElementById("a4-only"), "#ffd60a", 16, 0.8);
+        const tl = gsap.timeline({ paused: true });
+        // BUT WAIT... THERE'S MORE!
+        tl.fromTo("#a4-wait", { opacity: 0, scale: 3, rotation: -8 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.3, ease: "back.out(1.8)" }, 0.05);
+        tl.to("#a4-wait", { x: -2200, opacity: 0, duration: 0.3, ease: "power3.in" }, 1.1);
+        // Each card: in from the right, out to the left; its line slams in over it.
+        const T = [1.4, 4.5, 7.6, 11.0], OUT = [4.45, 7.55, 10.95];
+        T.forEach((t, i) => {
+          const c = `#a4-c${i + 1}`, u = `#a4-u${i + 1}`;
+          tl.fromTo(c, { opacity: 0, x: 900 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, t);
+          tl.fromTo(`${u} .cap`, { opacity: 0, scale: 1.5, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(2.5)" }, t + 0.1);
+          tl.fromTo(`${u} .quip`, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, t + 0.6);
+          if (i < 3) {
+            tl.to(c, { opacity: 0, x: -900, duration: 0.4, ease: "power3.in" }, OUT[i]);
+            tl.to(u, { opacity: 0, duration: 0.2, ease: "power2.in" }, OUT[i]);
+          }
+        });
+        tl.fromTo("#a4-rec", { opacity: 1 }, { opacity: 0.35, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut" }, 1.6);
+        tl.fromTo("#a4-mon", { scale: 1 }, { scale: 1.08, duration: 3.1, ease: "sine.inOut" }, 4.5);
+        // The check: its lines, the two shots, then the brackets on what moved.
+        tl.fromTo(["#a4-q1", "#a4-q2"], { opacity: 0 }, { opacity: 1, duration: 0.2, stagger: 0.2 }, 7.9);
+        tl.fromTo(["#a4-f1", "#a4-f2"], { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.15 }, 8.2);
+        tl.fromTo(".brk", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 8.9);
+        tl.fromTo("#a4-q3", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 9.2);
+        tl.to("#a4-brk2", { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 9.6);
+        // The tokens: the tree's answer, line by line; then the same window as text and as a
+        // screenshot, on one scale, the screenshot's bar counting up; then ONLY ~17!
+        ["#a4-m1", "#a4-m2", "#a4-m3"].forEach((m, i) => tl.to(m, { scaleX: 0, transformOrigin: "100% 50%", duration: 0.22, ease: "power2.out" }, 11.35 + i * 0.18));
+        tl.fromTo("#a4-r1 .lab", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 12.1);
+        tl.fromTo("#a4-b1", { scaleX: 0 }, { scaleX: 1, duration: 0.25, ease: "power2.out" }, 12.2);
+        tl.fromTo("#a4-v1", { opacity: 0, scale: 1.6, transformOrigin: "0% 100%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)" }, 12.3);
+        tl.fromTo(["#a4-r2 .lab", "#a4-thumb"], { opacity: 0 }, { opacity: 1, duration: 0.3 }, 13.0);
+        tl.fromTo("#a4-v2", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 13.2);
+        tl.fromTo("#a4-b2", { scaleX: 0 }, { scaleX: 1, duration: 1.5, ease: "power2.out" }, 13.2);
+        const n = { v: 0 }, num = document.getElementById("a4-num");
+        tl.fromTo(n, { v: 0 }, { v: 1500, duration: 1.5, ease: "power2.out",
+          onUpdate: () => { num.textContent = (Math.round(n.v / 10) * 10).toLocaleString("en-US"); } }, 13.2);
+        tl.fromTo("#a4-glow", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 14.9);
+        tl.fromTo("#a4-only", { opacity: 0, scale: 0, rotation: -90 }, { opacity: 1, scale: 1, rotation: 8, duration: 0.4, ease: "back.out(2)" }, 15.1);
+        tl.to("#a4-v1", { scale: 1.12, duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut" }, 15.0);
+        tl.to("#a4-root", { opacity: 0, duration: 0.25, ease: "power2.in" }, 16.25);
+        window.__timelines["a4"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

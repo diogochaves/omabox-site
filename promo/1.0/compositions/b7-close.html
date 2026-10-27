@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #b7-root { position: absolute; inset: 0; }
+        #b7-lock { position: absolute; left: calc(80 * var(--u)); top: calc(60 * var(--u)); height: calc(90 * var(--u)); display: flex; align-items: center; gap: calc(26 * var(--u)); }
+        #b7-mark { position: relative; width: calc(90 * var(--u)); height: calc(90 * var(--u)); }
+        #b7-word { font-size: calc(92 * var(--u)); }
+        #b7-ver { font-size: calc(26 * var(--u)); color: var(--accent); letter-spacing: 0.14em; margin-left: calc(10 * var(--u)); padding-top: calc(30 * var(--u)); }
+        #b7-h { top: calc(205 * var(--u)); font-size: calc(80 * var(--u)); }
+        #b7-h2 { color: var(--good); }
+        #b7-sub { top: calc(400 * var(--u)); font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(36 * var(--u)); line-height: 1.35; color: var(--muted); max-width: calc(1500 * var(--u)); }
+        .tile { position: absolute; top: calc(535 * var(--u)); width: calc(560 * var(--u)); height: calc(280 * var(--u)); border-radius: calc(20 * var(--u));
+          background: var(--lift); box-shadow: 0 0 0 2px var(--edge); padding: calc(28 * var(--u)) calc(34 * var(--u)); }
+        .tile .z { font-size: calc(96 * var(--u)); color: var(--good); line-height: 1; }
+        .tile .n { font-size: calc(26 * var(--u)); letter-spacing: 0.12em; color: var(--ink); margin-top: calc(8 * var(--u)); }
+        .tile .w { font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(29 * var(--u)); color: var(--muted); margin-top: calc(16 * var(--u)); line-height: 1.3; }
+        #b7-url { position: absolute; left: calc(80 * var(--u)); top: calc(860 * var(--u)); font-size: calc(76 * var(--u)); color: var(--accent); }
+        #b7-free { position: absolute; right: calc(80 * var(--u)); top: calc(882 * var(--u)); font-size: calc(34 * var(--u)); color: var(--ink); letter-spacing: 0.06em; }
+        #b7-where { position: absolute; left: calc(80 * var(--u)); top: calc(970 * var(--u)); font-size: calc(26 * var(--u)); color: var(--muted); letter-spacing: 0.04em; }
+        #b7-where .g { color: var(--good); }
+        /* The fine print: far too fast to read, on purpose. Pause to read it. */
+        #b7-fine { position: absolute; left: 0; top: calc(1036 * var(--u)); white-space: nowrap; font-family: "JetBrains Mono", monospace; font-weight: 700;
+          font-size: calc(22 * var(--u)); color: var(--muted); }
+      </style>
+      <!-- Act G: the close, as omabox.app's hero: the lockup, the pitch, what it does, what it
+           keeps from happening, the address. No install line, no credits (they are in the thread). -->
+      <div id="b7-root" data-composition-id="b7" data-width="1920" data-height="1080">
+        <div id="b7-lock">
+          <div id="b7-mark" class="mark"></div>
+          <div id="b7-word" class="wordmark">omabox</div>
+          <div id="b7-ver" class="mono">1.0</div>
+        </div>
+        <div id="b7-h" class="pad display">
+          <div id="b7-h1">Your agents get desktops of their own.</div>
+          <div id="b7-h2">Yours stays untouched.</div>
+        </div>
+        <div id="b7-sub" class="pad">omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is.</div>
+        <div id="b7-t1" class="tile" style="left: calc(80 * var(--u))"><div class="z display">0</div><div class="n mono">WINDOWS OPENED</div>
+          <div class="w">No windows popping up, no cursor jumps</div></div>
+        <div id="b7-t2" class="tile" style="left: calc(680 * var(--u))"><div class="z display">0</div><div class="n mono">FOCUS TAKEN</div>
+          <div class="w">No stolen focus, no password prompts</div></div>
+        <div id="b7-t3" class="tile" style="left: calc(1280 * var(--u))"><div class="z display">0</div><div class="n mono">LEFT BEHIND</div>
+          <div class="w">Nothing left behind when the agent is done</div></div>
+        <div id="b7-url" class="mono">omabox.app</div>
+        <div id="b7-free" class="mono">free · MIT, every line</div>
+        <div id="b7-fine" data-layout-allow-overflow>*omabox is not a sandbox: pair it with ai-jail. · Think outside the box. Test inside one. · No desktops were harmed in the making of this video. No cursors were moved either. · Every shot was filmed in omabox, on a desktop nobody touched. · Box included. Desktop not included: you already have one, and now you get to keep it. · Agents sold separately. · Unboxing video not included. · Keep out of reach of your real desktop. · Side effects may include finishing your sentences. · Results may vary; your focus won't. · In a box, pkexec just says no. · Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA. Plain Hyprland is coming. · Not affiliated with or endorsed by Omarchy or Hyprland. · MIT, every line: read it, fork it, keep it. · No refunds, as there was nothing to pay. · You paused to read this. Respect.</div>
+        <div id="b7-where" class="mono">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · <span class="g">plain Hyprland is coming</span></div>
+      </div>
+      <script>
+        const px = omaboxMark.draw(document.getElementById("b7-mark"), 6);
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(px, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.4)", stagger: 0.025 }, 0.05);
+        tl.fromTo(["#b7-word", "#b7-ver"], { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.45, ease: "expo.out", stagger: 0.1 }, 0.2);
+        tl.fromTo("#b7-h1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.4);
+        tl.fromTo("#b7-h2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.9);
+        tl.fromTo("#b7-sub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.5);
+        tl.fromTo(["#b7-t1", "#b7-t2", "#b7-t3"], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.35 }, 2.4);
+        tl.fromTo(".tile .z", { scale: 1.5, transformOrigin: "0% 100%" }, { scale: 1, duration: 0.4, ease: "back.out(2.4)", stagger: 0.35 }, 2.5);
+        tl.fromTo("#b7-url", { opacity: 0, scale: 0.9, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 4.0);
+        tl.fromTo(["#b7-free", "#b7-where"], { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.3 }, 4.4);
+        // The fine print: once across, too fast to read; pause to read it.
+        const fine = document.getElementById("b7-fine");
+        tl.fromTo(fine, { x: 1920 }, { x: () => -fine.scrollWidth, duration: 8.6, ease: "none" }, 0.8);
+        window.__timelines["b7"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #b2u-root { position: absolute; inset: 0; }
+        #b2u-say { position: absolute; left: 0; right: 0; top: calc(230 * var(--u)); text-align: center; font-size: calc(64 * var(--u)); }
+        /* A user's post, as a card: a generic avatar, no name or handle. */
+        #b2u-post { position: absolute; left: calc(390 * var(--u)); top: calc(370 * var(--u)); width: calc(1140 * var(--u)); padding: calc(40 * var(--u)) calc(48 * var(--u));
+          border-radius: calc(22 * var(--u)); background: #fff; color: #0f1419; box-shadow: calc(12 * var(--u)) calc(12 * var(--u)) 0 #000; opacity: 0; }
+        .who { display: flex; align-items: center; gap: calc(20 * var(--u)); }
+        .av { width: calc(78 * var(--u)); height: calc(78 * var(--u)); border-radius: 50%; background: #cfd9de; position: relative; overflow: hidden; }
+        .av i { position: absolute; left: 30%; top: 18%; width: 40%; height: 40%; border-radius: 50%; background: #8b98a5; }
+        .av b { position: absolute; left: 14%; top: 62%; width: 72%; height: 60%; border-radius: 50%; background: #8b98a5; }
+        .who .nm { font-family: Montserrat, sans-serif; font-weight: 900; font-size: calc(34 * var(--u)); }
+        .who .hd { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: calc(24 * var(--u)); color: #536471; }
+        .txt { font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(46 * var(--u)); line-height: 1.25; margin-top: calc(24 * var(--u)); }
+      </style>
+      <!-- After the pitch: what a user says (a real post, shown without a name, handle or photo). -->
+      <div id="b2u-root" data-composition-id="b2u" data-width="1920" data-height="1080">
+        <div id="b2u-say" class="cap w">See what our users are saying:</div>
+        <div id="b2u-post">
+          <div class="who"><div class="av"><i></i><b></b></div><div><div class="nm">an omabox user</div><div class="hd">on X</div></div></div>
+          <div class="txt">“No more agents stealing window focus while I'm mid-sentence. Sounds small until it happens 50x a day.”</div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#b2u-say", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, 0.05);
+        tl.fromTo("#b2u-post", { opacity: 0, y: 40, rotation: -2 }, { opacity: 1, y: 0, rotation: -1, duration: 0.35, ease: "back.out(1.8)" }, 0.2);
+        tl.to("#b2u-root", { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.0);
+        window.__timelines["b2u"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

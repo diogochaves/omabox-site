@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        #a5-root { position: absolute; inset: 0; }
+        #a5-ban { left: 0; right: 0; top: calc(420 * var(--u)); text-align: center; font-size: calc(150 * var(--u)); }
+        #a5-head { position: absolute; left: calc(80 * var(--u)); top: calc(60 * var(--u)); font-size: calc(96 * var(--u)); }
+        .pv { position: absolute; left: calc(80 * var(--u)); width: calc(640 * var(--u)); height: calc(360 * var(--u)); overflow: hidden;
+          border-radius: calc(16 * var(--u)); background: var(--ground); box-shadow: 0 calc(20 * var(--u)) calc(60 * var(--u)) rgba(0,0,0,0.5), 0 0 0 2px var(--edge); }
+        .pv video, .pv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .pv .chip { left: calc(12 * var(--u)); bottom: calc(12 * var(--u)); font-size: calc(24 * var(--u)); color: var(--ink); letter-spacing: 0.02em; }
+        .it { position: absolute; left: calc(800 * var(--u)); right: calc(60 * var(--u)); font-size: calc(46 * var(--u)); color: var(--ink); }
+        .it .k { display: inline-block; width: calc(60 * var(--u)); color: var(--good); }
+      </style>
+      <!-- Act 5: And that's not all! More uses, ticked off like what's in the box. -->
+      <div id="a5-root" data-composition-id="a5" data-width="1920" data-height="1080">
+        <div id="a5-ban" class="banner"><span class="bi">And that's not all!</span></div>
+        <div id="a5-head" class="cap">You also get:</div>
+        <div id="a5-p1" class="pv" style="top: calc(220 * var(--u))">
+          <video id="a5-v1" src="assets/footage/box-themes-7d20e815.mp4" muted
+                 data-start="1.0" data-duration="5.5" data-media-start="6.5" data-track-index="0"></video>
+          <div class="chip mono">any theme, without changing yours</div></div>
+        <!-- omabox.app's interactive.webp: an interactive box beside the terminal that drives it. -->
+        <div id="a5-p2" class="pv" style="top: calc(620 * var(--u))">
+          <img src="assets/stills/interactive.webp" alt="">
+          <div class="chip mono">drive a box yourself, or peek in</div></div>
+        <div class="it display" style="top: calc(230 * var(--u))"><span class="k">✓</span>film with sound nobody hears</div>
+        <div class="it display" style="top: calc(340 * var(--u))"><span class="k">✓</span>a web page, off your screen</div>
+        <div class="it display" style="top: calc(450 * var(--u))"><span class="k">✓</span>find the crash before your users do</div>
+        <div class="it display" style="top: calc(560 * var(--u))"><span class="k">✓</span>tray icons, notifications, a keyring</div>
+        <div class="it display" style="top: calc(670 * var(--u))"><span class="k">✓</span>your bar plugin, in every theme</div>
+        <div class="it display" style="top: calc(780 * var(--u))"><span class="k">✓</span>4K shots on any monitor</div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#a5-ban", { opacity: 0, scale: 3, rotation: 8 }, { opacity: 1, scale: 1, rotation: 3, duration: 0.3, ease: "back.out(1.8)" }, 0.05);
+        tl.to("#a5-ban", { x: 2200, opacity: 0, duration: 0.3, ease: "power3.in" }, 0.85);
+        tl.fromTo("#a5-head", { opacity: 0, scale: 1.4, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(2.5)" }, 1.1);
+        tl.fromTo(["#a5-p1", "#a5-p2"], { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", stagger: 0.2 }, 1.2);
+        tl.fromTo(".it", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out", stagger: 0.42 }, 1.6);
+        tl.fromTo(".it .k", { scale: 2.2 }, { scale: 1, duration: 0.3, ease: "back.out(3)", stagger: 0.42 }, 1.65);
+        tl.to("#a5-root", { opacity: 0, duration: 0.25, ease: "power2.in" }, 6.25);
+        window.__timelines["a5"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

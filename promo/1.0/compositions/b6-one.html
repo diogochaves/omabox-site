@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: Anton; font-weight: 400; src: url(assets/fonts/Anton-Regular.ttf); }
+        #b6-root { position: absolute; inset: 0; }
+        #b6-big { top: calc(110 * var(--u)); font-size: calc(160 * var(--u)); line-height: 1; }
+        #b6-big .v { color: var(--good); }
+        .b6-line { position: absolute; left: calc(88 * var(--u)); font-size: calc(44 * var(--u)); color: var(--ink); }
+        .b6-line .k { color: var(--accent); }
+        .st { position: absolute; top: calc(640 * var(--u)); width: calc(560 * var(--u)); height: calc(300 * var(--u)); border-radius: calc(20 * var(--u));
+          background: var(--lift); box-shadow: 0 0 0 2px var(--edge); padding: calc(30 * var(--u)) calc(36 * var(--u)); }
+        .st .n { font-size: calc(120 * var(--u)); color: var(--good); line-height: 1; }
+        .st .w { font-family: Montserrat, sans-serif; font-weight: 800; font-size: calc(34 * var(--u)); color: var(--ink); margin-top: calc(14 * var(--u)); line-height: 1.25; }
+        .st .w small { display: block; font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: calc(24 * var(--u)); color: var(--muted); margin-top: calc(8 * var(--u)); }
+        /* MIT first; then a pricing page that is not there. */
+        #b6-mit { top: calc(110 * var(--u)); font-size: calc(110 * var(--u)); }
+        #b6-mit .g { color: var(--good); }
+        #b6-free { left: calc(1440 * var(--u)); top: calc(40 * var(--u)); width: calc(330 * var(--u)); height: calc(330 * var(--u)); }
+        #b6-free .t { font-family: Anton, sans-serif; font-size: calc(96 * var(--u)); color: #fff; -webkit-text-stroke: calc(5 * var(--u)) #000; paint-order: stroke fill; }
+        #b6-ph { position: absolute; left: calc(80 * var(--u)); top: calc(420 * var(--u)); font-size: calc(40 * var(--u)); letter-spacing: 0.14em; color: var(--muted); }
+        #b6-ph .x { position: absolute; left: -2%; top: 46%; width: 104%; height: calc(8 * var(--u)); background: var(--tv-red); transform-origin: 0 50%; border-radius: 3px; }
+        .plan { position: absolute; top: calc(490 * var(--u)); width: calc(520 * var(--u)); height: calc(380 * var(--u)); border-radius: calc(20 * var(--u)); background: var(--lift);
+          box-shadow: 0 0 0 2px var(--edge); padding: calc(34 * var(--u)); }
+        .plan .n { font-size: calc(28 * var(--u)); letter-spacing: 0.12em; color: var(--muted); }
+        .plan .p { font-size: calc(84 * var(--u)); color: var(--ink); margin-top: calc(14 * var(--u)); }
+        .plan .p small { font-size: calc(30 * var(--u)); color: var(--muted); }
+        .plan .f { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: calc(26 * var(--u)); color: var(--muted); margin-top: calc(22 * var(--u)); line-height: 1.7; }
+        #b6-none { position: absolute; left: 0; right: 0; top: calc(725 * var(--u)); text-align: center; font-size: calc(96 * var(--u)); }
+      </style>
+      <!-- Act F: 1.0 (true: CHANGELOG, #390, the tags, SECURITY.md, the site's "Works with"), then the
+           licence: MIT since 0.1.0 (2026-09-25), and a pricing page that falls away. -->
+      <div id="b6-root" data-composition-id="b6" data-width="1920" data-height="1080">
+        <div id="b6-a">
+          <div id="b6-big" class="pad"><span class="wordmark">omabox</span> <span class="v display">1.0</span></div>
+          <div id="b6-l1" class="b6-line mono" style="top: calc(330 * var(--u))"><span class="k">→</span> one Rust binary</div>
+          <div id="b6-l2" class="b6-line mono" style="top: calc(405 * var(--u))"><span class="k">→</span> about 3 ms to step into a box</div>
+          <div id="b6-l3" class="b6-line mono" style="top: calc(480 * var(--u))"><span class="k">→</span> exit codes and --json: a contract for all of 1.x</div>
+          <div id="b6-s1" class="st" style="left: calc(80 * var(--u))"><div class="n display">32</div><div class="w">releases in 32 days<small>0.1.0 on 25 Sep → 1.0 today</small></div></div>
+          <div id="b6-s2" class="st" style="left: calc(680 * var(--u))"><div class="n display">10</div><div class="w">security rules, each with its tests<small>SECURITY.md, S1 to S10</small></div></div>
+          <div id="b6-s3" class="st" style="left: calc(1280 * var(--u))"><div class="n display">5</div><div class="w">agents it works with<small>Claude Code · Codex · OpenCode · pi · Hermes</small></div></div>
+        </div>
+        <div id="b6-b">
+          <div id="b6-mit" class="pad display"><div>MIT license,</div><div class="g">since day one.</div></div>
+          <div id="b6-free" class="burst"><div class="t">FREE!</div></div>
+          <div id="b6-ph" class="mono">PRICING PLANS<div class="x"></div></div>
+          <div id="b6-k1" class="plan" style="left: calc(80 * var(--u))"><div class="n mono">PRO</div><div class="p display">$99<small>/mo</small></div><div class="f">one agent<br>one box</div></div>
+          <div id="b6-k2" class="plan" style="left: calc(700 * var(--u))"><div class="n mono">TEAM</div><div class="p display">$499<small>/mo</small></div><div class="f">five agents<br>SSO, probably</div></div>
+          <div id="b6-k3" class="plan" style="left: calc(1320 * var(--u))"><div class="n mono">ENTERPRISE</div><div class="p display">Call us</div><div class="f">a sales call<br>about a box</div></div>
+          <div id="b6-none" class="cap w">No pricing plans included. Ever.</div>
+        </div>
+      </div>
+      <script>
+        info.burst(document.getElementById("b6-free"), "#e5243b", 22, 0.8);
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#b6-big", { opacity: 0, scale: 1.15, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, 0.05);
+        tl.fromTo(["#b6-l1", "#b6-l2", "#b6-l3"], { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out", stagger: 0.25 }, 0.35);
+        tl.fromTo(["#b6-s1", "#b6-s2", "#b6-s3"], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out", stagger: 0.3 }, 1.2);
+        tl.fromTo(".st .n", { scale: 1.6, transformOrigin: "0% 100%" }, { scale: 1, duration: 0.35, ease: "back.out(2.5)", stagger: 0.3 }, 1.3);
+        tl.to("#b6-a", { opacity: 0, duration: 0.2 }, 4.3);
+        tl.set("#b6-b", { opacity: 0 }, 0);
+        tl.set("#b6-b", { opacity: 1 }, 4.5);
+        tl.fromTo("#b6-mit > div", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out", stagger: 0.35 }, 4.5);
+        tl.fromTo("#b6-free", { opacity: 0, scale: 0, rotation: -160 }, { opacity: 1, scale: 1, rotation: 10, duration: 0.4, ease: "back.out(2)" }, 5.1);
+        tl.fromTo(["#b6-ph", "#b6-k1", "#b6-k2", "#b6-k3"], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", stagger: 0.08 }, 5.4);
+        tl.fromTo("#b6-ph .x", { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "power2.out" }, 6.1);
+        tl.to(["#b6-k1", "#b6-k2", "#b6-k3"], { y: 900, rotation: (i) => [-14, 6, 18][i], opacity: 0, duration: 0.5, ease: "power2.in", stagger: 0.06 }, 6.3);
+        tl.fromTo("#b6-none", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)" }, 6.8);
+        tl.to("#b6-root", { opacity: 0, duration: 0.2, ease: "power2.in" }, 8.8);
+        window.__timelines["b6"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- Local copies: a render never fetches anything. -->
+    <script src="lib/gsap.min.js"></script>
+    <script src="lib/director.js"></script>
+    <script src="lib/mark.js"></script>
+    <script src="lib/info.js"></script>
+    <style>
+      @font-face { font-family: Montserrat; font-weight: 900; src: url(assets/fonts/Montserrat-Black.ttf); }
+      @font-face { font-family: Montserrat; font-weight: 800; src: url(assets/fonts/Montserrat-ExtraBold.ttf); }
+      @font-face { font-family: "JetBrains Mono"; font-weight: 700; src: url(assets/fonts/JetBrainsMono-Bold.ttf); }
+      /* The wordmark, as omabox.app sets it (Chakra Petch 700, +0.02 em). */
+      @font-face { font-family: "Chakra Petch"; font-weight: 700; src: url(assets/fonts/ChakraPetch-Bold.ttf); }
+      /* The infomercial's caps. */
+      @font-face { font-family: Anton; font-weight: 400; src: url(assets/fonts/Anton-Regular.ttf); }
+      /* The palette (frame.md): Tokyo Night until the product brings its own. --u is one pixel at
+         1080 on the short side: sizes are written for 1080 and scale with the canvas. */
+      :root { --ground: #16161e; --lift: #1f2335; --ink: #c0caf5; --muted: #a9b1d6; --edge: #292e42;
+        --accent: #7aa2f7; --warn: #f7768e; --good: #9ece6a; --u: calc(1080px / 1080);
+        --tv-yellow: #ffd60a; --tv-red: #e5243b; --tv-gold: #f2b705; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 1920px; height: 1080px; color: var(--ink);
+        background: radial-gradient(ellipse at 50% 35%, var(--lift) 0%, var(--ground) 70%); }
+      /* Shared by the scenes in compositions/ (their markup joins this page). */
+      .display { font-family: Montserrat, sans-serif; font-weight: 900; letter-spacing: -0.035em; line-height: 0.98; }
+      .mono { font-family: "JetBrains Mono", monospace; font-weight: 700; }
+      .pad { position: absolute; left: calc(80 * var(--u)); right: calc(80 * var(--u)); }
+      .label { font-size: calc(24 * var(--u)); letter-spacing: 0.14em; color: var(--accent); }
+      .statement { font-size: calc(80 * var(--u)); }
+      /* The footage card: 16:9, 88% of the width or 62% of the height, whichever is smaller, low in
+         the frame. Its wrappers are untimed, so GSAP can move them; the <video> carries the timing. */
+      .card { position: absolute; left: 365px; width: 1190px; height: 669px; bottom: 12%; overflow: hidden;
+        border-radius: calc(22 * var(--u)); box-shadow: 0 calc(30 * var(--u)) calc(90 * var(--u)) rgba(0,0,0,0.55), 0 0 0 2px var(--edge); }
+      .zoom { position: absolute; inset: 0; transform-origin: 0 0; }
+      .zoom video, .zoom img { position: absolute; inset: 0; width: 100%; height: 100%; }
+      /* Full-bleed footage: "your desktop", the stage box, at the canvas's own size. */
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; }
+      /* A small label on footage: whose screen this is. */
+      .chip { position: absolute; padding: calc(8 * var(--u)) calc(16 * var(--u)); border-radius: calc(10 * var(--u));
+        background: rgba(22, 22, 30, 0.88); box-shadow: 0 0 0 2px var(--edge); font-size: calc(26 * var(--u)); letter-spacing: 0.08em; }
+      /* The statement over footage sits on a band that darkens the bottom of the frame. */
+      .band { position: absolute; left: 0; right: 0; bottom: 0; height: calc(360 * var(--u));
+        background: linear-gradient(to bottom, rgba(22,22,30,0) 0%, rgba(22,22,30,0.92) 45%, rgba(22,22,30,0.97) 100%); }
+      .mark { position: absolute; }
+      /* Infomercial: yellow caps with a black outline; a slanted red banner; a starburst. */
+      .cap { font-family: Anton, sans-serif; text-transform: uppercase; color: var(--tv-yellow); letter-spacing: 0.01em; line-height: 1;
+        -webkit-text-stroke: calc(12 * var(--u)) #000; paint-order: stroke fill; text-shadow: 0 calc(8 * var(--u)) 0 rgba(0,0,0,0.55); }
+      .cap.w { color: #fff; }
+      .banner { position: absolute; font-family: Anton, sans-serif; text-transform: uppercase; color: #fff; line-height: 1; }
+      .banner .bi { display: inline-block; background: var(--tv-red); padding: calc(14 * var(--u)) calc(40 * var(--u)); transform: skewX(-10deg);
+        box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 #000; }
+      .burst { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; }
+      .burst svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .burst .t { position: relative; font-family: Anton, sans-serif; text-transform: uppercase; line-height: 0.95; }
+      .wordmark { font-family: "Chakra Petch", sans-serif; font-weight: 700; letter-spacing: 0.02em; line-height: 1; }
+    </style>
+  </head>
+  <body>
+    <!-- omabox 1.0, cut 4 (STORYBOARD.md): one act per file in compositions/, placed here with its start
+         and length; a scene's own timeline counts from its start. -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="64" data-width="1920" data-height="1080">
+      <div id="b1" data-composition-id="b1" data-composition-src="compositions/b1-tired.html"
+           data-start="0" data-duration="5.8" data-track-index="0" data-width="1920" data-height="1080"></div>
+      <div id="b2" data-composition-id="b2" data-composition-src="compositions/b2-turn.html"
+           data-start="5.8" data-duration="3.0" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <div id="b2u" data-composition-id="b2u" data-composition-src="compositions/b2u-users.html"
+           data-start="8.8" data-duration="3.2" data-track-index="7" data-width="1920" data-height="1080"></div>
+      <div id="b3" data-composition-id="b3" data-composition-src="compositions/b3-boxes.html"
+           data-start="12.0" data-duration="10.5" data-track-index="2" data-width="1920" data-height="1080"></div>
+      <div id="b4" data-composition-id="b4" data-composition-src="compositions/b4-tests.html"
+           data-start="22.5" data-duration="15.0" data-track-index="3" data-width="1920" data-height="1080"></div>
+      <div id="b5" data-composition-id="b5" data-composition-src="compositions/b5-more.html"
+           data-start="37.5" data-duration="7.5" data-track-index="4" data-width="1920" data-height="1080"></div>
+      <div id="b6" data-composition-id="b6" data-composition-src="compositions/b6-one.html"
+           data-start="45.0" data-duration="9" data-track-index="5" data-width="1920" data-height="1080"></div>
+      <div id="b7" data-composition-id="b7" data-composition-src="compositions/b7-close.html"
+           data-start="54.0" data-duration="10" data-track-index="6" data-width="1920" data-height="1080"></div>
+    </div>
+    <script>
+      // The scenes drive themselves; the root timeline holds what crosses scenes (music cues, a
+      // match cut), at film time.
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
