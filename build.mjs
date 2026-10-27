@@ -1,6 +1,7 @@
 // Builds the public site from site/: each page (an artifact source, no <html>/<head>) wrapped into a
 // whole document, with what changes at every omabox release read from the omabox repo at its latest
-// release tag: the version, every command and its help (bin/omabox), the changelog (CHANGELOG.md).
+// release tag: the version, every command and its help (crates/omabox/src/help.txt since 1.0, bin/omabox
+// before), the changelog (CHANGELOG.md).
 // The home page also gets the repo's contributors (people only: no bots, no AI agents), their avatars
 // saved next to it. For agents, each page also gets a Markdown twin (/uses.md...), /install.md is
 // the setup guide (site/install-agent.md), and /llms.txt lists them. No dependencies; Node 18+.
@@ -121,9 +122,10 @@ async function atRelease(path) {
   return r.text();
 }
 
-// ── omabox help, read from bin/omabox without running it ─────────────────────────────────────────
-// The help is a heredoc (in usage_text(), or usage() before omabox had help per command): the
-// commands' lines, a blank line, then the prose. With help per command, each paragraph comes after
+// ── omabox help, read without running omabox ─────────────────────────────────────────────────────
+// Since 1.0 (the Rust omabox) the help is crates/omabox/src/help.txt, compiled in as it is, and
+// bin/omabox is a link to the build. Before, it was bin/omabox's heredoc (in usage_text(), or usage()
+// before omabox had help per command). Either way: the commands' lines, a blank line, then the prose. With help per command, each paragraph comes after
 // an "@" line naming the commands it is about, and `omabox help CMD` prints a command's lines and
 // its paragraphs (and, for run, up's lines too); each command here gets the same. Without "@" lines
 // the prose is one text, shown once, as the CLI prints it.
@@ -503,7 +505,7 @@ const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^
 const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
 
 const notes = JSON.parse(await readFile("site/commands.json", "utf8"));
-const help = parseHelp(helpText(await atRelease("bin/omabox"))), grouped = groupCommands(help, notes);
+const help = parseHelp(await atRelease("crates/omabox/src/help.txt").catch(async () => helpText(await atRelease("bin/omabox")))), grouped = groupCommands(help, notes);
 const changelog = await atRelease("CHANGELOG.md");
 // What fills each page's <!-- markers -->, as HTML for the page and as Markdown for its twin.
 const generated = {
