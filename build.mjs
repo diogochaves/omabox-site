@@ -503,12 +503,12 @@ const ending = cur => `${cur.out === "install.html" ? "" : `
 const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^]*?<\/pre>/, "");
 // Landing on a linked section once the fonts are in (written once, in the home page, like the nav).
 const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
-// The rail, as on the home page: 1 is the page's head, then each of its sections (a .grp with an id),
-// named by its data-rail or its id. The script that marks the one on screen is the home page's.
+// The rail, as on the home page: 1 is the page's head, named as the nav names the page, then each of
+// its sections (a .grp with an id), named by its data-rail or its id. The script that marks the one on screen is the home page's.
 const railScript = pick(/<!-- rail[^>]*-->[^]*?<!-- \/rail -->/, "<!-- rail --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
-const rail = src => {
+const rail = (src, page) => {
   const secs = [...src.matchAll(/<(?:section|div) class="grp[^"]*" id="([^"]+)"(?: data-rail="([^"]+)")?/g)];
-  return `<nav class="rail" aria-label="Sections"><a href="#top" class="on"><b>1</b><span>top</span></a>${secs.map(([, id, name], i) =>
+  return `<nav class="rail" aria-label="Sections"><a href="#top" class="on"><b>1</b><span>${esc(page.name)}</span></a>${secs.map(([, id, name], i) =>
     `<a href="#${id}"><b>${i + 2}</b><span>${esc(name || id.replaceAll("-", " "))}</span></a>`).join("")}</nav>`;
 };
 
@@ -568,7 +568,7 @@ for (const page of PAGES) {
     const style = src.match(/<style>[^]*?<\/style>/)?.[0] || "";
     const main = src.slice(src.indexOf("<main")).replace('<div class="head">', '<div class="head" id="top">')
       .replace(/<\/main>\s*$/, `${ending(page)}\n\n${footer}\n${landing}\n${railScript}\n</main>`);
-    doc = `${head(page)}${fonts}\n${style}\n</head>\n<body>\n${sprite}\n\n${header(page)}\n\n${rail(src)}\n\n${main}\n</body>\n</html>\n`;
+    doc = `${head(page)}${fonts}\n${style}\n</head>\n<body>\n${sprite}\n\n${header(page)}\n\n${rail(src, page)}\n\n${main}\n</body>\n</html>\n`;
   }
   await writeFile(`${OUT}/${page.out}`, links(doc).replace(/ data-(?:md|rail)="[^"]*"/g, ""));
   console.log(`built ${OUT}/${page.out}`);
