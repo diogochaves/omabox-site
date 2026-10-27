@@ -1,0 +1,1268 @@
+<title>omabox · Look F</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout (Look F): the old site's big mark hangs under the menu and shrinks into it as you scroll.
+   A black stage. The hero is one wide 3D scene: your desktop as the floor, agents' boxes
+   rising above it and folding away. Every section after it is a Hyprland workspace (the rail, the
+   label over each heading) with a live scene of its own. Your desktop is neutral grey; anything that
+   is a box has the brand green frame. Dark only, on purpose. */
+:root {
+  --bg: #08080a; --s1: #101013; --s2: #16161a; --s3: #1d1d22;
+  --line: rgb(255 255 255 / .08); --line-2: rgb(255 255 255 / .15);
+  --ink: #f3f3ef; --ink-2: #a6a6b0; --muted: #6a6a76;
+  --box: #9ece6a; --box-glow: rgb(158 206 106 / .32); --box-wall: #0c140b;
+  --sky: #7dcfff; --blue: #7aa2f7; --violet: #bb9af7; --amber: #e0af68; --warn: #f7768e;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --dim: #8b8b96;
+  --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gut: max(16px, env(safe-area-inset-left, 0px)); --gut-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16.5px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bg); }
+a { color: inherit; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--box); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1, h2 { font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 96; letter-spacing: -.035em; color: var(--ink); }
+h1 { font-size: clamp(40px, 5vw, 70px); line-height: 1; }
+h2 { font-size: clamp(32px, 3.8vw, 52px); line-height: 1.04; }
+h1 i, h2 i { font-style: normal; color: var(--dim); }
+h3 { font: 600 16.5px/1.3 var(--sans); }
+p { margin: 0; }
+code { font-family: var(--mono); font-size: .86em; }
+.wrap { position: relative; max-width: 1180px; margin: 0 auto; padding-left: var(--gut); padding-right: var(--gut-r); }
+.lead { color: var(--ink-2); font-size: clamp(16.5px, 1.3vw, 18.5px); max-width: 38em; }
+.lead b, .cols b { color: var(--ink); font-weight: 600; }
+.more { font: 500 14px/1 var(--sans); color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 4px; justify-self: start; transition: border-color .2s; }
+.more:hover { border-color: var(--ink); }
+
+/* the workspace label over each heading, as Hyprland numbers its workspaces */
+.wsl { display: inline-flex; align-items: center; gap: 10px; font: 500 12px/1 var(--mono); color: var(--muted); letter-spacing: .04em; }
+.wsl b { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 6px; background: var(--ink); color: #000; font-weight: 600; }
+
+/* background: grain and one soft glow behind the hero */
+.bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.bg .grain { position: absolute; inset: 0; opacity: .06; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+/* header: a normal menu at the top. The big mark (the old site's) hangs under it at the top of the
+   page; scrolling the first 120px (--t: 0 to 1) shrinks it into the menu's corner, as if into a box,
+   while the bar's background fades in. Transforms and opacity only. Click it and it breaks. */
+.top-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; --t: 0; --u: calc(1 - var(--t));
+  --M: 72px; --k: calc(26 / 72); --Y: 26px; --F: 32px; --kw: calc(21 / 32); }
+@media (min-width: 1080px) { .top-bar { --M: 112px; --k: calc(26 / 112); --Y: 34px; --F: 52px; --kw: calc(21 / 52); } }
+.top-bar::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgb(8 8 10 / .82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); opacity: var(--t); }
+.top-bar .wrap { display: flex; align-items: center; gap: 24px; height: 66px; }
+.brand { position: absolute; left: var(--gut); top: 0; width: 150px; height: 66px; color: var(--ink); text-decoration: none; }
+.brand .bm, .brand .bw { position: absolute; left: 0; top: 0; }
+.brand .bm { width: var(--M); height: var(--M); transform-origin: 0 0; filter: drop-shadow(0 0 22px var(--box-glow));
+  transform: translate(0, calc(20px + (var(--Y) - 20px) * var(--u))) scale(calc(var(--k) + (1 - var(--k)) * var(--u))); }
+.brand .bm svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.brand .bm rect { fill: var(--box); transform-box: fill-box; transform-origin: center; }
+.brand .bm.boot rect { animation: px .45s steps(2, end) both; animation-delay: calc(var(--i) * 28ms); }
+@keyframes px { from { opacity: 0; } 50% { opacity: 1; fill: #fff; } }
+.brand .bw { font: 650 var(--F)/1 var(--display); letter-spacing: -.035em; white-space: nowrap; transform-origin: 0 50%;
+  transform: translate(calc(36px + (var(--M) - 4px) * var(--u)), calc(33px - var(--F) / 2 + (var(--Y) + var(--M) / 2 - 33px) * var(--u))) scale(calc(var(--kw) + (1 - var(--kw)) * var(--u))); }
+.nav { margin-left: auto !important; }
+.nav { display: flex; gap: 22px; font-size: 14px; color: var(--ink-2); }
+.nav a { text-decoration: none; transition: color .2s; } .nav a:hover { color: var(--ink); }
+.top-bar .sp { margin-left: auto; }
+.ghost { font: 500 13.5px/1 var(--sans); text-decoration: none; padding: 10px 15px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--ink); background: rgb(255 255 255 / .03); }
+.ghost:hover { background: rgb(255 255 255 / .07); }
+.btn.sm { height: 38px; padding: 0 16px; font-size: 13.5px; }
+.menu { display: none; position: relative; }
+.menu summary { list-style: none; cursor: pointer; font: 500 13.5px/1 var(--sans); padding: 11px 15px; border-radius: 999px; border: 1px solid var(--line-2); }
+.menu summary::-webkit-details-marker { display: none; }
+.menu div { position: absolute; right: 0; top: calc(100% + 8px); display: grid; min-width: 200px; padding: 8px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--s2); box-shadow: 0 20px 50px rgb(0 0 0 / .6); }
+.menu div a { padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--ink-2); }
+.menu div a:hover { background: rgb(255 255 255 / .06); color: var(--ink); }
+@media (max-width: 1060px) { .nav, .top-bar .ghost { display: none; } .menu { display: block; } .top-bar .btn.sm { margin-left: auto; } }
+.rail { position: fixed; left: max(14px, env(safe-area-inset-left, 0px)); top: 50%; transform: translateY(-50%); z-index: 40; display: grid; gap: 8px; font: 500 11px/1 var(--mono); color: var(--muted); }
+.rail a { text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.rail b { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; transition: background .25s, color .25s; }
+.rail span { opacity: 0; transform: translateX(-4px); transition: opacity .25s, transform .25s; white-space: nowrap; }
+.rail a.on b { background: var(--ink); color: #000; }
+.rail a.on span, .rail:hover span { opacity: 1; transform: none; }
+.rail a.on span { color: var(--ink); }
+@media (max-width: 1330px) { .rail { display: none; } }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px; border-radius: 999px; font: 600 15px/1 var(--sans); text-decoration: none; border: 1px solid var(--line-2); background: rgb(255 255 255 / .04); transition: transform .2s, background .2s; }
+.btn:hover { transform: translateY(-1px); background: rgb(255 255 255 / .08); }
+.btn.solid { background: var(--ink); color: #000; border-color: transparent; }
+.btn.solid:hover { background: #fff; }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.note { font-size: 14px; color: var(--ink-2); }
+.req { font-size: 13.5px; color: var(--muted); }
+.req a { color: var(--box); }
+
+/* hero: under the big mark, the heading across the page; under it the lead and the topics share
+   one top line; then the desk scene across the whole width */
+.hero { padding-block: calc(var(--Mh, 112px) + 4px) 0; display: grid; gap: 30px; }
+@media (max-width: 1079px) { .hero { --Mh: 72px; } }
+.hero > * { min-width: 0; max-width: 100%; }
+.hero-h { display: grid; gap: 22px; justify-items: start; }
+.hero-h h1 { max-width: 15em; }
+.hero-b { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 56px; align-items: start; }
+.hero-b > div { display: grid; gap: 22px; justify-items: start; min-width: 0; }
+.topics { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.topics li { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 14px; align-items: center; font-size: 17px; color: var(--ink-2); }
+.topics b { color: var(--ink); font-weight: 600; }
+.topics .tic { width: 38px; height: 38px; border-radius: 11px; border: 1px solid rgb(158 206 106 / .35); background: rgb(158 206 106 / .07); display: grid; place-items: center; color: var(--box); }
+.topics .tic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 900px) { .hero-b { grid-template-columns: minmax(0, 1fr); } }
+.pill { display: inline-flex; gap: 10px; align-items: center; padding: 5px 14px 5px 5px; border-radius: 999px; border: 1px solid var(--line-2); background: rgb(255 255 255 / .03); font-size: 13.5px; color: var(--ink-2); text-decoration: none; }
+.pill b { font: 500 12px/1 var(--mono); color: #000; background: var(--box); border-radius: 999px; padding: 5px 9px; }
+.pill:hover { color: var(--ink); }
+
+/* the desk scene: your desktop lies flat as the floor; boxes rise above it, work, and fold away */
+.scene { --k: 1; position: relative; height: calc(600px * var(--k) + 40px); border-radius: 24px; border: 1px solid var(--line); overflow: hidden; perspective: 1700px; perspective-origin: 50% 0%;
+  background: radial-gradient(60% 70% at 50% 30%, rgb(158 206 106 / .07), transparent 70%), linear-gradient(180deg, #0b0b0e, #050506); }
+.cam { position: absolute; left: 50%; top: 63%; width: 0; height: 0; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.2, .7, .2, 1); }
+.world { position: absolute; left: -500px; top: -310px; width: 1000px; height: 620px; transform-style: preserve-3d; transform: scale(calc(var(--k) * .84)) rotateX(54deg); }
+.floor { position: absolute; inset: 0; border-radius: 14px; background: #101014; border: 1px solid rgb(255 255 255 / .12); box-shadow: 0 0 0 1px #000, 0 60px 120px rgb(0 0 0 / .6); overflow: hidden; }
+.fbar { position: absolute; inset: 0 0 auto; height: 28px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px; font: 400 12px/1 var(--mono); color: var(--muted); background: #0b0b0e; border-bottom: 1px solid var(--line); }
+.fbar i { font-style: normal; margin-right: 8px; opacity: .45; } .fbar i.on { opacity: 1; color: var(--ink); }
+.fw { position: absolute; border-radius: 8px; border: 2px solid rgb(255 255 255 / .1); background: #15151a; overflow: hidden; }
+.fw.focus { border-color: #9aa0b8; }
+.fw .h { font: 400 12px/1 var(--mono); color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.fed { left: 12px; top: 40px; width: 586px; height: 568px; }
+.fed pre { margin: 0; padding: 12px 14px; font: 400 15px/1.75 var(--mono); color: var(--ink-2); white-space: pre; }
+.fed .k { color: var(--violet); } .fed .s { color: var(--box); } .fed .c { color: var(--muted); }
+.fed .cur { display: inline-block; width: 9px; height: 17px; background: var(--ink); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+.fptr { position: absolute; left: 420px; top: 300px; }
+.fptr svg { width: 28px; height: 34px; display: block; }
+.fptr em { position: absolute; left: 24px; top: 26px; font: 600 13px/1 var(--mono); font-style: normal; color: #000; background: var(--ink); border-radius: 4px; padding: 4px 7px; white-space: nowrap; }
+.ft { left: 610px; width: 378px; height: 134px; }
+.ft .h { display: flex; justify-content: space-between; } .ft .h b { font-weight: 500; color: var(--c); }
+.ft div.o { padding: 6px 10px; font: 400 12.5px/1.6 var(--mono); color: var(--ink-2); white-space: pre; overflow: hidden; height: 98px; display: flex; flex-direction: column; justify-content: flex-end; }
+.ft div.o span { display: block; } .ft div.o .g { color: var(--box); } .ft div.o .m { color: var(--muted); }
+/* boxes, tethers and shadows live in the world's space, above the floor */
+.cb3 { --s: 130px; position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); transform-style: preserve-3d; transition: transform 1s cubic-bezier(.3, .7, .2, 1); cursor: pointer; }
+.cb3 .f { position: absolute; inset: 0; transition: opacity .5s; border: 2.5px solid rgb(158 206 106 / .8); }
+.cb3.gone .f, .cb3.new .f { opacity: 0; }
+.cb3 .fr { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); background: radial-gradient(120% 90% at 20% 0%, #182a11, #090c08 70%); box-shadow: 0 0 40px rgb(158 206 106 / .18); }
+.cb3 .bk { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); background: rgb(158 206 106 / .05); }
+.cb3 .lf { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); background: linear-gradient(180deg, rgb(158 206 106 / .16), rgb(158 206 106 / .04)); }
+.cb3 .rt { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); background: linear-gradient(180deg, rgb(158 206 106 / .12), rgb(158 206 106 / .03)); }
+.cb3 .tp { transform: translateZ(calc(var(--s) / 2)); background: linear-gradient(135deg, rgb(255 255 255 / .14), rgb(158 206 106 / .08)); display: grid; place-items: center; }
+.cb3 .tp svg { width: 34%; height: 34%; color: var(--box); opacity: .7; }
+.cb3:hover .f { border-color: var(--box); }
+.cb3 .nm { position: absolute; left: -1px; bottom: calc(100% + 6px); display: flex; gap: 6px; align-items: center; white-space: nowrap; font: 500 11px/1 var(--mono); color: var(--ink); }
+.cb3 .nm i { font-style: normal; color: #000; background: var(--c); border-radius: 999px; padding: 3px 6px; font-size: 10px; }
+.sc { position: absolute; inset: 0; overflow: hidden; }
+.sc .db { display: flex; justify-content: space-between; padding: 3px 5px; font: 400 7px/1 var(--mono); color: rgb(158 206 106 / .9); background: rgb(0 0 0 / .4); }
+.sc .w { position: absolute; left: 7%; top: 18%; width: 86%; height: 60%; border-radius: 4px; border: 1px solid var(--line-2); background: #17171c; transition: opacity .35s, transform .35s; }
+.sc .w.hid { opacity: 0; transform: translateY(6px); }
+.sc .w i { display: block; height: 4px; margin: 6px 6px 0; border-radius: 2px; background: rgb(255 255 255 / .1); }
+.sc .d { position: absolute; left: 34%; top: 36%; width: 54%; padding: 4px 5px; border-radius: 4px; border: 1px solid var(--line-2); background: #22222a; font: 400 6.5px/1.5 var(--mono); color: var(--ink-2); opacity: 0; transition: opacity .3s; }
+.sc .d.on { opacity: 1; } .sc .d b { color: var(--box); font-weight: 500; }
+.sc .pg { margin: 8px 6px 0; height: 5px; border-radius: 3px; background: rgb(255 255 255 / .08); overflow: hidden; }
+.sc .pg i { margin: 0; height: 100%; background: var(--box); transform-origin: left; transform: scaleX(0); }
+.sc .pg i.run { transition: transform 2.6s linear; transform: scaleX(1); }
+.sc .bt { position: absolute; left: 6px; bottom: 6px; width: 26px; height: 8px; border-radius: 2px; background: rgb(255 255 255 / .2); transition: transform .4s; }
+.sc .bt.mv { transform: translateX(4px); }
+.sc .ox { position: absolute; left: 2px; bottom: 2px; width: 36px; height: 16px; border: 1px solid var(--warn); border-radius: 3px; opacity: 0; transition: opacity .3s; } .sc .ox.on { opacity: 1; }
+.sc .rc { position: absolute; right: 5px; top: 14px; font: 500 6.5px/1 var(--mono); color: var(--warn); opacity: 0; transition: opacity .3s; } .sc .rc.on { opacity: 1; }
+.sc .st { position: absolute; left: 5px; right: 5px; bottom: 4px; font: 400 7px/1.3 var(--mono); color: var(--box); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc .ring { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-width: 1.5px; }
+.teth { position: absolute; left: 0; top: 0; height: 3.5px; transform-origin: 0 50%; background: repeating-linear-gradient(90deg, rgb(158 206 106 / .9) 0 9px, transparent 9px 15px); transition: transform .7s ease-out, opacity .5s; }
+.stalk { position: absolute; left: 0; top: 0; width: 3px; transform-origin: 0 0; background: linear-gradient(180deg, rgb(158 206 106 / .7), rgb(158 206 106 / 0)); transition: transform 1s cubic-bezier(.3, .7, .2, 1), opacity .5s; }
+.shd { position: absolute; left: 0; top: 0; border-radius: 50%; background: radial-gradient(closest-side, rgb(0 0 0 / .65), transparent); transition: transform 1s, opacity .6s; }
+.gone-l { opacity: 0 !important; }
+/* flat labels over the scene */
+.lg { position: absolute; z-index: 5; font: 400 12px/1.5 var(--mono); color: var(--ink-2); }
+.lg-you { left: 18px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding: 9px 12px; border-radius: 10px; background: rgb(8 8 10 / .8); border: 1px solid var(--line); }
+.lg-you b { color: var(--ink); font: 600 13px/1 var(--sans); }
+.lg-you em { font-style: normal; color: var(--box); font-weight: 500; }
+.lg-ls { right: 18px; top: 16px; margin: 0; padding: 10px 12px; border-radius: 10px; background: rgb(8 8 10 / .8); border: 1px solid var(--line); white-space: pre; font-size: 11px; line-height: 1.6; }
+.lg-ls .p { color: var(--box); } .lg-ls .h { color: var(--muted); }
+.lg-act { right: 18px; bottom: 16px; display: flex; gap: 12px; align-items: center; color: var(--muted); }
+.lg-act .full { position: absolute; right: 0; bottom: calc(100% + 8px); width: max-content; white-space: nowrap; margin: 0; text-align: right; font: 500 13px/1.3 var(--sans); color: var(--ink); background: rgb(8 8 10 / .92); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line-2); }
+.lg-act button { height: 38px; padding: 0 16px; font-size: 13.5px; color: var(--ink); background: var(--s2); }
+@media (max-width: 760px) { .lg-ls { display: none; } .lg-act span { display: none; } .lg-you span:nth-of-type(n+2) { display: none; } }
+@media (max-width: 860px) { .lg-act .full { white-space: normal; width: 300px; } }
+@media (max-width: 600px) { .lg-act { display: none; } .lg-you { left: 10px; bottom: 10px; } }
+.agents { display: grid; justify-items: center; gap: 22px; padding-block: 56px 0; }
+.agents .lbl { font: 500 12px/1 var(--sans); color: var(--muted); display: flex; align-items: center; gap: 14px; }
+.agents .lbl::before, .agents .lbl::after { content: ""; width: 48px; height: 1px; background: var(--line-2); }
+.agents div { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 48px; }
+.agents span { font: 600 20px/1 var(--display); letter-spacing: -.02em; color: var(--ink-2); }
+
+/* sections */
+section { position: relative; padding-block: 150px 0; scroll-margin-top: 40px; }
+.head { display: grid; gap: 18px; margin-bottom: 44px; max-width: 760px; }
+.head.split { max-width: none; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px 56px; align-items: end; }
+.head.split > div { display: grid; gap: 18px; justify-items: start; }
+@media (max-width: 860px) { .head.split { grid-template-columns: minmax(0, 1fr); } }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 40px; margin-top: 40px; padding-inline: 4px; }
+.cols div { display: grid; gap: 6px; align-content: start; }
+.cols p { color: var(--ink-2); font-size: 15px; }
+.cols h3 { display: flex; gap: 9px; align-items: center; }
+@media (max-width: 760px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+
+/* a workspace: the frame every section's scene sits in */
+.ws { position: relative; border-radius: 20px; border: 1px solid var(--line-2); background: linear-gradient(180deg, #121215, #0b0b0d); overflow: hidden; box-shadow: 0 40px 80px -30px rgb(0 0 0 / .8); }
+.ws-bar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); font: 400 12px/1 var(--mono); color: var(--muted); flex-wrap: wrap; }
+.ws-bar .dots { display: flex; gap: 6px; } .ws-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--s3); }
+.ws-bar .t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--s2); border: 1px solid var(--line); }
+.seg button { border: 0; background: none; border-radius: 999px; padding: 7px 13px; font: 500 12.5px/1 var(--sans); color: var(--muted); transition: background .2s, color .2s; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #000; }
+
+/* a desktop, Hyprland-style: a thin bar, then tiled windows */
+.desk { position: relative; border-radius: 10px; overflow: hidden; background: #0e0e11; border: 1px solid var(--line); }
+.desk.box { border-color: rgb(158 206 106 / .55); background: radial-gradient(120% 90% at 20% 0%, #15240f, #090c08 70%); box-shadow: 0 0 0 1px rgb(158 206 106 / .08), 0 0 30px rgb(158 206 106 / .07); }
+.dbar { display: flex; justify-content: space-between; gap: 8px; padding: 5px 9px; font: 400 9.5px/1 var(--mono); color: var(--muted); background: rgb(0 0 0 / .35); }
+.box .dbar { color: rgb(158 206 106 / .85); }
+.dbar .wsn i { font-style: normal; opacity: .45; } .dbar .wsn i.on { opacity: 1; }
+.win { position: absolute; border-radius: 6px; border: 1px solid var(--line-2); background: #17171c; overflow: hidden; transition: opacity .35s, transform .35s; }
+.win.hid { opacity: 0; transform: translateY(8px) scale(.97); }
+.win .wt { font: 400 9px/1 var(--mono); color: var(--muted); padding: 5px 7px; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; }
+.win .wb { padding: 8px; display: grid; gap: 6px; align-content: start; }
+.win .wb i { display: block; height: 6px; border-radius: 3px; background: rgb(255 255 255 / .09); }
+
+/* the flagship: your desktop beside four agents' boxes */
+.fleet { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: 14px; padding: 14px; }
+.fleet > * { min-width: 0; }
+.you { display: grid; gap: 10px; align-content: start; }
+.lbl2 { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.you .desk { height: 260px; }
+.editor { position: absolute; inset: 20px 0 0; padding: 12px 14px; font: 400 11.5px/1.75 var(--mono); color: var(--ink-2); white-space: pre; overflow: hidden; }
+.editor .k { color: var(--violet); } .editor .s { color: var(--box); } .editor .c { color: var(--muted); }
+.editor .cur { display: inline-block; width: 7px; height: 13px; background: var(--ink); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.pop { position: absolute; border-radius: 7px; border: 1px solid var(--line-2); background: #1b1b21; box-shadow: 0 16px 40px rgb(0 0 0 / .6); font: 400 10.5px/1.5 var(--mono); color: var(--ink-2); padding: 24px 10px 8px; opacity: 0; transform: scale(.94); transition: opacity .25s, transform .25s; }
+.pop::before { content: attr(data-t); position: absolute; top: 0; left: 0; right: 0; padding: 5px 9px; font-size: 9.5px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.pop.on { opacity: 1; transform: none; }
+.pop.p1 { left: 14%; top: 22%; width: 62%; height: 46%; }
+.pop.p2 { left: 26%; top: 44%; width: 66%; height: 42%; border-color: var(--warn); }
+.pop.p2 b { color: var(--warn); font-weight: 500; }
+.pop.p3 { right: 8px; top: 28px; width: 46%; height: auto; padding-top: 22px; }
+.wsw { position: absolute; inset: 20px 0 0; background: #0b0b0e; display: grid; place-items: center; font: 400 11px/1 var(--mono); color: var(--muted); opacity: 0; transition: opacity .2s; }
+.wsw.on { opacity: 1; }
+.ptr { position: absolute; left: 30%; top: 72%; width: 14px; height: 14px; transition: transform .45s cubic-bezier(.3, .8, .3, 1); }
+.ptr::before { content: ""; position: absolute; border-left: 7px solid var(--ink); border-top: 4px solid transparent; border-bottom: 9px solid transparent; transform: rotate(-30deg); }
+.tally { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.tally span { border-radius: 8px; border: 1px solid var(--line); background: rgb(255 255 255 / .02); padding: 8px 6px; display: grid; gap: 4px; justify-items: center; font: 400 10px/1 var(--mono); color: var(--muted); }
+.tally b { font: 500 20px/1 var(--display); font-variant-numeric: tabular-nums; color: var(--box); transition: transform .2s, color .3s; }
+.fleet.chaos .tally b { color: var(--warn); }
+.tally b.bump { transform: scale(1.35); }
+.boxes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; position: relative; }
+.bx { display: grid; gap: 6px; min-width: 0; transition: opacity .4s; }
+.bx header { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 400 10.5px/1 var(--mono); color: var(--ink-2); min-width: 0; }
+.bx header span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip { flex: 0 0 auto; font: 500 10px/1 var(--mono); padding: 4px 7px; border-radius: 999px; color: #000; background: var(--c); }
+.bx .desk { height: 150px; }
+.bx .st { font: 400 10.5px/1.35 var(--mono); color: var(--muted); min-height: 2.7em; overflow-wrap: anywhere; transition: color .3s; }
+.bx .st.ok { color: var(--box); }
+.bx .st.warn { color: var(--amber); }
+.ring { position: absolute; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 2px solid var(--box); border-radius: 50%; opacity: 0; pointer-events: none; }
+.ring.go { animation: ring .6s ease-out; }
+@keyframes ring { 0% { opacity: 1; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.5); } }
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.flash.go { animation: flash .5s ease-out; }
+@keyframes flash { 0% { opacity: .5; } 100% { opacity: 0; } }
+.brief { position: absolute; right: 8px; top: 24px; width: 54%; border-radius: 6px; border: 1px dashed var(--amber); background: #1a160e; padding: 6px 8px; font: 400 9px/1.5 var(--mono); color: var(--amber); transition: opacity .35s, transform .35s; }
+.brief.hid { opacity: 0; transform: translateX(-30px); }
+.prog { height: 6px; border-radius: 3px; background: rgb(255 255 255 / .08); overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--box); transform-origin: left; transform: scaleX(0); }
+.prog i.run { transition: transform 3s linear; transform: scaleX(1); }
+.btnmock { position: absolute; left: 10px; bottom: 10px; width: 52px; height: 15px; border-radius: 4px; background: rgb(255 255 255 / .16); transition: transform .4s; }
+.btnmock.moved { transform: translateX(6px); }
+.diffbox { position: absolute; left: 4px; bottom: 5px; width: 70px; height: 25px; border: 1.5px solid var(--warn); border-radius: 5px; opacity: 0; transition: opacity .3s; }
+.diffbox.on { opacity: 1; }
+.rec { position: absolute; right: 8px; top: 25px; font: 500 9px/1 var(--mono); color: var(--warn); display: flex; gap: 5px; align-items: center; opacity: 0; transition: opacity .3s; }
+.rec::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--warn); animation: blink 1.2s steps(1) infinite; }
+.rec.on { opacity: 1; }
+.cap { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); font: 400 9.5px/1 var(--mono); color: #000; background: rgb(255 255 255 / .85); border-radius: 4px; padding: 4px 7px; white-space: nowrap; opacity: 0; transition: opacity .3s; }
+.cap.on { opacity: 1; }
+.none { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; font: 500 14px/1.5 var(--sans); color: var(--ink-2); background: rgb(8 8 10 / .72); border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .4s; }
+.fleet.chaos .none { opacity: 1; }
+.fleet.chaos .bx { opacity: .25; }
+.feed { border-top: 1px solid var(--line); padding: 12px 16px; height: 132px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; font: 400 11.5px/1.9 var(--mono); color: var(--ink-2); }
+.feed div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: up .35s ease-out; }
+.feed .a { display: inline-block; min-width: 13ch; color: var(--c); }
+.feed .r { color: var(--muted); }
+.feed .bad { color: var(--warn); }
+@keyframes up { from { opacity: 0; transform: translateY(10px); } }
+@media (max-width: 900px) { .fleet { grid-template-columns: minmax(0, 1fr); } .you .desk { height: 240px; } }
+@media (max-width: 520px) { .boxes { grid-template-columns: minmax(0, 1fr); } .tally b { font-size: 16px; } .feed .a { min-width: 0; margin-right: 1ch; } }
+
+/* ask: tabs, a typed terminal and the box's screen */
+.tabs { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { flex: 0 0 auto; border: 0; background: transparent; border-radius: 10px; padding: 10px 14px; font: 500 14px/1.25 var(--sans); color: var(--muted); text-align: left; max-width: 330px; white-space: normal; transition: color .2s, background .2s; }
+.tabs button[aria-selected="true"] { background: rgb(255 255 255 / .07); color: var(--ink); }
+.tabs button:hover { color: var(--ink); }
+.tabpane { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); min-height: 380px; }
+.tabpane > * { min-width: 0; }
+.term { padding: 20px 22px; font: 400 12.8px/1.85 var(--mono); color: var(--ink-2); white-space: pre-wrap; overflow-wrap: anywhere; border-right: 1px solid var(--line); }
+.term .p { color: var(--box); } .term .o { color: var(--muted); } .term .y { color: var(--sky); }
+.term .cur { display: inline-block; width: 8px; height: 15px; background: var(--ink); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+.peek { padding: 18px; display: grid; gap: 10px; align-content: start; }
+.peek .cap2 { font: 400 12px/1.4 var(--mono); color: var(--muted); }
+.peek .desk { aspect-ratio: 16 / 10; max-width: 100%; }
+.appw { left: 6%; top: 20%; width: 66%; height: 70%; display: grid; grid-template-rows: auto 1fr; }
+.appw .in { display: grid; grid-template-columns: var(--sb, 34%) 1fr; }
+.appw .sb { border-right: 1px solid var(--line); background: #111115; }
+.appw .bd { padding: 12px; display: grid; gap: 8px; align-content: start; }
+.appw .bd i { display: block; height: 7px; border-radius: 4px; background: rgb(255 255 255 / .08); }
+.termw { right: 4%; top: 20%; width: 24%; height: 70%; }
+.termw .wb { font: 400 8.5px/1.6 var(--mono); color: var(--box); }
+.dlg { position: absolute; left: 30%; top: 36%; width: 46%; border-radius: 8px; border: 1px solid var(--line-2); background: #1f1f26; padding: 10px; font: 400 10.5px/1.6 var(--mono); color: var(--ink-2); opacity: 0; transform: scale(.95); transition: opacity .3s, transform .3s; box-shadow: 0 10px 30px rgb(0 0 0 / .5); }
+.dlg.on { opacity: 1; transform: none; }
+.dlg b { color: var(--box); font-weight: 500; }
+.wslabel { position: absolute; right: 10px; bottom: 8px; font: 400 10px/1 var(--mono); color: var(--muted); }
+#pane-lanes { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+.lanes { padding: 18px; display: grid; gap: 10px; align-content: start; border-bottom: 1px solid var(--line); }
+.lane { display: grid; grid-template-columns: minmax(0, 1.2fr) auto minmax(0, .8fr) auto minmax(0, 1.4fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: rgb(255 255 255 / .02); font: 400 12px/1.35 var(--mono); color: var(--ink-2); }
+.lane > * { min-width: 0; overflow-wrap: anywhere; }
+.lane .ar { color: var(--muted); } .lane .bxn { color: var(--box); }
+.lane.booting { opacity: .55; } .lane.booting .bxn::after { content: " starting…"; color: var(--muted); }
+.lane button { border: 1px solid var(--line-2); background: none; border-radius: 999px; padding: 5px 10px; font: 500 11px/1 var(--mono); color: var(--ink-2); }
+.lane button:hover { border-color: var(--warn); color: var(--warn); }
+.addlane { justify-self: start; margin-top: 4px; height: 40px; font-size: 13.5px; }
+.ls { margin: 0; padding: 18px; font: 400 11px/1.75 var(--mono); color: var(--ink-2); overflow-x: auto; white-space: pre; }
+.ls .p { color: var(--box); } .ls .h { color: var(--muted); }
+.straight { margin-top: 28px; max-width: 46em; color: var(--ink-2); font-size: 17px; }
+.straight b { color: var(--ink); font-weight: 600; }
+@media (max-width: 900px) { .tabpane { grid-template-columns: minmax(0, 1fr); } .term { border-right: 0; border-bottom: 1px solid var(--line); } .lane { grid-template-columns: minmax(0, 1fr) auto; } .lane .ar { display: none; } }
+
+
+/* uses: what people do with a box, each with a small picture of it */
+.uses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.use { border-radius: 18px; border: 1px solid var(--line); background: var(--s1); padding: 20px; display: grid; gap: 10px; align-content: start; min-width: 0; transition: border-color .25s; }
+.use:hover { border-color: rgb(158 206 106 / .4); }
+.use h3 { font: 600 19px/1.2 var(--display); letter-spacing: -.02em; }
+.use p { color: var(--ink-2); font-size: 14.5px; }
+.use pre { margin: 4px 0 0; padding: 10px 12px; border-radius: 9px; background: #060607; border: 1px solid var(--line); font: 400 11.5px/1.7 var(--mono); color: var(--ink-2); overflow-x: auto; }
+.use pre .p { color: var(--box); }
+.pic { position: relative; height: 128px; border-radius: 10px; border: 1px solid var(--line); background: #0b0b0e; overflow: hidden; margin-bottom: 6px; }
+.pic .bx2 { position: absolute; border-radius: 6px; border: 1.5px solid rgb(158 206 106 / .7); background: radial-gradient(120% 90% at 20% 0%, #15240f, #090c08 70%); }
+.pic .tl { position: absolute; left: 12px; right: 12px; bottom: 14px; height: 30px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.pic .tl i { border-radius: 3px; background: #1a2614; border: 1px solid rgb(158 206 106 / .3); }
+.pic .mk { position: absolute; bottom: 48px; font: 500 9.5px/1 var(--mono); color: #000; background: var(--ink); border-radius: 3px; padding: 3px 5px; }
+.pic .head2 { position: absolute; left: 0; top: 0; bottom: 48px; width: 2px; background: var(--warn); animation: play 6s linear infinite; }
+@keyframes play { from { transform: translateX(14px); } to { transform: translateX(300px); } }
+.pic .rc2 { position: absolute; right: 10px; top: 10px; font: 500 10px/1 var(--mono); color: var(--warn); }
+.pic .sz { position: absolute; font: 500 10.5px/1 var(--mono); color: var(--box); }
+.pic .glyph { position: absolute; font: 600 30px/1 var(--display); color: var(--ink); letter-spacing: -.03em; }
+.pic .glyph.lo { filter: blur(.9px); opacity: .6; }
+.pic .mon { position: absolute; border-radius: 4px; border: 1.5px solid rgb(158 206 106 / .7); background: #0f170c; }
+.pic .mon::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: rgb(158 206 106 / .3); }
+.pic .clk { position: absolute; top: 6px; right: 10px; font: 500 10px/1 var(--mono); color: var(--muted); }
+.pic .page { position: absolute; left: 14%; right: 14%; top: 22px; bottom: -40px; border-radius: 6px 6px 0 0; background: #15151a; border: 1px solid var(--line-2); overflow: hidden; }
+.pic .page i { display: block; height: 7px; margin: 10px 12px 0; border-radius: 3px; background: rgb(255 255 255 / .09); }
+.pic .page .scroll { animation: pagedown 5s steps(3) infinite; }
+@keyframes pagedown { to { transform: translateY(-60px); } }
+.pic .bt2 { position: absolute; left: 12px; right: 12px; top: 12px; font: 400 10.5px/1.6 var(--mono); color: var(--ink-2); white-space: pre; }
+.pic .bt2 .w { color: var(--warn); }
+.usemore { margin-top: 22px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; color: var(--ink-2); }
+@media (max-width: 960px) { .uses { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .uses { grid-template-columns: minmax(0, 1fr); } }
+
+/* new in: one tab per release with something to show, the newest open */
+.news { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+.news > * { min-width: 0; }
+.rels { border-right: 1px solid var(--line); padding: 10px; display: grid; gap: 2px; align-content: start; }
+.rels button { border: 0; background: none; text-align: left; border-radius: 10px; padding: 10px 12px; display: grid; gap: 3px; color: var(--muted); transition: background .2s, color .2s; }
+.rels button b { font: 600 16px/1.1 var(--display); color: var(--ink-2); letter-spacing: -.01em; }
+.rels button span { font: 400 11.5px/1.3 var(--mono); }
+.rels button[aria-selected="true"] { background: rgb(255 255 255 / .06); }
+.rels button[aria-selected="true"] b { color: var(--box); }
+.rels a { padding: 10px 12px; font-size: 13.5px; color: var(--ink-2); }
+.rel { padding: 24px; display: grid; gap: 18px; align-content: start; }
+.rmeta { font: 400 12.5px/1.5 var(--mono); color: var(--muted); }
+.rmeta b { color: var(--ink); font-weight: 500; }
+.rmeta a { color: var(--box); }
+.hls { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hls li { border-radius: 14px; border: 1px solid var(--line); background: rgb(255 255 255 / .015); padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.hls h3 { font-size: 15.5px; }
+.hls p { color: var(--ink-2); font-size: 14.5px; }
+.hls pre { margin: 2px 0 0; padding: 8px 10px; border-radius: 8px; background: #060607; border: 1px solid var(--line); font: 400 11.5px/1.6 var(--mono); color: var(--ink-2); overflow-x: auto; }
+.hls pre .p { color: var(--box); }
+@media (max-width: 860px) { .news { grid-template-columns: minmax(0, 1fr); } .rels { border-right: 0; border-bottom: 1px solid var(--line); grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; } .hls { grid-template-columns: minmax(0, 1fr); } }
+
+/* built for agents: glow cards, each with a small working piece */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.gcard { --x: 50%; --y: 0%; position: relative; border-radius: 18px; padding: 1px; background: radial-gradient(420px circle at var(--x) var(--y), rgb(158 206 106 / .5), var(--line) 45%); }
+.gcard > div { height: 100%; border-radius: 17px; background: radial-gradient(500px circle at var(--x) var(--y), rgb(158 206 106 / .05), transparent 50%), var(--s1); padding: 26px; display: grid; gap: 12px; align-content: start; }
+.gcard h3 { display: flex; gap: 10px; align-items: center; font: 500 21px/1.2 var(--display); letter-spacing: -.02em; }
+.gcard p { color: var(--ink-2); font-size: 15px; }
+.viz { margin-top: 6px; border-radius: 10px; border: 1px solid var(--line); background: #060607; padding: 14px; font: 400 11.5px/1.7 var(--mono); color: var(--ink-2); overflow-x: auto; }
+.bars { display: grid; gap: 8px; }
+.bars div { display: grid; grid-template-columns: 90px minmax(0, 1fr) 56px; gap: 10px; align-items: center; }
+.bars i { display: block; height: 8px; border-radius: 4px; background: var(--box); transform-origin: left; }
+.bars .shot i { background: var(--muted); }
+.diff { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.diff div { position: relative; height: 74px; border-radius: 6px; background: #121216; border: 1px solid var(--line); }
+.diff div::before { content: attr(data-t); position: absolute; top: -1px; left: 6px; transform: translateY(-50%); font-size: 9.5px; background: #060607; padding: 0 4px; color: var(--muted); }
+.diff span { position: absolute; left: 14px; bottom: 12px; width: 56px; height: 18px; border-radius: 4px; background: rgb(255 255 255 / .12); }
+.diff .new span { transform: translateX(-6px); }
+.diff .new em { position: absolute; left: 4px; bottom: 6px; width: 70px; height: 30px; border: 1.5px solid var(--warn); border-radius: 4px; }
+.codes { width: 100%; border-collapse: collapse; }
+.codes td { padding: 3px 0; border-bottom: 1px solid var(--line); }
+.codes td:first-child { width: 46px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.gcard a { font: 500 13.5px/1 var(--sans); color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 3px; justify-self: start; }
+@media (max-width: 760px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+
+/* ai-jail: a fence around the agent, a box for its screen */
+.pair { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+.pair > * { min-width: 0; }
+.map { padding: 26px; border-right: 1px solid var(--line); display: grid; gap: 14px; align-content: start; }
+.mach { position: relative; border-radius: 14px; border: 1px solid var(--line); padding: 34px 16px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, .9fr); gap: 12px; align-items: center; }
+.mach > * { min-width: 0; }
+.tag { position: absolute; top: 10px; left: 14px; font: 500 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.jail { position: relative; border-radius: 12px; border: 1.5px dashed var(--amber); background: rgb(224 175 104 / .04); padding: 30px 12px 12px; display: grid; gap: 8px; }
+.jail .tag { color: var(--amber); }
+.who { border-radius: 8px; border: 1px solid var(--line-2); background: var(--s2); padding: 9px 10px; font: 500 12.5px/1.2 var(--sans); }
+.who small { display: block; font: 400 10.5px/1.4 var(--mono); color: var(--muted); margin-top: 3px; }
+.can, .cant { font: 400 11px/1.6 var(--mono); }
+.can { color: var(--ink-2); }
+.cant { color: var(--muted); }
+.cant s { text-decoration-color: var(--warn); }
+.wire { font: 400 10.5px/1.3 var(--mono); color: var(--box); text-align: center; display: grid; gap: 4px; justify-items: center; }
+.wire i { display: block; width: 46px; height: 2px; background: linear-gradient(90deg, var(--amber), var(--box)); position: relative; overflow: hidden; }
+.wire i::after { content: ""; position: absolute; inset: 0; width: 12px; background: #fff; opacity: .8; animation: pulse 1.6s linear infinite; }
+@keyframes pulse { from { transform: translateX(-12px); } to { transform: translateX(46px); } }
+.mach .desk { height: 140px; }
+.mach .desk .win { left: 10%; top: 26%; width: 80%; height: 62%; }
+.recipes { padding: 22px; display: grid; gap: 18px; align-content: start; }
+.recipes h3 { font-size: 14.5px; }
+.recipes pre { margin: 6px 0 0; border-radius: 10px; border: 1px solid var(--line); background: #060607; padding: 12px 14px; font: 400 12px/1.8 var(--mono); color: var(--ink-2); overflow-x: auto; }
+.recipes pre .p { color: var(--box); } .recipes pre .o { color: var(--muted); }
+.recipes .capt { font-size: 13px; color: var(--muted); }
+@media (max-width: 900px) { .pair { grid-template-columns: minmax(0, 1fr); } .map { border-right: 0; border-bottom: 1px solid var(--line); } }
+@media (max-width: 560px) { .mach { grid-template-columns: minmax(0, 1fr); } .wire i { transform: rotate(90deg); margin: 18px 0; } }
+
+/* omarchy: the pixel mark that breaks, beside a box running Omarchy */
+.oma { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; align-items: center; padding: 36px; }
+.pix { position: relative; width: 165px; height: 165px; border: 0; background: none; padding: 0; }
+.pix i { position: absolute; width: 11px; height: 11px; background: var(--box); box-shadow: 0 0 10px var(--box-glow); }
+.oma > div { display: grid; gap: 14px; justify-items: start; min-width: 0; }
+.oma p { color: var(--ink-2); }
+.oma .hint2 { font: 400 12px/1 var(--mono); color: var(--muted); }
+.shotbox { align-self: center; border-radius: 10px; overflow: hidden; border: 1px solid rgb(158 206 106 / .55); box-shadow: 0 0 30px rgb(158 206 106 / .08); }
+.shotbox .dbar { background: #0b120a; }
+@media (max-width: 900px) { .oma { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .oma { grid-template-columns: minmax(0, 1fr); padding: 24px 18px; } }
+
+/* open: MIT, forks, the people */
+.open { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.open > * { min-width: 0; }
+.graph { padding: 22px; border-right: 1px solid var(--line); }
+.graph svg { width: 100%; height: auto; display: block; overflow: visible; }
+.graph .ln { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.graph .dot { stroke: #0b0b0d; stroke-width: 3; }
+.graph text { font: 400 11.5px var(--mono); fill: var(--ink-2); }
+.graph text.h { fill: var(--ink); font-weight: 500; }
+.graph .seq { transition: opacity .5s; }
+.lic { padding: 22px; display: grid; gap: 16px; align-content: start; }
+.licp { border-radius: 10px; border: 1px solid var(--line); background: #060607; padding: 14px 16px; font: 400 11.5px/1.7 var(--mono); color: var(--ink-2); }
+.licp b { color: var(--ink); font-weight: 500; }
+.ppl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.ppl img { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-2); }
+.ppl .you2 { width: 38px; height: 38px; border-radius: 50%; border: 1px dashed var(--line-2); display: grid; place-items: center; color: var(--muted); font: 500 16px/1 var(--sans); }
+@media (max-width: 900px) { .open { grid-template-columns: minmax(0, 1fr); } .graph { border-right: 0; border-bottom: 1px solid var(--line); } }
+
+/* coming */
+.soon { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 14px; align-items: stretch; }
+.soon > * { min-width: 0; }
+.sooncards { display: grid; gap: 10px; }
+.sooncards article { padding: 20px 20px; border-radius: 16px; border: 1px dashed rgb(255 255 255 / .22); background: rgb(255 255 255 / .015); display: grid; gap: 6px; }
+.sooncards h3 { display: flex; gap: 10px; align-items: center; font: 500 19px/1.2 var(--display); letter-spacing: -.02em; }
+.sooncards p { color: var(--ink-2); font-size: 15px; }
+.soon .ws { display: grid; grid-template-rows: auto 1fr; }
+.soon .ws img { width: 100%; height: 100%; object-fit: cover; object-position: right top; }
+.soon figcaption { font: 400 12px/1.5 var(--mono); color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+@media (max-width: 900px) { .soon { grid-template-columns: minmax(0, 1fr); } }
+
+/* install, last */
+.inst { margin-top: 150px; border-radius: 26px; border: 1px solid var(--line); background: radial-gradient(60% 80% at 50% 0%, rgb(158 206 106 / .12), transparent 70%), #050506; text-align: center; display: grid; justify-items: center; gap: 24px; padding: 80px 22px; }
+.inst h2 { font-size: clamp(36px, 4.6vw, 64px); }
+.cmd { display: flex; align-items: center; gap: 4px; max-width: 100%; border-radius: 14px; border: 1px solid var(--line-2); background: #060607; padding: 6px 6px 6px 16px; }
+.cmd code { min-width: 0; overflow-x: auto; white-space: nowrap; font-size: 13.5px; color: var(--ink-2); }
+.cmd code::before { content: "$ "; color: var(--box); }
+.cmd button { flex: 0 0 auto; border: 0; border-radius: 9px; background: rgb(255 255 255 / .08); padding: 10px 13px; font: 500 12.5px/1 var(--mono); }
+.hero .cmd { justify-self: start; }
+
+footer { margin-top: 120px; border-top: 1px solid var(--line); padding-block: 40px 120px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: grid; gap: 18px; }
+.fl { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.fl a { color: var(--ink-2); text-decoration: none; }
+.fl a:hover { color: var(--ink); }
+.draft { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+.paused, .paused *, .paused *::before, .paused *::after { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="m" viewBox="0 0 15 15"><path fill="currentColor" d="M0 0h8v1H0zM13 0h2v1h-2zM0 1h1v13H0zM14 1h1v13h-1zM0 14h2v1H0zM7 14h8v1H7zM4 4h7v2H4zM4 6h1v4H4zM10 6h1v4h-1zM4 10h7v1H4z"/></symbol>
+</svg>
+<div class="bg" aria-hidden="true"><div class="grain"></div></div>
+
+<header class="top-bar" id="bar">
+  <div class="wrap">
+    <a class="brand" href="#top" id="brand" aria-label="omabox, back to the top"><span class="bm boot" id="mark"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true" id="marksvg"></svg></span><span class="bw" aria-hidden="true">omabox</span></a>
+    <nav class="nav" aria-label="Pages"><a href="#ask">How it works</a><a href="#uses">Uses</a><a href="#omarchy">Omarchy</a><a href="#built">Commands</a><a href="#built">Develop</a><a href="#jail">ai-jail</a><a href="#coming">Coming</a></nav>
+    <a class="ghost" href="https://github.com/diogochaves/omabox">GitHub</a><a class="btn solid sm" href="#install">Install</a>
+    <details class="menu"><summary>Menu</summary><div><a href="#ask">How it works</a><a href="#uses">Uses</a><a href="#omarchy">Omarchy</a><a href="#built">Commands</a><a href="#built">Develop</a><a href="#jail">ai-jail</a><a href="#coming">Coming</a><a href="https://github.com/diogochaves/omabox">GitHub</a></div></details>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Sections, as workspaces"><a href="#top" class="on"><b>1</b><span>desk</span></a><a href="#parallel"><b>2</b><span>parallel</span></a><a href="#ask"><b>3</b><span>ask</span></a><a href="#uses"><b>4</b><span>uses</span></a><a href="#new"><b>5</b><span>new in</span></a><a href="#built"><b>6</b><span>agents</span></a><a href="#jail"><b>7</b><span>ai-jail</span></a><a href="#omarchy"><b>8</b><span>omarchy</span></a><a href="#open"><b>9</b><span>mit</span></a><a href="#coming"><b>10</b><span>coming</span></a></nav>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-h"><a class="pill" href="#new"><b>1.0</b>New: a contract your scripts can keep →</a>
+        <h1>Your agents get desktops of their own. <i>Yours stays untouched.</i></h1></div>
+      <div class="hero-b">
+        <div><p class="lead">omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is.</p>
+          <div class="ctas"><a class="btn solid" href="#parallel">See them work</a><a class="btn" href="#ask">How it works</a></div>
+          <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT · <a href="#coming">Plain Hyprland is coming →</a></p></div>
+        <ul class="topics">
+          <li><span class="tic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 8.5h18M9.5 12l5 5M14.5 12l-5 5"/></svg></span><span><b>No windows</b> popping up, no cursor jumps</span></li>
+          <li><span class="tic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5l12 6.2-5.2 1.6-1.7 5.2z"/><path d="M14 17.5h6M17 14.5v6" transform="rotate(45 17 17.5)"/></svg></span><span><b>No stolen focus</b>, no password prompts</span></li>
+          <li><span class="tic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b>Nothing left behind</b> when the agent is done</span></li>
+        </ul>
+      </div>
+      <div class="scene" id="scene" data-anim>
+        <div class="cam" id="cam"><div class="world" id="world">
+          <div class="floor" aria-hidden="true">
+            <div class="fbar"><span><i class="on">1</i><i>2</i><i>3</i><i>4</i><i>5</i></span><span>nvim · src/tray.rs</span><span>Tue 22:18</span></div>
+            <div class="fw fed focus"><div class="h">nvim · src/tray.rs</div><pre id="fed"></pre></div>
+            <span class="fptr"><svg viewBox="0 0 14 17"><path d="M1 1v13.5l3.6-3.4 2.3 5 2.2-1-2.3-4.9H12z" fill="#f3f3ef" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/></svg><em>your cursor · still</em></span>
+            <div class="fw ft" style="top:40px;--c:var(--amber)"><div class="h"><b>claude</b><span>~/code/app</span></div><div class="o" id="ft-claude"></div></div>
+            <div class="fw ft" style="top:184px;--c:var(--sky)"><div class="h"><b>codex</b><span>~/code/app-theme</span></div><div class="o" id="ft-codex"></div></div>
+            <div class="fw ft" style="top:328px;--c:var(--box)"><div class="h"><b>pi</b><span>~/code/app-docs</span></div><div class="o" id="ft-pi"></div></div>
+            <div class="fw ft" style="top:472px;--c:var(--violet)"><div class="h"><b>opencode</b><span>~/code/app-keyring</span></div><div class="o" id="ft-opencode"></div></div>
+          </div>
+        </div></div>
+        <pre class="lg lg-ls" id="hls" aria-live="off"></pre>
+        <div class="lg lg-you"><b>Your desktop</b><span><em>0</em> windows opened</span><span><em>0</em> focus taken</span><span><em>0</em> cursor moves</span></div>
+        <div class="lg lg-act"><p class="full" id="spawn-full" role="status" hidden>This drawing holds 7 boxes. omabox sets no limit: each box takes 400 to 700 MB.</p><span>Click a box to take it down.</span><button class="btn" type="button" id="spawn">Ask another agent</button></div>
+      </div>
+    </div>
+    <div class="agents"><span class="lbl">Works with</span><div><span>Claude Code</span><span>Codex</span><span>OpenCode</span><span>pi</span><span>Hermes</span></div></div>
+
+    <section id="parallel" aria-labelledby="h-par">
+      <div class="head split">
+        <div><span class="wsl"><b>2</b>parallel boxes</span><h2 id="h-par">Every agent gets a desktop. <i>None of them is yours.</i></h2></div>
+        <div><p class="lead">Without omabox, an agent testing a desktop app tests it on your desktop. With it, each agent takes a box of its own: four agents, four apps, four test runs, <b>all at once</b>, while you keep typing.</p></div>
+      </div>
+      <div class="ws" data-anim>
+        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t" id="fleet-title">omabox ls · 4 boxes up</span>
+          <span class="seg" role="group" aria-label="Show"><button type="button" id="m-with" aria-pressed="true">With omabox</button><button type="button" id="m-without" aria-pressed="false">Without</button></span></div>
+        <div class="fleet" id="fleet">
+          <div class="you">
+            <div class="lbl2"><span>Your desktop</span><span id="you-state">you, typing</span></div>
+            <div class="desk"><div class="dbar"><span class="wsn"><i class="on">1</i> <i>2</i> <i>3</i> <i>4</i></span><span>Tue 22:18</span></div>
+              <div class="editor" id="editor"></div>
+              <div class="pop p1" data-t="app · settings">your keystrokes, typed into its app</div>
+              <div class="wsw">workspace 7 · the agent's</div>
+              <div class="pop p3" data-t="notification">build finished · 3 tray icons left</div>
+              <div class="pop p2" data-t="Authentication is required"><b>Password:</b> ▍<br>to run /usr/bin/make as the super user</div>
+              <span class="ptr" aria-hidden="true"></span></div>
+            <div class="tally"><span><b data-k="w">0</b>windows</span><span><b data-k="f">0</b>focus</span><span><b data-k="s">0</b>workspace</span><span><b data-k="c">0</b>cursor</span><span><b data-k="p">0</b>prompts</span></div>
+          </div>
+          <div class="boxes">
+            <div class="bx" id="b1"><header><span>app-sidebar-5cc72cdc</span><span class="chip" style="--c:var(--amber)">Claude Code · lead</span></header>
+              <div class="desk box"><div class="dbar"><span class="wsn"><i class="on">1</i> <i>2</i></span><span>box</span></div>
+                <div class="win hid" style="left:6%;top:24%;width:88%;height:66%"><div class="wt">app</div><div class="wb"><i style="width:60%"></i><i></i><i style="width:40%"></i></div></div>
+                <div class="dlg" style="left:34%;top:42%;width:52%;font-size:9px;padding:7px">Settings<br>☑ <b>Dark mode</b></div>
+                <span class="ring" style="left:52%;top:56%"></span><div class="flash"></div></div>
+              <p class="st">waiting for its build</p></div>
+            <div class="bx" id="b2"><header><span>app-menu-3b7a6c11</span><span class="chip" style="--c:#e9c58f">its subagent</span></header>
+              <div class="desk box"><div class="dbar"><span class="wsn"><i class="on">1</i></span><span>box</span></div>
+                <div class="win hid" style="left:6%;top:24%;width:88%;height:66%"><div class="wt">ctest · tst_menu</div><div class="wb"><i style="width:80%"></i><div class="prog"><i></i></div><i style="width:50%"></i></div></div>
+                <div class="brief hid">omabox brief<br>-b app-menu-3b7a6c11<br>15 lines, not the skill</div></div>
+              <p class="st">waiting for a brief</p></div>
+            <div class="bx" id="b3"><header><span>app-theme-71c0ea52</span><span class="chip" style="--c:var(--sky)">Codex</span></header>
+              <div class="desk box"><div class="dbar"><span class="wsn"><i class="on">1</i> <i>2</i> <i>3</i></span><span>box</span></div>
+                <div class="win hid" style="left:6%;top:24%;width:88%;height:66%"><div class="wt">app · preferences</div><div class="wb"><i style="width:70%"></i><i style="width:45%"></i></div><span class="btnmock"></span><span class="diffbox"></span></div></div>
+              <p class="st">checking against its baseline</p></div>
+            <div class="bx" id="b4"><header><span>app-docs-e4d29b07</span><span class="chip" style="--c:var(--box)">pi</span></header>
+              <div class="desk box"><div class="dbar"><span class="wsn"><i class="on">1</i></span><span>box</span></div>
+                <div class="win hid" style="left:6%;top:24%;width:56%;height:66%"><div class="wt">docs</div><div class="wb"><i></i><i style="width:65%"></i><i style="width:80%"></i></div></div>
+                <div class="win hid" style="left:65%;top:24%;width:29%;height:66%"><div class="wt">foot</div><div class="wb"><i></i><i style="width:50%"></i></div></div>
+                <span class="rec">REC</span><span class="cap">scene 1</span></div>
+              <p class="st">filming a take</p></div>
+            <div class="none">No boxes. Every agent works on your desktop.</div>
+          </div>
+        </div>
+        <div class="feed" id="feed" aria-live="off"></div>
+      </div>
+      <div class="cols">
+        <div><h3>On their own</h3><p>Agents take a box when a task needs a desktop, wait until a window has settled instead of sleeping, and put it down when they exit. <b>No prompt stops them</b>: in a box, <code>pkexec</code> just says no.</p></div>
+        <div><h3>Checks side by side</h3><p>Tests, visual checks and videos run in parallel, each on its own screen and session bus. <b>None sees another's windows</b>, and none sees yours.</p></div>
+        <div><h3>Handed on</h3><p>A lead agent gives each subagent a box and <code>omabox brief</code>: about 15 lines with its windows and the rules, <b>not the whole skill</b>.</p></div>
+      </div>
+    </section>
+
+    <section id="ask" aria-labelledby="h-ask">
+      <div class="head split">
+        <div><span class="wsl"><b>3</b>ask your agent</span><h2 id="h-ask">You ask. <i>Your agent takes a box.</i></h2></div>
+        <div><p class="lead">Install once. A skill your agent already loads tells it when a task needs a desktop. You don't change your projects or your prompts.</p></div>
+      </div>
+      <div class="ws">
+        <div class="tabs" role="tablist" aria-label="Three things to ask">
+          <button role="tab" id="t0" aria-selected="true" aria-controls="pane">“Check the new settings dialog and show me.”</button>
+          <button role="tab" id="t1" aria-selected="false" aria-controls="pane" tabindex="-1">“Start a box with the app and the dev server running. I want to try it.”</button>
+          <button role="tab" id="t2" aria-selected="false" aria-controls="pane" tabindex="-1">“Try all three branches.”</button>
+        </div>
+        <div id="pane" role="tabpanel" aria-labelledby="t0">
+          <div class="tabpane" id="pane-term">
+            <div class="term" id="term" aria-live="off"></div>
+            <div class="peek"><div class="desk box" id="screen"><div class="dbar"><span class="wsn"><i class="on">1</i> <i>2</i> <i>3</i></span><span id="sname">box · app-5cc72cdc</span><span>22:18</span></div>
+              <div class="win appw hid" id="appw"><div class="wt">app</div><div class="in"><div class="sb"></div><div class="bd"><i style="width:70%"></i><i></i><i style="width:55%"></i><i style="width:80%"></i></div></div></div>
+              <div class="win termw hid" id="termw"><div class="wt">npm run dev</div><div class="wb">ready in 412 ms<br>➜ localhost:5173</div></div>
+              <div class="dlg" id="dlg">Settings<br>☑ <b>Dark mode</b><br>☐ Compact rows</div>
+              <span class="ring" id="clk"></span><div class="flash" id="flash"></div><span class="wslabel" id="wsl"></span></div>
+              <p class="cap2" id="pcap">What the box shows, as omabox peek would. You never see it unless you ask.</p></div>
+          </div>
+          <div class="tabpane" id="pane-lanes" hidden>
+            <div class="lanes"><div id="lanes" style="display:grid;gap:10px"></div><button class="btn addlane" id="addlane" type="button">+ Start another agent</button></div>
+            <pre class="ls" id="ls"></pre>
+          </div>
+        </div>
+      </div>
+      <p class="straight">Every command is yours to type too. But omabox is built to be driven by an agent: one call per step, answers in text, waits instead of sleeps. <b>Even to drive a box yourself, the fastest way in is to ask.</b></p>
+    </section>
+
+
+    <section id="uses" aria-labelledby="h-uses">
+      <div class="head split">
+        <div><span class="wsl"><b>4</b>uses</span><h2 id="h-uses">A desktop to spare, <i>for whatever you're making.</i></h2></div>
+        <div><p class="lead">Testing is where omabox started. Any job that needs a screen and shouldn't touch yours fits in a box too: these are a few we use it for.</p></div>
+      </div>
+      <div class="uses" data-anim>
+        <article class="use"><div class="pic" aria-hidden="true"><span class="rc2">● REC</span><span class="mk" style="left:22%">open the panel</span><span class="mk" style="left:58%">scene 2</span><span class="head2"></span><div class="tl"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <h3>Film what you made</h3><p>A demo of your app, plugin or feature, filmed in a box while you keep working. Your marks become captions; clicks and keys are drawn in.</p>
+          <pre><span class="p">$</span> omabox record start -o demo.mp4
+<span class="p">$</span> omabox record mark "scene 2"
+<span class="p">$</span> omabox record stop --show-input --captions</pre></article>
+        <article class="use"><div class="pic" aria-hidden="true"><span class="glyph lo" style="left:22px;top:38px">Aa</span><span class="sz" style="left:22px;top:84px">1x</span><span class="bx2" style="left:44%;top:14px;width:50%;height:98px"></span><span class="glyph" style="left:52%;top:38px">Aa</span><span class="sz" style="left:52%;top:84px">3840x2160 · 2x</span></div>
+          <h3>Shots at 2x, or 4K</h3><p>A box is whatever size and scale you ask for, whatever your monitor is. Crisp shots and videos for a README, a store page or a talk.</p>
+          <pre><span class="p">$</span> omabox up --size 3840x2160,scale=2
+<span class="p">$</span> omabox shot --window app</pre></article>
+        <article class="use"><div class="pic" aria-hidden="true"><span class="bx2" style="left:12px;right:12px;top:12px;bottom:12px"></span><span class="clk">12:00 · always</span><span class="bt2" style="top:40px;left:26px;color:var(--box)">a stock Omarchy
+nothing of yours in it</span></div>
+          <h3>A clean setup, not yours</h3><p>A stock bar and theme, your files and accounts left out, a clock that never moves. Nothing personal ends up in the picture.</p>
+          <pre><span class="p">$</span> omabox up --clean --stock-bar --theme tokyo-night</pre></article>
+        <article class="use"><div class="pic" aria-hidden="true"><span class="mon" style="left:16%;top:16px;width:38%;height:52px"></span><span class="mon" style="left:57%;top:16px;width:15%;height:96px"></span><span class="mon" style="left:16%;top:74px;width:38%;height:42px"></span><span class="sz" style="left:75%;top:20px">portrait</span><span class="sz" style="left:75%;top:96px">scale 1.6</span></div>
+          <h3>Monitors you don't have</h3><p>Portrait, scaled, side by side or below. Plug and unplug them while the box runs, and see what your shell does.</p>
+          <pre><span class="p">$</span> omabox up --monitor 1080x1920 --monitor 2560x1440,scale=1.6,below</pre></article>
+        <article class="use"><div class="pic" aria-hidden="true"><div class="page"><div class="scroll"><i style="width:60%"></i><i></i><i style="width:80%"></i><i style="width:50%"></i><i></i><i style="width:70%"></i><i style="width:40%"></i><i></i><i style="width:65%"></i><i></i></div></div></div>
+          <h3>Look at a web page, off your screen</h3><p>Your agent opens a site in the box's browser, pages down and reads the shots. No browser window lands on your desktop.</p>
+          <pre><span class="p">$</span> omabox run -d --wait -- chromium --app=URL
+<span class="p">$</span> omabox keys Page_Down</pre></article>
+        <article class="use"><div class="pic" aria-hidden="true"><span class="mon" style="left:14px;top:22px;width:56px;height:36px"></span><span class="mon" style="left:84px;top:22px;width:56px;height:36px;opacity:.25"></span><span class="mon" style="left:154px;top:22px;width:56px;height:36px"></span><span class="mon" style="left:224px;top:22px;width:56px;height:36px;opacity:.25"></span><span class="bt2" style="top:72px">a monitor gone and back, over and over
+<span class="w">until something falls over</span></span></div>
+          <h3>Find the crash first</h3><p>Unplug a monitor again and again until your shell or plugin falls over, then read the backtrace. Your session never notices.</p>
+          <pre><span class="p">$</span> omabox output drop --cycles 50
+<span class="p">$</span> omabox gdb --shell</pre></article>
+      </div>
+      <p class="usemore">Every screenshot on this site was taken in a box, too. <a class="more" href="#uses">More uses →</a></p>
+    </section>
+
+    <section id="new" aria-labelledby="h-new">
+      <div class="head split">
+        <div><span class="wsl"><b>5</b>new in</span><h2 id="h-new">New in <span id="newv">1.0</span>. <i>And before it.</i></h2></div>
+        <div><p class="lead">What each release added that you would notice, newest first. Every fix is in the <a href="#new">changelog</a>.</p></div>
+      </div>
+      <div class="ws news">
+        <div class="rels" role="tablist" aria-label="Releases" aria-orientation="vertical">
+          <button role="tab" id="rt-10" aria-controls="rp-10" aria-selected="true" data-v="1.0"><b>1.0</b><span>a contract · Rust</span></button>
+          <button role="tab" id="rt-09" aria-controls="rp-09" aria-selected="false" tabindex="-1" data-v="0.9"><b>0.9</b><span>2026-10-20 · briefs</span></button>
+          <button role="tab" id="rt-08" aria-controls="rp-08" aria-selected="false" tabindex="-1" data-v="0.8"><b>0.8</b><span>2026-10-20 · visual checks</span></button>
+          <button role="tab" id="rt-07" aria-controls="rp-07" aria-selected="false" tabindex="-1" data-v="0.7"><b>0.7</b><span>2026-10-16 · held keys</span></button>
+          <button role="tab" id="rt-06" aria-controls="rp-06" aria-selected="false" tabindex="-1" data-v="0.6"><b>0.6</b><span>2026-10-14 · the app as text</span></button>
+          <button role="tab" id="rt-05" aria-controls="rp-05" aria-selected="false" tabindex="-1" data-v="0.5"><b>0.5</b><span>2026-10-09 · several monitors</span></button>
+          <a href="#new">0.4 and earlier →</a>
+        </div>
+        <div>
+          <div class="rel" id="rp-10" role="tabpanel" aria-labelledby="rt-10" tabindex="0">
+            <p class="rmeta"><b>1.0.0</b> · everything from 0.6 to 1.0 you would notice · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>A contract your scripts can keep</h3><p>Within 1.x, exit codes and <code>--json</code> fields stay or only grow. A change warns for one release first; <code>OMABOX_STRICT=1</code> makes it an error, for CI.</p></li>
+              <li><h3>One binary, in Rust</h3><p>Stopped mid-step, omabox undoes that step: an interrupted <code>up</code> takes its box down, a stopped recording keeps its video.</p></li>
+              <li><h3>Ports no box reaches</h3><p>Your database stays out of every box, on loopback or any of your host's addresses.</p><pre><span class="p">$</span> omabox config protect-ports 5432,8080</pre></li>
+              <li><h3>The app answers in text</h3><p><code>tree</code>, <code>check</code>, <code>record</code> and <code>audio</code>: an agent asks the app, compares it with a baseline, films it and hears it.</p></li>
+            </ul>
+          </div>
+          <div class="rel" id="rp-09" role="tabpanel" aria-labelledby="rt-09" tabindex="0" hidden>
+            <p class="rmeta"><b>0.9.0</b> · 2026-10-20 · the last release before 1.0 · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>A brief for a subagent</h3><p>About 15 lines a lead agent pastes into a subagent's prompt in place of the whole skill.</p><pre><span class="p">$</span> omabox brief -b app-menu</pre></li>
+              <li><h3>Help that fits</h3><p><code>omabox help CMD</code> is the command's lines and options; <code>--long</code> has the prose.</p></li>
+              <li><h3>Exit codes that mean one thing</h3><p>Called wrong is exit 2, with the nearest option or command named, in every command.</p><pre><span class="p">$</span> omabox help exit-codes</pre></li>
+              <li><h3>Holds in a video</h3><p><code>record hold</code> pauses a take on the video's own clock; <code>record --for</code> films something that moves by itself.</p></li>
+            </ul>
+          </div>
+          <div class="rel" id="rp-08" role="tabpanel" aria-labelledby="rt-08" tabindex="0" hidden>
+            <p class="rmeta"><b>0.8.0</b> · 2026-10-20 · visual checks · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>Visual checks</h3><p><code>check</code> compares an app's or a plugin's look with a baseline, in a box where only what is tested moves.</p><pre><span class="p">$</span> omabox check run -- ./visual.sh</pre></li>
+              <li><h3>Your own Quickshell</h3><p>Run the box's shell on a Quickshell build of yours.</p><pre><span class="p">$</span> omabox up --quickshell ~/src/quickshell/build</pre></li>
+              <li><h3>Your fonts, in every box</h3><p>Read-only, so an app draws in a box the way it draws for you.</p></li>
+              <li><h3>Says what's in the way</h3><p><code>click --window</code> says when a toast or another layer covers the point it aims at.</p></li>
+            </ul>
+          </div>
+          <div class="rel" id="rp-07" role="tabpanel" aria-labelledby="rt-07" tabindex="0" hidden>
+            <p class="rmeta"><b>0.7.0</b> · 2026-10-16 · held keys, your binds · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>Hold a key across commands</h3><p>Hold Shift, click three things, let go.</p><pre><span class="p">$</span> omabox keys down:shift</pre></li>
+              <li><h3>Your binds, in the box</h3><p>A box loads your Hyprland bindings and input settings.</p></li>
+              <li><h3>A journal in every box, CPU per thread</h3><p>Logs of what ran, and where the time went.</p></li>
+              <li><h3>A crash says it crashed</h3><p>With the signal, so an agent doesn't wait on a window that will never come.</p></li>
+            </ul>
+          </div>
+          <div class="rel" id="rp-06" role="tabpanel" aria-labelledby="rt-06" tabindex="0" hidden>
+            <p class="rmeta"><b>0.6.0</b> · 2026-10-14 · the app as text · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>A window as text</h3><p>An app's controls as compact text, for a fraction of a shot's tokens.</p><pre><span class="p">$</span> omabox tree --find 'dark mode'</pre></li>
+              <li><h3>Videos with sound and marks</h3><p><code>up --audio</code>, <code>record mark</code>, and every monitor in one video.</p></li>
+              <li><h3>Your whole shell in a box</h3><p>Every plugin and your <code>shell.json</code>, without touching your bar.</p><pre><span class="p">$</span> omabox up --desk-shell</pre></li>
+              <li><h3>Boxes nobody will take down</h3><p><code>ls</code> names them; <code>down --orphans</code> clears them.</p></li>
+            </ul>
+          </div>
+          <div class="rel" id="rp-05" role="tabpanel" aria-labelledby="rt-05" tabindex="0" hidden>
+            <p class="rmeta"><b>0.5.0</b> · 2026-10-09 · several monitors in one box · <a href="#new">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>Several monitors in one box</h3><p>As many as a test needs, any size, scale and place, a bar on each.</p><pre><span class="p">$</span> omabox up --monitor 1080x1920</pre></li>
+              <li><h3>A monitor that drops off and comes back</h3><p><code>output drop --cycles</code>, until your shell crashes; <code>gdb</code> gives the backtrace.</p></li>
+              <li><h3>Your theme, live</h3><p><code>--theme-dir</code> puts the theme you are editing in the box, every save with it.</p></li>
+              <li><h3>Only what changed</h3><p><code>shot --changed</code> sends only what an action changed: a menu opening is about 65 image tokens instead of 1.5k.</p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="built" aria-labelledby="h-built">
+      <div class="head"><span class="wsl"><b>6</b>built for agents</span><h2 id="h-built">Everything an agent needs to test its work, <i>and nothing of yours.</i></h2></div>
+      <div class="cards">
+        <div class="gcard"><div><h3>One box per session</h3><p>Named after its worktree and session. 400 to 700 MB, up in 3 to 5 s, down when the agent exits. Subagents get a box and a brief each.</p><div class="viz">$ omabox brief -b app-5cc72cdc<br><span style="color:var(--muted)"># the lines a subagent needs, not the whole skill</span></div><a href="#ask">How it works →</a></div></div>
+        <div class="gcard"><div><h3>Answers in text</h3><p>After a click, omabox says what changed, or that nothing did. <code>tree</code> reads the app's controls, where a shot costs far more.</p><div class="viz bars"><div><span>tree --find</span><i style="transform:scaleX(.03)"></i><span>~17 tok</span></div><div class="shot"><span>a shot</span><i></i><span>~1.5k</span></div></div><a href="#built">Develop →</a></div></div>
+        <div class="gcard"><div><h3>Checks and videos</h3><p><code>check</code> keeps what three runs agree on as the baseline, then names the button that moved. <code>record</code> films a take with captions and a contact sheet.</p><div class="viz diff"><div data-t="baseline"><span></span></div><div class="new" data-t="changed"><span></span><em></em></div></div><a href="#built">Develop →</a></div></div>
+        <div class="gcard"><div><h3>A contract your scripts can keep</h3><p>In 1.x, exit codes and <code>--json</code> fields only grow, and a change warns for one release first. Rewritten in Rust for 1.0.</p><div class="viz"><table class="codes" aria-label="Exit codes"><tr><td>0</td><td>done</td></tr><tr><td>1</td><td>it ran and failed</td></tr><tr><td>2</td><td>called wrongly</td></tr><tr><td>124</td><td>not in time</td></tr></table></div><a href="#built">The contract →</a></div></div>
+      </div>
+    </section>
+
+    <section id="jail" aria-labelledby="h-jail">
+      <div class="head split">
+        <div><span class="wsl"><b>7</b>ai-jail</span><h2 id="h-jail">Not a sandbox. <i>Pair it with ai-jail.</i></h2></div>
+        <div><p class="lead">omabox keeps an agent's windows off your desktop, but it is <b>not a security boundary</b>: a box shares your kernel, GPU and network. <a href="https://aijail.io">ai-jail</a>, by Fabio Akita, fences what the agent itself can read, write and reach. Together, a jailed agent tests in boxes of its own.</p></div>
+      </div>
+      <div class="ws pair" data-anim>
+        <div class="map">
+          <div class="mach"><span class="tag">your machine</span>
+            <div class="jail"><span class="tag">ai-jail</span>
+              <div class="who">the agent<small>claude, codex, opencode…</small></div>
+              <p class="can">rw ~/code/app<br>its API, nothing else</p>
+              <p class="cant"><s>~/.ssh</s> <s>~/.config</s> <s>your LAN</s></p>
+            </div>
+            <div class="wire"><span>omabox<br>broker</span><i></i><span>up · run · shot</span></div>
+            <div class="desk box"><div class="dbar"><span>its box</span><span>isolated</span></div><div class="win"><div class="wt">./build/app</div><div class="wb"><i style="width:70%"></i><i></i></div></div></div>
+          </div>
+          <p class="req">ai-jail decides what the agent can touch. omabox decides where it draws.</p>
+        </div>
+        <div class="recipes">
+          <div><h3>A jailed app, drawn in a box</h3>
+<pre><span class="p">$ </span>omabox up
+<span class="p">$ </span>eval "$(omabox env)"
+<span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" \
+    --env WAYLAND_DISPLAY -- ./build/app</pre></div>
+          <div><h3>A jailed agent, driving boxes of its own</h3>
+<pre><span class="p">$ </span>omabox broker on   <span class="o"># the lines for ~/.ai-jail</span>
+<span class="p">$ </span>ai-jail claude</pre></div>
+          <p class="capt">Tested with ai-jail 2.8.1 and omabox 0.5.2. A jailed agent can't use <code>host</code>, <code>peek</code> or interactive boxes.</p>
+          <a class="more" href="#jail">omabox and ai-jail →</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="omarchy" aria-labelledby="h-oma">
+      <div class="ws oma">
+        <div><span class="wsl"><b>8</b>omarchy</span><h2 id="h-oma">Fullest <i>on Omarchy.</i></h2><p>On Omarchy a box is your desktop: Omarchy's own config and shell, your theme and bar, your plugins with <code>--desk-shell</code>, and a widget in your bar that lists every box.</p><a class="more" href="#omarchy">omabox on Omarchy →</a></div>
+        <figure class="shotbox" style="margin:0"><div class="dbar"><span>box · omarchy-menu</span><span>Omarchy's launcher, in a box</span></div><img src="media/menu.webp" alt="Omarchy's app launcher open in a box, in the Retro 82 theme" loading="lazy" width="1280" height="720"></figure>
+      </div>
+    </section>
+
+    <section id="open" aria-labelledby="h-open">
+      <div class="head split">
+        <div><span class="wsl"><b>9</b>mit</span><h2 id="h-open">MIT, every line. <i>It's your computer.</i></h2></div>
+        <div><p class="lead">omabox is built by builders, to make other builders' lives easier. All of it is MIT: read it, fork it, bend it to your machine, ship your own. Every fix someone sends makes it better for the next person. That's why it won't stay on Omarchy alone: <b>the builders on Hyprland are who it's for.</b></p></div>
+      </div>
+      <div class="ws open" data-anim>
+        <div class="graph" id="graph">
+          <svg viewBox="0 0 560 250" role="img" aria-label="A git graph: main, with forks branching off and a pull request merging back">
+            <path class="ln" d="M20 125H540" stroke="#9ece6a"/>
+            <path class="ln seq" d="M110 125C150 125 150 50 190 50H330" stroke="#7dcfff"/>
+            <path class="ln seq" d="M230 125C270 125 270 200 310 200H420C460 200 460 125 500 125" stroke="#bb9af7"/>
+            <path class="ln seq" d="M330 50H450" stroke="#7dcfff" stroke-dasharray="2 7"/>
+            <circle class="dot" cx="20" cy="125" r="7" fill="#9ece6a"/><circle class="dot" cx="110" cy="125" r="7" fill="#9ece6a"/><circle class="dot" cx="230" cy="125" r="7" fill="#9ece6a"/><circle class="dot" cx="370" cy="125" r="7" fill="#9ece6a"/>
+            <circle class="dot seq" cx="190" cy="50" r="7" fill="#7dcfff"/><circle class="dot seq" cx="270" cy="50" r="7" fill="#7dcfff"/><circle class="dot seq" cx="330" cy="50" r="7" fill="#7dcfff"/>
+            <circle class="dot seq" cx="310" cy="200" r="7" fill="#bb9af7"/><circle class="dot seq" cx="390" cy="200" r="7" fill="#bb9af7"/>
+            <circle class="dot seq" cx="500" cy="125" r="9" fill="#9ece6a"/>
+            <text class="h" x="20" y="105">main · diogochaves/omabox</text>
+            <text class="seq" x="190" y="30">your fork: your machine, your rules</text>
+            <text class="seq" x="250" y="232">a fix your machine found → a PR</text>
+            <text class="seq h" x="468" y="155">merged</text>
+          </svg>
+        </div>
+        <div class="lic">
+          <div class="licp"><b>MIT License</b><br>Copyright (c) 2026 Diogo Chaves<br><br>Permission is hereby granted, free of charge, to any person obtaining a copy of this software… to deal in the Software without restriction.</div>
+          <div class="ppl"><img src="media/avatar-diogochaves.jpg" alt="diogochaves" title="diogochaves" width="38" height="38"><img src="media/avatar-btsouth.jpg" alt="btsouth" title="btsouth" width="38" height="38"><span class="you2" title="you">+</span></div>
+          <p class="note">Your machine is the test we don't have: a GPU, a distro, a shell we never ran.</p>
+          <div class="ctas"><a class="btn" href="https://github.com/diogochaves/omabox">Read the code</a><a class="more" href="https://github.com/diogochaves/omabox/blob/main/CONTRIBUTING.md">Contributing →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="inst" id="install">
+      <h2>Give every agent <i>a desktop of its own.</i></h2>
+      <div class="cmd"><code>git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code><button type="button" data-copy>Copy</button></div>
+      <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT</p>
+      <div class="ctas" style="justify-content:center"><a class="btn solid" href="#install">Install guide</a><a class="btn" href="https://github.com/diogochaves/omabox">GitHub</a></div>
+    </div>
+
+    <section id="coming" aria-labelledby="h-coming">
+      <div class="head split">
+        <div><span class="wsl"><b>10</b>coming</span><h2 id="h-coming">omabox <i>beyond Omarchy.</i></h2></div>
+        <div><p class="lead">omabox was born on Omarchy, but it can help many more people, so it's growing. Here's what's coming next.</p></div>
+      </div>
+      <div class="soon">
+        <div class="sooncards">
+          <article><h3>Plain Hyprland boxes</h3><p>Aimed at any distro with Hyprland 0.56+ (Lua config). For Hyprland plugin and compositor developers.</p></article>
+          <article><h3>Your own shell</h3><p>One shell at a time, Dux Shell first.</p></article>
+          <article><h3>Your own Hyprland desktop, in a box</h3><p>Your config, your binds, your shell: your agent tries a change to your desktop in a box first.</p></article>
+          <div class="ctas" style="margin-top:8px"><a class="btn solid" href="https://github.com/diogochaves/omabox/issues/321">Tell us your shell</a><a class="more" href="#coming">What has run, and what hasn't →</a></div>
+        </div>
+        <figure class="ws" style="margin:0"><div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">box · plain Hyprland · Dux Shell 2.0</span></div><img src="media/dux2-control-center.webp" alt="Dux Shell 2.0 in a plain box, its control center open: user at omabox, network not connected, no Bluetooth adapters, no output device" loading="lazy" width="1280" height="720"><figcaption>A spike, not a release: Dux Shell 2.0 in a plain box. No system bus, so network and sound read "Not connected" and the shell keeps running.</figcaption></figure>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fl"><a href="#ask">How it works</a><a href="#uses">Uses</a><a href="#omarchy">Omarchy</a><a href="#built">Commands</a><a href="#built">Develop</a><a href="#jail">ai-jail</a><a href="#coming">Coming</a><a href="#new">Changelog</a><a href="#install">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a></div>
+    <p>MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
+    <p class="draft">Look D · a draft for review</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const motion = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = ms => new Promise(r => setTimeout(r, motion ? ms : 0));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const kick = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+
+  /* copy the install command */
+  const install = "git clone https://github.com/diogochaves/omabox && cd omabox && ./install.sh";
+  $$("[data-copy]").forEach(b => b.addEventListener("click", () => {
+    const t = b.textContent;
+    navigator.clipboard?.writeText(install).then(() => { b.textContent = "Copied"; setTimeout(() => b.textContent = t, 1500); }, () => { b.textContent = install; });
+  }));
+
+  /* the big mark shrinks into the menu over the first 120px of scroll */
+  const bar = $("#bar"); let lastT = -1;
+  const onScroll = () => { const t = Math.min(1, Math.max(0, scrollY / 120)); if (t !== lastT) { bar.style.setProperty("--t", t); lastT = t; } };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  /* the mark, pixel by pixel (the old site's): it powers on once, and again after a click breaks it.
+     A break: the pixels burst, fall and pile up under it, blink like loot in a game, and go.
+     Transform and opacity on 75 rects, only while it plays. */
+  const mpx = [[0,0,8,1],[13,0,2,1],[0,1,1,13],[14,1,1,13],[0,14,2,1],[7,14,8,1],[4,4,7,2],[4,6,1,4],[10,6,1,4],[4,10,7,1]];
+  const mcells = []; mpx.forEach(([x, y, w, h]) => { for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) mcells.push([x + i, y + j]); });
+  mcells.sort((a, b) => (a[1] - b[1]) || (a[0] - b[0]));
+  $("#marksvg").innerHTML = mcells.map(([x, y], i) => `<rect x="${x}" y="${y}" width="1" height="1" style="--i:${i}"/>`).join("");
+  const boot = () => { const m = $("#mark"); m.classList.remove("boot"); void m.offsetWidth; m.classList.add("boot"); };
+  let breaking = false;
+  const smash = async () => {
+    breaking = true; $("#mark").classList.remove("boot");
+    const rects = $$("#marksvg rect"), pile = {}, anims = [];
+    let landed = 0;
+    const lean = Math.random() * 4 - 2, spread = .1 + Math.random() * .45, scatter = 1 + Math.random() * 2.5;
+    const ok = c => c >= -3 && c <= 17, ht = c => pile[c] ?? -1, pick = a => a[Math.floor(Math.random() * a.length)];
+    rects.map((r, i) => [r, ...mcells[i]]).sort((a, b) => b[2] - a[2] || Math.random() - .5).forEach(([r, x, y]) => {
+      let col = Math.max(-3, Math.min(17, Math.round(x + (x - 7) * spread + lean + (Math.random() * 2 - 1) * scatter)));
+      for (let k = 0; k < 4; k++) { const n = [col - 1, col + 1].filter(c => ok(c) && ht(c) < ht(col) - 1); if (!n.length) break; col = pick(n); }
+      const h = pile[col] = ht(col) + 1;
+      const dx = col - x, fy = 14 - h - y, up = 1 + Math.random() * 2, spin = 90 * (Math.floor(Math.random() * 5) - 2);
+      const delay = (14 - y) * 22 + Math.random() * 60, rise = 150, fall = 110 * Math.sqrt(fy + up), bounce = 90;
+      const T = rise + fall + 2 * bounce, tr = (a, b = 0) => `translate(${a}px, ${b}px)`;
+      landed = Math.max(landed, delay + T);
+      anims.push(r.animate([
+        { transform: tr(0) + " rotate(0deg)", easing: "cubic-bezier(.2,.6,.4,1)" },
+        { transform: tr(dx * .25, -up) + ` rotate(${spin * .25}deg)`, offset: rise / T, easing: "cubic-bezier(.5,0,1,.6)" },
+        { transform: tr(dx, fy) + ` rotate(${spin}deg)`, offset: (rise + fall) / T, easing: "ease-out" },
+        { transform: tr(dx, fy - .7) + ` rotate(${spin}deg)`, offset: (rise + fall + bounce) / T, easing: "ease-in" },
+        { transform: tr(dx, fy) + ` rotate(${spin}deg)` }
+      ], { duration: T, delay, fill: "forwards" }));
+    });
+    const blink = rects.map(r => r.animate([{ opacity: 1 }, { opacity: 1, offset: .5 }, { opacity: 0, offset: .5 }, { opacity: 0 }],
+      { duration: 110, delay: landed + 350, iterations: 9, fill: "forwards" }));
+    await Promise.all(blink.map(a => a.finished)).catch(() => {});
+    [...anims, ...blink].forEach(a => a.cancel()); boot(); breaking = false;
+  };
+  $("#brand").addEventListener("click", e => {
+    e.preventDefault();
+    if (scrollY > 0) scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" });
+    if (!breaking) motion && rectsOK() ? smash() : boot();
+  });
+  const rectsOK = () => !!$("#marksvg rect")?.animate;
+  $$(".menu a").forEach(a => a.addEventListener("click", () => a.closest("details").open = false));
+
+  /* the rail marks the section on screen */
+  const railLinks = $$(".rail a"), secs = railLinks.map(a => $(a.getAttribute("href")));
+  const railIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) railLinks.forEach((a, i) => a.classList.toggle("on", secs[i] === e.target)); }), { rootMargin: "-45% 0px -50% 0px" });
+  secs.forEach(s => s && railIO.observe(s));
+
+  /* animations pause off screen; loops ask whether their scene is on screen */
+  const io = new IntersectionObserver(es => es.forEach(e => { e.target.classList.toggle("paused", !e.isIntersecting); e.target._on = e.isIntersecting; e.target.dispatchEvent(new Event(e.isIntersecting ? "shown" : "hidden")); }));
+  $$("[data-anim]").forEach(el => io.observe(el));
+
+  /* the desk scene: your desktop is the floor; each agent's terminal sends up a box, which works
+     above the floor and folds back into its terminal when done. Nothing ever lands on the floor. */
+  const scene = $("#scene"), cam = $("#cam"), world = $("#world"), hls = $("#hls");
+  const fit = () => { const k = Math.min(1, (scene.clientWidth - 24) / 1080); scene.style.setProperty("--k", k.toFixed(3)); };
+  fit(); addEventListener("resize", fit, { passive: true });
+  if (motion) {
+    scene.addEventListener("pointermove", e => { const r = scene.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; cam.style.transform = `rotateX(${-y * 5}deg) rotateY(${x * 7}deg)`; });
+    scene.addEventListener("pointerleave", () => cam.style.transform = "");
+  }
+  const fcode = ['<span class="k">fn</span> render_tray(icons: &amp;[Icon]) {', '    <span class="k">let</span> gap = theme.spacing(<span class="s">"tray"</span>);', '    <span class="k">for</span> icon <span class="k">in</span> icons {', '        <span class="c">// draw each at its own scale</span>', '        icon.draw(gap * scale);', '    }', '}', '', '<span class="k">fn</span> tray_width(n: usize) -&gt; u32 {', '    (n <span class="k">as</span> u32) * ICON + gap(n)', '}'];
+  const fed = $("#fed"); let fline = 9;
+  const drawEd = () => { fed.innerHTML = fcode.slice(0, fline).join("\n") + '<span class="cur"></span>'; };
+  drawEd();
+  const AG = { claude: { c: "var(--amber)", anchor: [799, 107] }, codex: { c: "var(--sky)", anchor: [799, 251] }, pi: { c: "var(--box)", anchor: [799, 395] }, opencode: { c: "var(--violet)", anchor: [799, 539] } };
+  const tlines = { claude: ['<span class="m">›</span> check the settings dialog'], codex: ['<span class="m">›</span> did the theme move anything?'], pi: ['<span class="m">›</span> film the docs walkthrough'], opencode: ['<span class="m">›</span> idle'] };
+  const tsay = (a, html) => { tlines[a].push(html); tlines[a] = tlines[a].slice(-4); $("#ft-" + a).innerHTML = tlines[a].map(l => `<span>${l}</span>`).join(""); };
+  Object.keys(tlines).forEach(a => tsay(a, tlines[a].pop()));
+  const SLOTS = [[250, 200, 200], [470, 110, 250], [700, 210, 190], [360, 400, 120], [880, 120, 240], [150, 470, 150], [600, 470, 110]];
+  const ROLE = {
+    app: '<div class="w hid"><i style="width:60%"></i><i></i><i style="width:40%"></i></div><div class="d">Settings<br>☑ <b>Dark mode</b></div><span class="ring" style="left:56%;top:58%"></span><div class="flash"></div>',
+    test: '<div class="w hid"><i style="width:70%"></i><div class="pg"><i></i></div><i style="width:45%"></i></div>',
+    check: '<div class="w hid"><i style="width:70%"></i><i style="width:40%"></i><span class="bt"></span><span class="ox"></span></div>',
+    rec: '<div class="w hid" style="width:54%"><i></i><i style="width:65%"></i></div><div class="w hid" style="left:64%;width:29%"><i></i></div><span class="rc">● REC</span>' };
+  let boxes = [];
+  const used = () => boxes.filter(b => !b.dead).map(b => b.slot);
+  const pt = (b, x, y, z, flat) => `translate3d(${x - b.s / 2}px, ${y - b.s / 2}px, ${z}px) scale3d(${flat ? .25 : 1}, ${flat ? .25 : 1}, ${flat ? .02 : 1})`;
+  function lsDraw() {
+    const live = boxes.filter(b => !b.dead);
+    hls.innerHTML = `<span class="p">$</span> omabox ls\n<span class="h">${"NAME".padEnd(22)}AGENT</span>\n` + live.map(b => `${b.name.padEnd(22)}${b.who}`).join("\n");
+  }
+  function spawn(agent, name, role, from, opt = {}) {
+    const free = SLOTS.findIndex((_, i) => !used().includes(i)); if (free < 0) return null;
+    const [x, y, h] = SLOTS[free], sz = opt.s || 130;
+    const b = { agent, name, role, slot: free, s: sz, x, y, z: h + sz / 2, who: opt.who || agent, dead: false };
+    const el = b.el = document.createElement("div"); el.className = "cb3 new"; el.style.setProperty("--s", sz + "px"); el.style.setProperty("--c", AG[agent].c);
+    el.setAttribute("role", "button"); el.setAttribute("aria-label", `Take down ${name}`);
+    el.innerHTML = `<div class="f bk"></div><div class="f lf"></div><div class="f rt"></div><div class="f tp"><svg aria-hidden="true"><use href="#m"/></svg></div>
+      <div class="f fr"><span class="nm">${esc(name)}<i>${esc(opt.who || agent)}</i></span><div class="sc"><div class="db"><span>1 2</span><span>box</span></div>${ROLE[role]}<p class="st"></p></div></div>`;
+    const [fx, fy] = from || AG[agent].anchor;
+    const shd = b.shd = document.createElement("div"); shd.className = "shd gone-l"; shd.style.width = shd.style.height = sz * 1.4 + "px";
+    shd.style.transform = `translate3d(${x - sz * .7}px, ${y - sz * .7 + 30}px, 1px)`;
+    const dx = x - fx, dy = y - fy, len = Math.hypot(dx, dy), ang = Math.atan2(dy, dx);
+    const t = b.teth = document.createElement("div"); t.className = "teth"; t.style.width = len + "px";
+    t.style.transform = `translate3d(${fx}px, ${fy}px, 2px) rotate(${ang}rad) scaleX(0)`; b.tethOn = `translate3d(${fx}px, ${fy}px, 2px) rotate(${ang}rad) scaleX(1)`;
+    const st = b.stalk = document.createElement("div"); st.className = "stalk"; st.style.height = h + "px";
+    st.style.transform = `translate3d(${x - 1}px, ${y}px, 0) rotateX(90deg) scaleY(0)`; b.stalkOn = `translate3d(${x - 1}px, ${y}px, 0) rotateX(90deg) scaleY(1)`;
+    el.style.transform = pt(b, fx, fy, opt.fz || 0, true);
+    world.append(shd, t, st, el); boxes.push(b);
+    el.addEventListener("click", () => down(b));
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); down(b); } }); el.tabIndex = 0;
+    const go = () => { el.classList.remove("new"); el.style.transform = pt(b, x, y, b.z, false); t.style.transform = b.tethOn; st.style.transform = b.stalkOn; shd.classList.remove("gone-l"); };
+    if (opt.now) go(); else requestAnimationFrame(() => requestAnimationFrame(go));
+    tsay(agent, `<span class="g">omabox up</span> → '${esc(name)}'`);
+    lsDraw(); b.loop = work(b, opt.now);
+    return b;
+  }
+  async function down(b) {
+    if (b.dead) return; b.dead = true; lsDraw();
+    const [fx, fy] = b.home || AG[b.agent].anchor;
+    b.el.style.transform = pt(b, fx, fy, 0, true); b.el.classList.add("gone");
+    b.teth.style.transform = b.teth.style.transform.replace("scaleX(1)", "scaleX(0)"); b.stalk.style.transform = b.stalkOn.replace("scaleY(1)", "scaleY(0)"); b.shd.classList.add("gone-l");
+    tsay(b.agent, `<span class="g">omabox down</span> → gone`);
+    await new Promise(r => setTimeout(r, 1100)); [b.el, b.teth, b.stalk, b.shd].forEach(e => e.remove());
+    boxes = boxes.filter(x => x !== b);
+  }
+  const q = (b, sel) => b.el.querySelector(sel);
+  const say = (b, t) => { q(b, ".st").textContent = t; };
+  async function work(b, now) {
+    const me = b.lg = (b.lg || 0) + 1, alive = () => !b.dead && b.lg === me && scene._on !== false;
+    await sleep(now ? 0 : 900);
+    if (b.dead) return;
+    b.el.querySelectorAll(".w").forEach(w => w.classList.remove("hid")); say(b, { app: "app up", test: "ctest, 42 tests", check: "check run", rec: "recording · scene 1" }[b.role]);
+    if (!motion) return;
+    while (alive()) {
+      if (b.role === "app") {
+        q(b, ".d").classList.remove("on"); say(b, "app up"); await sleep(1300); if (!alive()) return;
+        kick(q(b, ".ring"), "go"); q(b, ".d").classList.add("on"); say(b, "click → “Settings” opened"); await sleep(1500); if (!alive()) return;
+        kick(q(b, ".flash"), "go"); say(b, "shot taken"); await sleep(1800);
+      } else if (b.role === "test") {
+        const p = q(b, ".pg i"); p.classList.remove("run"); void p.offsetWidth; say(b, "ctest, 42 tests"); p.classList.add("run"); await sleep(2800); if (!alive()) return;
+        say(b, "42 passed"); await sleep(2200);
+      } else if (b.role === "check") {
+        q(b, ".bt").classList.remove("mv"); q(b, ".ox").classList.remove("on"); say(b, "check run"); await sleep(1500); if (!alive()) return;
+        q(b, ".bt").classList.add("mv"); q(b, ".ox").classList.add("on"); say(b, "changed: “Save” moved 6 px"); await sleep(2600);
+      } else {
+        q(b, ".rc").classList.add("on"); say(b, "recording · scene 1"); await sleep(1800); if (!alive()) return;
+        say(b, "recording · scene 2"); await sleep(1800); if (!alive()) return;
+        q(b, ".rc").classList.remove("on"); say(b, "take.mp4 saved"); await sleep(1600);
+      }
+    }
+  }
+  // the first frame: three agents, three boxes, already at work
+  const cl = spawn("claude", "app-sidebar-5cc72cdc", "app", null, { now: true });
+  spawn("codex", "app-theme-71c0ea52", "check", null, { now: true });
+  let piBox = spawn("pi", "app-docs-e4d29b07", "rec", null, { now: true });
+  let dirGen = 0, piN = 3;
+  async function direct() {
+    const me = ++dirGen, on = () => me === dirGen && scene._on !== false;
+    boxes.filter(b => !b.dead).forEach(b => work(b, true));
+    while (on()) {
+      fline = fline >= fcode.length ? 6 : fline + 1; drawEd();
+      await sleep(2200); if (!on()) return;
+      let sub = null; const lead = boxes.find(b => !b.dead && b.agent === "claude" && b.role === "app");
+      if (lead) { tsay("claude", '<span class="g">omabox brief</span> → its subagent'); sub = spawn("claude", "menu-tests", "test", [lead.x, lead.y], { s: 96, who: "subagent", fz: lead.z }); if (sub) sub.home = [lead.x, lead.y]; }
+      fline = fline >= fcode.length ? 6 : fline + 1; drawEd();
+      await sleep(4200); if (!on()) return;
+      if (piBox && !piBox.dead) { tsay("pi", '<span class="m">take saved</span>'); await down(piBox); }
+      fline = fline >= fcode.length ? 6 : fline + 1; drawEd();
+      await sleep(1200); if (!on()) return;
+      piBox = spawn("pi", "box-" + piN++, "rec");
+      await sleep(4200); if (!on()) return;
+      if (sub && !sub.dead) { tsay("claude", '<span class="m">subagent: 42 passed</span>'); await down(sub); }
+      fline = fline >= fcode.length ? 6 : fline + 1; drawEd();
+      await sleep(2400);
+    }
+  }
+  scene.addEventListener("shown", () => { if (motion) direct(); });
+  scene.addEventListener("hidden", () => dirGen++);
+  let fullT;
+  const extra = [["opencode", "app-keyring-3b7a6c11", "test"], ["codex", "box-2", "app"], ["opencode", "app-tray-9f01d2e4", "check"]]; let ei = 0;
+  $("#spawn").addEventListener("click", () => {
+    const [a, n, r] = extra[ei++ % extra.length];
+    if (a === "opencode") tsay("opencode", '<span class="m">›</span> try it in a box');
+    if (!spawn(a, boxes.some(b => b.name === n) ? n + "-" + ei : n, r)) { const t = $("#spawn-full"); t.hidden = false; clearTimeout(fullT); fullT = setTimeout(() => t.hidden = true, 3600); }
+  });
+
+  /* the flagship: your desktop, four agents' boxes, and a feed of what they did */
+  const ws = $("#fleet").closest(".ws"), fleet = $("#fleet"), feed = $("#feed"), editor = $("#editor");
+  const code = [
+    ['<span class="k">fn</span> render_tray(icons: &amp;[Icon]) {', 0],
+    ['    <span class="k">let</span> gap = theme.spacing(<span class="s">"tray"</span>);', 0],
+    ['    <span class="k">for</span> icon <span class="k">in</span> icons {', 0],
+    ['        <span class="c">// draw each at its own scale</span>', 0],
+    ['        icon.draw(gap * scale);', 0],
+    ['    }', 0], ['}', 0] ];
+  const C = { lead: "var(--amber)", sub: "#e9c58f", codex: "var(--sky)", pi: "var(--box)" };
+  function log(who, cmd, res, bad) {
+    const d = document.createElement("div");
+    d.innerHTML = `<span class="a" style="--c:${C[who] || "var(--warn)"}">${esc({ lead: "claude-code", sub: "subagent", codex: "codex", pi: "pi" }[who] || who)}</span> ${esc(cmd)} <span class="${bad ? "bad" : "r"}">→ ${esc(res)}</span>`;
+    feed.append(d); while (feed.children.length > 5) feed.firstChild.remove();
+  }
+  const B = n => $("#b" + n), st = (n, t, cls = "") => { const p = B(n).querySelector(".st"); p.textContent = t; p.className = "st " + cls; };
+  let mode = "with", gen = 0;
+  const live = me => me === gen && ws._on !== false;
+  async function typing(me) {
+    const shown = [];
+    for (let i = 0; live(me) && mode === "with"; i++) {
+      shown.push(code[i % code.length][0]); if (shown.length > 7) shown.shift();
+      editor.innerHTML = shown.join("\n") + '<span class="cur"></span>';
+      if (!motion) return;
+      await sleep(900);
+    }
+  }
+  function resetBoxes() {
+    $$(".bx .win").forEach(w => w.classList.add("hid")); $$(".bx .dlg").forEach(d => d.classList.remove("on"));
+    B(2).querySelector(".brief").classList.add("hid"); const p = B(2).querySelector(".prog i"); p.classList.remove("run");
+    B(3).querySelector(".btnmock").classList.remove("moved"); B(3).querySelector(".diffbox").classList.remove("on");
+    B(4).querySelector(".rec").classList.remove("on"); B(4).querySelector(".cap").classList.remove("on");
+    st(1, "starting its app"); st(2, "waiting for a brief"); st(3, "checking against its baseline"); st(4, "filming a take");
+  }
+  async function withLoop(me) {
+    while (live(me) && mode === "with") {
+      resetBoxes();
+      await sleep(400); if (!live(me)) return;
+      B(1).querySelector(".win").classList.remove("hid"); log("lead", "omabox run -d --wait -- ./build/app", "window opened"); st(1, "app up, on its own screen");
+      await sleep(700); if (!live(me)) return;
+      B(2).querySelector(".brief").classList.remove("hid"); log("lead", "omabox brief -b app-menu-3b7a6c11", "its subagent: 15 lines"); st(2, "got a box and a brief", "warn");
+      await sleep(600); if (!live(me)) return;
+      B(3).querySelector(".win").classList.remove("hid"); B(4).querySelectorAll(".win").forEach(w => w.classList.remove("hid"));
+      B(4).querySelector(".rec").classList.add("on"); B(4).querySelector(".cap").classList.add("on"); log("pi", "omabox record start -o take.mp4", "recording");
+      await sleep(900); if (!live(me)) return;
+      kick(B(1).querySelector(".ring"), "go"); B(1).querySelector(".dlg").classList.add("on");
+      log("lead", "omabox click --window app 640 380 --wait", 'satisfied: "Settings" opened'); st(1, '"Settings" opened, dark mode on', "ok");
+      await sleep(700); if (!live(me)) return;
+      B(2).querySelector(".brief").classList.add("hid"); B(2).querySelector(".win").classList.remove("hid"); B(2).querySelector(".prog i").classList.add("run");
+      log("sub", "omabox run -- ctest --test-dir build", "running"); st(2, "ctest, 42 tests");
+      await sleep(800); if (!live(me)) return;
+      B(3).querySelector(".btnmock").classList.add("moved"); B(3).querySelector(".diffbox").classList.add("on");
+      log("codex", "omabox check run -- ./visual.sh", 'changed: button "Save" moved 6 px', true); st(3, 'changed: button "Save" moved 6 px', "warn");
+      await sleep(800); if (!live(me)) return;
+      B(4).querySelector(".cap").textContent = "scene 2"; log("pi", 'omabox record mark "scene 2"', "marked at 0:04");
+      await sleep(900); if (!live(me)) return;
+      kick(B(1).querySelector(".flash"), "go"); log("lead", "omabox shot --window app", "shot.png, for you"); st(1, "shot taken, box goes with the session", "ok");
+      await sleep(1100); if (!live(me)) return;
+      log("sub", "ctest", "42 passed"); st(2, "42 passed", "ok");
+      await sleep(700); if (!live(me)) return;
+      B(4).querySelector(".rec").classList.remove("on"); B(4).querySelector(".cap").classList.remove("on"); B(4).querySelector(".cap").textContent = "scene 1";
+      log("pi", "omabox record stop --sheet", "take.mp4, take.sheet.png"); st(4, "take.mp4 and its contact sheet", "ok");
+      if (!motion) return;
+      await sleep(2600);
+    }
+  }
+  const tallyB = k => { const b = fleet.querySelector(`[data-k="${k}"]`); b.textContent = +b.textContent + 1; kick(b, "bump"); };
+  function calm() {
+    fleet.querySelectorAll(".pop, .wsw").forEach(e => e.classList.remove("on")); fleet.querySelectorAll("[data-k]").forEach(b => b.textContent = 0);
+    fleet.querySelector(".ptr").style.transform = "";
+  }
+  async function chaos(me) {
+    calm(); $("#you-state").textContent = "you, interrupted";
+    const ptr = fleet.querySelector(".ptr"), on = s => fleet.querySelector(s).classList.add("on"), off = s => fleet.querySelector(s).classList.remove("on");
+    await sleep(400); if (me !== gen) return;
+    on(".p1"); tallyB("w"); tallyB("f"); log("claude-code", "./build/app", "opened on your workspace", true);
+    await sleep(900); if (me !== gen) return;
+    ptr.style.transform = "translate(120px, -90px)"; tallyB("c"); log("claude-code", "ydotool click", "your cursor moved", true);
+    await sleep(800); if (me !== gen) return;
+    on(".wsw"); tallyB("s"); log("codex", "hyprctl dispatch workspace 7", "you lost your place", true);
+    await sleep(900); if (me !== gen) return;
+    off(".wsw"); ptr.style.transform = "translate(40px, -130px)"; tallyB("c"); on(".p3"); tallyB("w");
+    await sleep(800); if (me !== gen) return;
+    on(".p2"); tallyB("w"); tallyB("f"); tallyB("p"); log("pi", "pkexec make install", "a password prompt, on your screen", true);
+    await sleep(700); if (me !== gen) return;
+    tallyB("c"); $("#you-state").textContent = "you, waiting for it to finish";
+  }
+  function setMode(m) {
+    mode = m; const me = ++gen;
+    $("#m-with").setAttribute("aria-pressed", m === "with"); $("#m-without").setAttribute("aria-pressed", m !== "with");
+    fleet.classList.toggle("chaos", m !== "with"); feed.innerHTML = "";
+    $("#fleet-title").textContent = m === "with" ? "omabox ls · 4 boxes up" : "no omabox · 4 agents on your desktop";
+    if (m === "with") { calm(); $("#you-state").textContent = "you, typing"; withLoop(me); typing(me); }
+    else { resetBoxes(); chaos(me); }
+  }
+  $("#m-with").addEventListener("click", () => setMode("with"));
+  $("#m-without").addEventListener("click", () => setMode("without"));
+  editor.innerHTML = code.slice(0, 4).map(c => c[0]).join("\n") + '<span class="cur"></span>';
+  ["b1", "b2", "b3", "b4"].forEach(id => $("#" + id).querySelector(".win").classList.remove("hid"));
+  log("lead", "omabox up", "box 'app-sidebar-5cc72cdc' up"); log("codex", "omabox up --monitor 2560x1440", "3 monitors"); log("pi", "omabox up", "box 'app-docs-e4d29b07' up");
+  ws.addEventListener("shown", () => { if (mode === "with") setMode("with"); });
+  ws.addEventListener("hidden", () => { if (mode === "with") gen++; });
+
+  /* ask your agent: a typed terminal and the box's screen */
+  const term = $("#term"), appw = $("#appw"), termw = $("#termw"), dlg = $("#dlg"), clk = $("#clk"), flash = $("#flash"), wsl = $("#wsl"), sname = $("#sname"), pcap = $("#pcap");
+  const scripts = [
+    { box: "box · app-5cc72cdc", ws: "", steps: [
+      ["c", "omabox up"], ["o", "box 'app-5cc72cdc' up (1920x1080@60)"],
+      ["c", "omabox run -d -- ./build/app", "app"],
+      ["c", "omabox click --window app 640 380 --wait", "click"], ["o", 'satisfied: window opened, focused: app "Settings"', "dlg"],
+      ["c", "omabox tree --find 'dark mode'"], ["o", 'check box "Dark mode" [checked]'],
+      ["c", "omabox shot --window app", "shot"], ["o", "# the shot goes to you; the box goes down with the session"] ] },
+    { box: "box · app-try-1a2b3c4d", ws: "your workspace 9 · a window you drive", steps: [
+      ["c", "omabox up --interactive"], ["c", "omabox run -d -- npm run dev", "dev"],
+      ["c", "omabox run -d -- ./build/app", "app"],
+      ["y", "you › make the sidebar narrower"],
+      ["c", "make && omabox run -d --replace -- ./build/app", "narrow"] ] } ];
+  let run = 0;
+  async function type(i) {
+    const me = ++run, s = scripts[i];
+    term.innerHTML = ""; appw.classList.add("hid"); termw.classList.add("hid"); dlg.classList.remove("on"); appw.style.setProperty("--sb", "34%");
+    sname.textContent = s.box; wsl.textContent = s.ws;
+    pcap.textContent = i === 1 ? "An interactive box: a window on your workspace 9, opened without taking your focus." : "What the box shows, as omabox peek would. You never see it unless you ask.";
+    for (const [k, t, fx] of s.steps) {
+      if (me !== run) return;
+      const line = document.createElement("div");
+      if (k === "c") {
+        line.innerHTML = '<span class="p">$</span> <span class="t"></span><span class="cur"></span>'; term.append(line);
+        const tt = line.querySelector(".t");
+        for (const ch of t) { if (me !== run) return; tt.textContent += ch; await sleep(18 + Math.random() * 26); }
+        line.querySelector(".cur").remove(); await sleep(250);
+      } else { line.className = k === "y" ? "y" : "o"; line.textContent = t; term.append(line); await sleep(k === "y" ? 900 : 350); }
+      if (fx === "app") appw.classList.remove("hid");
+      if (fx === "dev") termw.classList.remove("hid");
+      if (fx === "click") { clk.style.left = "46%"; clk.style.top = "54%"; kick(clk, "go"); }
+      if (fx === "dlg") dlg.classList.add("on");
+      if (fx === "shot") kick(flash, "go");
+      if (fx === "narrow") appw.style.setProperty("--sb", "16%");
+      await sleep(300);
+    }
+  }
+
+  /* third tab: parallel lanes and omabox ls (the real column format) */
+  const pool = [
+    { wt: "~/code/app-theme", agent: "pi", box: "app-theme-71c0ea52", size: "3440x1440@144", net: "connected" },
+    { wt: "~/code/app-docs", agent: "Hermes", box: "app-docs-e4d29b07", size: "1280x720@60", net: "connected" } ];
+  let lanes = [
+    { wt: "~/code/app-sidebar", agent: "Claude Code", box: "app-sidebar-5cc72cdc", size: "1920x1080@60", net: "connected", idle: "2m/2h", st: "up" },
+    { wt: "~/code/app-menu", agent: "Codex", box: "app-menu-9f01d2e4", size: "3 monitors", net: "connected", idle: "0m/2h", st: "up" },
+    { wt: "~/code/app-keyring", agent: "OpenCode", box: "app-keyring-3b7a6c11", size: "1920x1080@60", net: "isolated", idle: "5m/2h", st: "up" } ];
+  const pad = (s, n) => String(s).padEnd(n) + " ";
+  function renderLanes() {
+    $("#lanes").innerHTML = lanes.map((l, i) => `<div class="lane ${l.st === "booting" ? "booting" : ""}"><span>${esc(l.wt)}</span><span class="ar">→</span><span>${esc(l.agent)}</span><span class="ar">→</span><span class="bxn">${esc(l.box)}</span><button type="button" data-down="${i}" ${l.st === "booting" ? "disabled" : ""}>down</button></div>`).join("");
+    const rows = lanes.filter(l => l.st === "up");
+    $("#ls").innerHTML = `<span class="p">$</span> omabox ls\n<span class="h">${pad("NAME", 24)}${pad("MODE", 11)}${pad("SIZE", 16)}${pad("STATE", 7)}${pad("SHELL", 14)}${pad("NET", 9)}${pad("IDLE", 9)}PLUGINS</span>\n` +
+      rows.map(l => `${pad(l.box, 24)}${pad("headless", 11)}${pad(l.size, 16)}${pad("up", 7)}${pad("running", 14)}${pad(l.net, 9)}${pad(l.idle, 9)}`).join("\n");
+    $("#addlane").disabled = !pool.length; $("#addlane").style.opacity = pool.length ? 1 : .5;
+  }
+  $("#lanes").addEventListener("click", e => { const b = e.target.closest("[data-down]"); if (!b) return; const [l] = lanes.splice(+b.dataset.down, 1); pool.unshift({ ...l }); renderLanes(); });
+  $("#addlane").addEventListener("click", async () => { const n = pool.shift(); if (!n) return; const l = { ...n, idle: "0m/2h", st: "booting" }; lanes.push(l); renderLanes(); await sleep(1400); l.st = "up"; renderLanes(); });
+  renderLanes();
+
+  /* tabs */
+  const tabs = $$('[role="tab"]');
+  function show(t, focus) {
+    tabs.forEach(b => { const on = b === t; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; });
+    $("#pane").setAttribute("aria-labelledby", t.id);
+    const i = tabs.indexOf(t), lanesOn = i === 2;
+    $("#pane-lanes").hidden = !lanesOn; $("#pane-term").hidden = lanesOn;
+    if (!lanesOn) type(i); else run++;
+    if (focus) t.focus();
+  }
+  tabs.forEach(t => {
+    t.addEventListener("click", () => show(t));
+    t.addEventListener("keydown", e => { const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if (d) show(tabs[(tabs.indexOf(t) + d + tabs.length) % tabs.length], true); });
+  });
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { type(0); o.disconnect(); } }, { threshold: .3 }).observe($("#pane"));
+  term.innerHTML = '<span class="p">$</span> omabox up\n<span class="o">box \'app-5cc72cdc\' up (1920x1080@60)</span>';
+  appw.classList.remove("hid");
+
+
+  /* new in: release tabs (arrow keys move between them) */
+  const rtabs = $$(".rels [role=tab]");
+  const showRel = (t, focus) => {
+    rtabs.forEach(b => { const on = b === t; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; $("#" + b.getAttribute("aria-controls")).hidden = !on; });
+    $("#newv").textContent = t.dataset.v; if (focus) t.focus();
+  };
+  rtabs.forEach(t => {
+    t.addEventListener("click", () => showRel(t));
+    t.addEventListener("keydown", e => { const d = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : ["ArrowUp", "ArrowLeft"].includes(e.key) ? -1 : 0; if (d) { e.preventDefault(); showRel(rtabs[(rtabs.indexOf(t) + d + rtabs.length) % rtabs.length], true); } });
+  });
+
+  /* glow cards follow the pointer */
+  $$(".gcard").forEach(c => c.addEventListener("pointermove", e => { const r = c.getBoundingClientRect(); c.style.setProperty("--x", `${e.clientX - r.left}px`); c.style.setProperty("--y", `${e.clientY - r.top}px`); }));
+
+  /* the git graph grows its forks once, when scrolled to */
+  const graph = $("#graph"), seq = $$("#graph .seq");
+  new IntersectionObserver(async ([e], o) => {
+    if (!e.isIntersecting) return; o.disconnect();
+    seq.forEach(s => s.style.opacity = 0);
+    for (const s of seq) { await sleep(160); s.style.opacity = ""; }
+  }, { threshold: .4 }).observe(graph);
+
+})();
+</script>

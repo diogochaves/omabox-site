@@ -8,15 +8,18 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
 
 - `site/omabox.html`: the home page, as an **artifact source**: no `<!doctype>`, `<html>`, `<head>`
   or `<body>` (the artifact platform wraps it). `<title>`, its links and `<style>` come first.
-- `site/base.css`: what every page shares (tokens, type, cut frames, cards, header, footer, motion).
-  Each page's `<style>` has only what it uses.
-- `site/how-it-works.html`, `site/commands.html`, `site/develop.html`, `site/compare.html`,
+- `site/base.css`: what every page shares (tokens, type, header with the big mark, buttons, labels,
+  panels and cards, code, the install band, the "what's coming" strip, footer, motion). Each page's
+  `<style>` has only what it uses. Since the 1.0 look (branch `site-1.0`, Look H in `DIRECTION.md`)
+  everything is rounded: `.cut`/`.in` are kept as names for a card, with no cut corners.
+- `site/how-it-works.html`, `site/uses.html`, `site/omarchy.html`, `site/commands.html`,
+  `site/develop.html`, `site/compare.html` (omabox and ai-jail), `site/next.html`,
   `site/changelog.html`, `site/install.html`: the other pages, as a `<style>` and a `<main>` only (a
-  page's `<script>` goes inside its `<main>`); the build adds the head, header, "Keep reading", an
-  install call to action (not on /install) and footer, and fills their `<!-- markers -->`. The nav
-  (between `<!-- nav -->` markers), "Keep reading" (`<section class="sec more">`, one card per line)
-  the footer and the script that lands a link on its section once the fonts are in (between
-  `<!-- landing -->` markers) are written once, in the home page, and copied from it. Every page but `/commands`
+  page's `<script>` goes inside its `<main>`); the build adds the head, header, an install band (not
+  on /install), the "what's coming" strip (not on /next) and footer, and fills their
+  `<!-- markers -->`. The nav (between `<!-- nav -->` markers), the footer and the script that lands
+  a link on its section once the fonts are in (between `<!-- landing -->` markers) are written once,
+  in the home page, and copied from it. Every page but `/commands`
   and `/changelog` is written by hand. `/commands` and `/changelog` are
   read from the omabox repo at its latest release tag: every command and its help from `bin/omabox`
   (the usage heredoc, not run), the changelog from `CHANGELOG.md`. `site/commands.json` is the
@@ -34,11 +37,18 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   the artifact and as the fallback when GitHub can't be reached; the version falls back the same
   way. `/commands` and `/changelog` have no fallback: without GitHub the build stops and the site
   keeps its last deploy. `node build.mjs` (Node 18+, no dependencies; `GITHUB_TOKEN` optional);
-  `node build.mjs --preview` writes the other pages into `preview/` (git-ignored) for the artifact.
+  `node build.mjs --preview` writes the other pages into `preview/` (git-ignored) for the artifact;
+  `OUT=DIR` writes them elsewhere (one folder per builder when several work at once).
 - The home page sends links to sections that moved to pages (`/#compare`, `/#jail`, `/#never`...)
   on to them, so old links keep working (the omabox README links `/#compare`).
 
 ## Publishing
+
+**Draft 6, the 1.0 site** (branch `site-1.0`, not merged: omabox.app follows `main` and the pages
+describe 1.0, so it goes live the day 1.0 ships) is at
+<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid>. Update it from that branch the same way as
+below, with its `url`, `site/omabox.html` and every page in `files` (`uses.html`, `omarchy.html`,
+`next.html` too). Draft 5, below, keeps showing what is live until then.
 
 The page lives at <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 5, the site split into
 pages; omabox.app since 2026-10-01). Draft 4, the single page before it, stays at

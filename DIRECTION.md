@@ -9,6 +9,78 @@ claude.ai artifact: <https://claude.ai/artifact/P1SN24Cvz4fqXJoUZo2M8d> (draft 4
 <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>). Older drafts are in `reference/`, to mine for
 parts (see `reference/README.md`).
 
+## Decisions (2026-10-26): the site for omabox 1.0
+
+omabox 1.0 is the Rust rewrite; it ships when Diogo has finished testing it, with no date promised.
+The site is rewritten for it. The copy, page by page, is `COPY-1.0.md`; the look is
+`looks/c-glass.html`. Neither is live yet.
+
+- **For anyone on Hyprland who runs coding agents**, not only Omarchy users. 1.0 still needs
+  Omarchy 4, and the hero says so in one line ("Today on Omarchy 4 · … · Plain Hyprland is coming").
+  Omarchy keeps a page of its own, `/omarchy`: born there, fullest there.
+- **Every page ends with what's coming**: plain Hyprland boxes, your own shell (Dux Shell first),
+  your own Hyprland desktop in a box. Each is worded to what the spikes showed ("aimed at any distro
+  with Hyprland 0.56+", never "runs on X"; one shell at a time, never "any rice"), with its own page,
+  `/next`. This replaces the 2026-10-21 decision to keep the beyond-Omarchy research off the site,
+  and the rule against saying "coming" (2026-10-01): that rule was about a third party's decision,
+  and this one is Diogo's.
+- **Agent-first, said plainly.** Any developer can type omabox's commands, but it is built for
+  agents to drive. Even to drive a box yourself, the fastest way in is to ask your agent.
+- **A shorter home page**: seven sections. The four steps go to `/how-it-works`, the "New in" tabs
+  to `/changelog`, the FAQ to `/install`, Built by to the footer.
+- **The look: Look C**, modelled on resend.com (tried beside A, today's look cleaned up, and B, a
+  new take). It is a black stage with silver serif headings and a glass box in the hero. It keeps
+  today's interactive pieces, with more motion. It replaces draft 4's visual system once polished;
+  "lightweight is a feature" still holds, and it gets measured before it goes live.
+- **omabox.app for agents**, from Resend: `/llms.txt`, a Markdown twin of every page, the same URL
+  as Markdown on `Accept: text/markdown`, and `/install.md`, a setup guide for an agent installing
+  omabox with its user.
+- **Dux Shell's claims are on 2.0** (re-run on 2026-10-26 from the release files, nothing
+  installed); `COPY-1.0.md`'s re-check list says what `/next` must not say.
+
+## Decisions (2026-10-27): Look D, parallel boxes first, ai-jail only, MIT
+
+Diogo, with the new <https://cua.ai> as his reference ("each section is like a mini workspace where
+you can see something it does in action"):
+
+- **Look D** (`looks/d-workspace.html`): Look C rebuilt so every section is a small live workspace,
+  with cua.ai's fonts, icons and motion as the reference, not the model. `COPY-1.0.md`'s Visual
+  direction has what was taken and kept. Not live; waiting on Diogo's review.
+- **The flagship is parallel boxes**: several agents, each in its own box, testing on their own at
+  the same time, nothing on your desktop. "The problem" lives on as the scene's Without switch.
+- **No other project but ai-jail is named.** What it is not goes, and with it Cua (its product
+  changed; tracking other projects isn't the site's job) and omarchy-in-omarchy. This replaces the
+  2026-09-29 "link out generously" list. ai-jail stays and gets a home page section; `/compare`
+  becomes omabox and ai-jail. "Not a security boundary" still goes wherever safety comes up.
+- **MIT, every line**, said on the home page: anyone can fork it, change it, ship their own, and
+  that is why omabox is leaving Omarchy-only.
+
+## Decisions (2026-10-27, later): Look E, nothing borrowed from cua.ai
+
+Diogo, on Look D: better, but it looked like a ripoff. Nothing of cua.ai's own visuals stays (its
+keycaps, floating keys, bottom dock, font pair); the idea of each section showing omabox at work
+does. The hero takes the full width and shows what omabox is in 3D: your desktop as the floor,
+agents' boxes rising above it, small, more than one per agent when it needs, gone when done, with
+the floor never touched. The side rail stays as Hyprland workspaces that name their sections. The
+MIT and Coming copy changed (`COPY-1.0.md`). Look E: `looks/e-desk.html`.
+
+## Decisions (2026-10-27, last): Look F, the home page's look
+
+Diogo, on Look E: the big mark that shrinks into the menu and breaks on a click comes back, as an
+homage to the site before; no install line in the hero; the hero's two columns share one top edge
+and the promise reads as topics; a "New in" section on the home page again (this undoes moving it to
+`/changelog` on 2026-10-26); a Uses page and section for what omabox does beyond testing. Look F
+(`looks/f-home.html`) is meant to be the home page; the other pages move to its visual language
+next.
+
+## Draft 6 (2026-10-27): the 1.0 site, on branch `site-1.0`
+
+Look H is the look (Diogo: "this is the final version"). `site/base.css` carries it, the home page
+is Look H, and every page was rebuilt from `COPY-1.0.md` in it, with three new ones: `/uses`,
+`/omarchy`, `/next`. `/compare` is omabox and ai-jail. Review artifact:
+<https://claude.ai/artifact/8voq3KwYon5ub3h5V2kGid>. It stays off `main` until 1.0 ships, then the
+re-check list in `COPY-1.0.md` runs against the tag before it goes live.
+
 ## Draft 5 (2026-10-01): the site split into pages, like aijail.io
 
 Diogo, after testing the four pages: the new pages had no clear way in (the top menu only jumped

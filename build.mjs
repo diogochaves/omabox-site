@@ -10,6 +10,7 @@
 //                               anything but omabox.app gets noindex
 //   node build.mjs --preview    into preview/: the other pages, for the artifact (AGENTS.md,
 //                               "Publishing"); their links keep .html, as the artifact serves them
+//   OUT=DIR node build.mjs --preview   the same, into DIR
 //
 // If GitHub can't be reached, the home page keeps the contributors and the version written in its
 // source and the build says so. The commands and changelog pages can't be made without the release,
@@ -24,7 +25,7 @@ const REPO = "diogochaves/omabox";
 const HOME = "https://omabox.app";
 const SITE = (process.env.SITE_URL || HOME).replace(/\/+$/, "");
 const PREVIEW = process.argv.includes("--preview");
-const OUT = PREVIEW ? "preview" : "dist";
+const OUT = process.env.OUT || (PREVIEW ? "preview" : "dist");   // OUT=DIR: elsewhere, e.g. one builder each
 
 // AI agents that show up as GitHub users. Bots (type "Bot", or a login ending in "[bot]": Claude,
 // Codex, Copilot, Devin, Jules...) are dropped anyway; this catches agent accounts that are plain
@@ -34,27 +35,36 @@ const isPerson = c => c.type === "User" && !c.login.endsWith("[bot]") && !AGENT.
 
 const PAGES = [
   { src: "omabox.html", out: "index.html", path: "/", home: true,
-    title: "omabox: desktops for AI agents on Omarchy",
-    desc: "omabox gives every AI agent a whole Omarchy desktop, invisible and in parallel. Your desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts.",
-    card: "A whole Omarchy desktop for every AI agent, invisible and in parallel. Yours stays untouched." },
+    title: "omabox: desktops of their own for your coding agents",
+    desc: "omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is. Yours stays untouched: no windows, no cursor moves, no stolen focus, no prompts.",
+    card: "A whole Hyprland desktop for every coding agent, invisible and in parallel. Yours stays untouched." },
   { src: "how-it-works.html", out: "how-it-works.html", path: "/how-it-works", name: "How it works",
     title: "How omabox works: a desktop of its own for every agent",
-    desc: "What an omabox box keeps off your desktop and how, what a box gets, one box per agent session, and how you look inside one." },
+    desc: "The four steps, what a box keeps off your desktop and how, what a box gets, 1.0's hardening and the ten rules, and how agents use it on their own." },
+  { src: "uses.html", out: "uses.html", path: "/uses", name: "Uses",
+    title: "What people use omabox for",
+    desc: "Testing is where omabox started. Videos of what you made, shots at 2x or 4K, a clean setup that isn't yours, monitors you don't have, and more, in a box instead of on your desktop." },
+  { src: "omarchy.html", out: "omarchy.html", path: "/omarchy", name: "Omarchy",
+    title: "omabox on Omarchy",
+    desc: "omabox was born on Omarchy and is fullest there: Omarchy's own config and shell in every box, your theme and bar, your plugins, and a widget in your bar." },
   { src: "commands.html", out: "commands.html", path: "/commands", name: "Commands",
     title: "omabox commands: every command and option",
-    desc: "Every omabox command, its options and examples, read from omabox help at the latest release." },
+    desc: "Every omabox command, its options and examples, read from omabox help at the latest release, and the contract your scripts can keep." },
   { src: "develop.html", out: "develop.html", path: "/develop", name: "Develop",
-    title: "Develop for Omarchy with omabox",
-    desc: "Test Omarchy shell plugins, themes and apps, and changes to Hyprland or Omarchy itself, in a box instead of on your desktop." },
-  { src: "compare.html", out: "compare.html", path: "/compare", name: "Compare",
-    title: "omabox, ai-jail, Cua and omarchy-in-omarchy compared",
-    desc: "omabox is not a security boundary. When to pair it with ai-jail, and when Cua or omarchy-in-omarchy is what you need instead." },
+    title: "Develop with omabox: apps, plugins, themes, Hyprland",
+    desc: "Test apps, shell plugins and themes, and changes to Hyprland itself, in a box instead of on your desktop: visual checks, accessibility trees, videos and sound." },
+  { src: "compare.html", out: "compare.html", path: "/compare", name: "ai-jail",
+    title: "omabox and ai-jail",
+    desc: "omabox is not a security boundary. ai-jail fences what an agent can read, write and reach; omabox decides where it draws. The two recipes that pair them." },
+  { src: "next.html", out: "next.html", path: "/next", name: "Coming",
+    title: "What's coming to omabox",
+    desc: "omabox beyond Omarchy: plain Hyprland boxes, your own shell, your own Hyprland desktop in a box. What has run so far, and what hasn't." },
   { src: "changelog.html", out: "changelog.html", path: "/changelog", name: "Changelog",
     title: "omabox changelog",
-    desc: "What changed in each omabox release." },
+    desc: "What each omabox release added, and every change." },
   { src: "install.html", out: "install.html", path: "/install", name: "Install",
     title: "Install omabox",
-    desc: "What omabox needs, how to install and check it, update it and remove it." },
+    desc: "What omabox needs, how to install and check it, upgrade to 1.0, update and remove it, and the questions people ask." },
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -83,7 +93,7 @@ async function contributors() {
     const ext = (r.headers.get("content-type") || "").includes("png") ? "png" : "jpg";
     const file = `media/avatars/${p.login.toLowerCase()}.${ext}`;
     await writeFile(`${OUT}/${file}`, Buffer.from(await r.arrayBuffer()));
-    tiles.push(`        <li><a class="cut" href="https://github.com/${esc(p.login)}"><span class="in"><img src="${file}" alt="" width="72" height="72" loading="lazy">${esc(p.login)}</span></a></li>`);
+    tiles.push(`            <li><a href="https://github.com/${esc(p.login)}" title="${esc(p.login)}"><img src="${file}" alt="${esc(p.login)}" width="38" height="38" loading="lazy"></a></li>`);
   }
   return tiles;
 }
@@ -171,7 +181,7 @@ function commandsHtml(help, notes) {
         <p>${inline(b.lines.join(" ").trim())}</p>`).join("")}
       </details>` : "";
     return `
-    <article class="cmd card cut" id="${id}"><div class="in">
+    <article class="cmdc card" id="${id}"><div class="in">
       <div><h3><a href="#${id}">omabox ${esc(name)}</a></h3>${n.say ? `<p style="margin-top:10px">${inline(n.say)}</p>` : ""}</div>
       ${n.examples?.length ? `<div class="ex"><span class="lbl">Examples</span>${code(n.examples)}</div>` : "<div></div>"}
       <pre class="code syn wide">${esc(c.lines.join("\n"))}</pre>${more}
@@ -236,8 +246,8 @@ ${SITE === HOME ? (page.home ? '<meta name="google-site-verification" content="-
 <meta name="twitter:card" content="summary_large_image">
 ${page.home ? `<script type="application/ld+json">${JSON.stringify({
   "@context": "https://schema.org", "@type": "SoftwareApplication", name: "omabox", url: `${SITE}/`,
-  description: "A whole Omarchy desktop for every AI agent, invisible and in parallel, so your own desktop stays untouched.",
-  applicationCategory: "DeveloperApplication", operatingSystem: "Linux (Omarchy)", softwareVersion: version,
+  description: "A whole Hyprland desktop for every coding agent, invisible and in parallel, so your own desktop stays untouched.",
+  applicationCategory: "DeveloperApplication", operatingSystem: "Linux (Hyprland; Omarchy 4 today)", softwareVersion: version,
   license: "https://opensource.org/licenses/MIT", codeRepository: `https://github.com/${REPO}`,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 })}</script>\n` : ""}`;
@@ -258,23 +268,24 @@ const fonts = pick(/<link rel="preconnect"[^]*?<link rel="stylesheet" href="base
 const sprite = pick(/<svg width="0" height="0"[^]*?<\/svg>/, "<svg> sprite");
 const ghMark = pick(/<svg viewBox="0 0 16 16"[^]*?<\/svg>/, "GitHub mark");
 const others = PAGES.filter(p => !p.home);
-// The nav (a row on wide screens, a menu on narrow ones) and "Keep reading" are written once, in the
-// home page; each other page gets them with its own link marked, or left out.
+// The nav (a row on wide screens, a menu on narrow ones) is written once, in the home page; each
+// other page gets it with its own link marked.
 const nav = pick(/<!-- nav[^>]*-->[^]*?<!-- \/nav -->/, "<!-- nav --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
-const more = pick(/ {2}<section class="sec more"[^]*?<\/section>/, "Keep reading section");
-const header = cur => `<header class="top">
+const header = cur => `<header class="top-bar sub">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="omabox, the home page"><span class="bm static"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true"><use href="#m"/></svg></span><span class="bw" aria-hidden="true">omabox</span></a>
     ${nav.replaceAll(`href="${cur.out}"`, `href="${cur.out}" aria-current="page"`)}
   </div>
 </header>`;
-const ending = cur => `${more.replace(new RegExp(`\\n[^\\n]*href="${cur.out}"[^\\n]*`), "")}${cur.out === "install.html" ? "" : `
-  <section class="sec get">
-    <div class="head"><p class="tag">Install</p><h2>Give every agent a desktop of its own.</h2>
-      <p class="lead">Omarchy 4 with Hyprland 0.56 or later, and a GPU. Three minutes, then your agents take it from there.</p></div>
-    <pre class="code"><span class="p">$ </span>git clone https://github.com/${REPO} &amp;&amp; cd omabox &amp;&amp; ./install.sh</pre>
-    <div class="ctas"><a class="btn solid" href="install.html">Install guide</a><a class="btn gh" href="https://github.com/${REPO}">${ghMark}GitHub</a></div>
-  </section>`}`;
+// Every page ends the same way: the call to install (not on /install), then what's coming (not on /next).
+const ending = cur => `${cur.out === "install.html" ? "" : `
+  <div class="inst">
+    <h2>Give every agent <i>a desktop of its own.</i></h2>
+    <div class="icmd"><code>git clone https://github.com/${REPO} &amp;&amp; cd omabox &amp;&amp; ./install.sh</code></div>
+    <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT</p>
+    <div class="ctas"><a class="btn solid" href="install.html">Install guide</a><a class="btn" href="https://github.com/${REPO}">${ghMark}GitHub</a></div>
+  </div>`}${cur.out === "next.html" ? "" : `
+  <a class="strip" href="next.html"><b>What's coming</b><span>Plain Hyprland boxes · Your own shell · Your own Hyprland desktop, in a box →</span></a>`}`;
 const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^]*?<\/pre>/, "");
 // Landing on a linked section once the fonts are in (written once, in the home page, like the nav).
 const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");
