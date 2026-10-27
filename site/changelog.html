@@ -75,14 +75,12 @@
           <button type="button" role="tab" id="nt-010" aria-controls="new-0.1.0" aria-selected="false" tabindex="-1" data-v="0.1.0"><b>0.1.0</b><span>the first</span></button>
         </div>
         <div>
-          <!-- check: 1.0.0's date at the release (no date promised before); which of these land in 1.0.0 (Facts to re-check, 1) -->
           <div class="rel" id="new-1.0" role="tabpanel" aria-labelledby="nt-10" tabindex="0">
-            <p class="rmeta"><b>1.0.0</b> · a contract your scripts can keep · <a href="#v1.0.0">changelog →</a></p>
+            <p class="rmeta"><b>1.0.0</b> · 2026-10-27 · a contract your scripts can keep · <a href="#v1.0.0">changelog →</a></p>
             <p class="caption" style="margin:0">Everything from 0.6 to 1.0 that you would notice, in one tab.</p>
             <ul class="hls">
               <li><h3>A contract your scripts can keep</h3><p>Within 1.x, exit codes and <code>--json</code> fields stay as they are or only grow. A command or option that has to change warns for one release first; <code>OMABOX_STRICT=1</code> makes that warning an error, for CI.</p><a href="commands.html#contract">The contract →</a></li>
-              <!-- check: "about 24 ms" for run -- true, measured on 1.0 (Facts to re-check, 2) -->
-              <li><h3>One binary, in Rust</h3><p>Stopped mid-step, omabox undoes that step: an interrupted <code>up</code> takes its box down, a stopped recording keeps its video. Entering a box is its own now, not nsenter's: <code>run -- true</code> in about 24 ms.</p></li>
+              <li><h3>One binary, in Rust</h3><p>Stopped mid-step, omabox undoes that step: an interrupted <code>up</code> takes its box down, a stopped recording keeps its video. Entering a box is its own now, not nsenter's: <code>run -- true</code> in about 3 ms.</p></li>
               <li><h3>Ports no box reaches</h3><p>Your database stays out of every box, on loopback or any of your host's addresses.</p><pre><span class="p">$ </span>omabox config protect-ports 5432,8080</pre><a href="how-it-works.html#ports">Ports →</a></li>
               <li><h3>The app answers in text</h3><p><code>tree</code>, <code>check</code>, <code>record</code> and <code>audio</code>, from 0.6 to 0.9: an agent asks the app, compares it with a baseline, films it and hears it.</p><a href="develop.html">On /develop →</a></li>
             </ul>
@@ -195,7 +193,7 @@
 
     <section class="grp" id="log" aria-labelledby="h-log">
       <h2 id="h-log">Every change, <i>release by release.</i></h2>
-      <p class="lead">omabox's <a href="<!-- changelog-url -->">CHANGELOG.md</a> at omabox <span class="ver">0.9.2</span>, the latest
+      <p class="lead">omabox's <a href="<!-- changelog-url -->">CHANGELOG.md</a> at omabox <span class="ver">1.0.0</span>, the latest
         release when this site was built. Update with <code>git pull &amp;&amp; ./install.sh</code>.</p>
       <div class="log" style="margin-top:12px">
         <!-- changelog -->

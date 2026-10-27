@@ -22,8 +22,9 @@ Then, after the first draft (Diogo, 2026-10-26):
 
 Sources: omabox `port-rust` (CHANGELOG from Unreleased down to 0.6.0, README, SECURITY.md), branch
 `desk-plain` (NOTES findings 534 to 536), omabox #247 and #321. The site was last reviewed against
-0.5.2, so everything from 0.5.3 on is new to the hand-written pages. Claims marked **[check]** are
-on the re-check list at the end.
+0.5.2, so everything from 0.5.3 on is new to the hand-written pages. Claims marked **[check]** were
+on the re-check list at the end; all were answered on 2026-10-27 (omabox#390, at v1.0.0) and the
+pages follow those answers where they differ from this file.
 
 Notation: `**H:**` is a heading, `**L:**` the small mono label above it, `**CTA:**` a call to action,
 `**Shows:**` the screenshot or scene. "Shot" means taken in a box, with nothing personal in it.
@@ -184,7 +185,7 @@ Four cards, a title and one line each, every one linking to its page. This repla
 
 - **L:** Built for agents
 - **H:** Everything an agent needs to test its work, and nothing of yours.
-- **One box per session.** Named after its worktree and session, 400 to 700 MB, up in 3 to 5 s,
+- **One box per session.** Named after its worktree and session, up in 3 to 5 s, about 400 to 600 MB,
   down when the agent exits. Subagents get a box and a brief each. → /how-it-works
 - **Answers in text.** After a click, omabox says what changed: a window opened, a menu, or nothing.
   `tree` reads the app's controls for about 17 tokens, where a shot costs about 1.5k. → /develop
@@ -441,8 +442,8 @@ What changes:
   monitor goes, temporary files go.
 - **Card: No crash notifications from a box.** The tools omabox runs against a box (grim, hyprctl,
   gdb) get the box's crash limits, so a crash in one doesn't reach your desktop's notifications.
-- **Card: Faster in.** omabox enters a box itself, without nsenter: `run -- true` in about 24 ms.
-  **[check]**
+- **Card: Faster in.** omabox enters a box itself, without nsenter: `run -- true` in about 3 ms.
+  **[checked: ~3 ms, omabox#390]**
 
 ### New: Ports no box reaches (`#ports`)
 
@@ -469,7 +470,7 @@ What changes:
 ### Agents use it on their own (changes)
 
 - **The skill:** "about 2k tokens fewer since 0.9: the core every task needs, the rest in a reference
-  the agent reads by section". **[check]** the size claim (the page now says about 4k tokens).
+  the agent reads by section". **[checked: SKILL.md 7,966 bytes, ~2k tokens]**
 - **New card: Subagents get a brief.** `omabox brief -b NAME` prints what a subagent needs: the box,
   its windows, each with a word that finds it, and the rules. It costs a quarter of the skill or less.
 - **New card: It says what changed.** After a click or keys with `--wait`, omabox says what changed:
@@ -528,8 +529,8 @@ What changes:
 - **H:** Ready for Omarchy 4.5.
 - **Text:** Boxes run on Omarchy 4.0 and 4.5. On 4.5, a box's windows can open on a workspace of
   omabox's own, `special:omabox`, opened by the widget's Show. The first shot after `up` waits for
-  4.5's intro cover. **[check]** which 1.0.x carries this, and that 4.0 is still supported (1.1
-  drops it, omabox #312).
+  4.5's intro cover. **[checked]** 1.0.0 carries it and still runs on 4.0 (1.1 drops it, omabox
+  #312); the page says "omabox 1.0.0 runs boxes on Omarchy 4.0 and 4.5 (1.1 will need 4.5)".
 
 ### The bar widget
 
@@ -601,7 +602,7 @@ Kept as it is (monitors, `output drop --cycles`, gdb).
 - **Text:** Write a scenario: a script that drives the box and calls `omabox check point ID` where a
   shot should match. `check run --approve` runs it three times in a clean box and keeps what most runs
   agree on. From then on, `check run` says same or changed for each checkpoint. Each changed region
-  is marked, and for an app with an accessibility tree it names the element (`moved -6,+0 button
+  is marked, and for an app with an accessibility tree it names the element (`moved +0,+6 button
   "Save"`). One report image shows every change, the baseline beside the new shot.
 - **Highlights:** a 2 px spacing change is caught, and so is a colour a few levels off; what the
   approve runs disagreed on is left out and said; holes (the wallpaper showing through a window) fail
@@ -757,7 +758,7 @@ The generated changelog gets a hand-written head: the "New in" tabs that left th
   `OMABOX_STRICT=1` makes that warning an error, for CI. → `/commands#contract`
 - **One binary, in Rust.** Stopped mid-step, omabox undoes that step: an interrupted `up` takes its
   box down, a stopped recording keeps its video. Entering a box is its own now, not nsenter's:
-  `run -- true` in about 24 ms. **[check]**
+  `run -- true` in about 3 ms. **[checked]**
 - **Ports no box reaches.** `omabox config protect-ports 5432,8080`: your database stays out of
   every box, on loopback or any of your host's addresses. → `/how-it-works#ports`
 - **The app answers in text.** `tree`, `check`, `record` and `audio`, from 0.6 to 0.9: an agent asks
@@ -826,6 +827,41 @@ The generated changelog gets a hand-written head: the "New in" tabs that left th
 ---
 
 ## Facts to re-check at the 1.0 release
+
+**Answered 2026-10-27** in omabox#390's comment, measured on the 1.0 candidate (port-rust f4f13bb;
+v1.0.0 changed no code after it, only CHANGELOG, README and VERSION). What the pages now say:
+
+1. Everything ships in **1.0.0** (no 1.0.1): the changelog tab, `/omarchy`'s 4.5 section and
+   `/how-it-works` name it. Dated 2026-10-27.
+2. Box entry: **about 3 ms** (median 3.0 ms over 40 runs). The 24 ms was from a bash front.
+3. **Up in 3 to 5 s, about 400 to 600 MB** (AMD iGPU 5.0 s, 492 MB; RTX 3.2 s, 605 MB).
+4. Not run: the three "ask your agent" scenes stay as written.
+5. SKILL.md 7,966 bytes, about 2k tokens; "about 2k tokens fewer since 0.9" stands.
+6. `tree`: ~17 tokens against ~1.5k holds; GTK3/4, Qt Widgets and Quick, Chromium and Electron with
+   the flag, egui on eframe 0.37 (0.36 refused, as documented).
+7. "Omarchy 4" stays; 1.0.x runs on 4.0 and 4.5, 1.1 drops 4.0.
+8. Both ai-jail recipes pass with ai-jail 2.10.0; captions: "Tested with ai-jail 2.10.0 and 2.12.0
+   and omabox 1.0 on Linux, and before that with ai-jail 2.2.1, 2.6.2 and 2.8.1."
+9. The upgrade's five steps hold; no `guard on` needed.
+10. Every `commands.json` example is valid at the tag. The contract's "Carried" follows the README: a
+    baseline compares, or is refused ("approve again"), never compared wrongly.
+11. SECURITY.md: S1-S10, same titles.
+12. README requirements match `/install`.
+13. New contributor: overp0werj0int (PR #212), added to the fallback list.
+14. `desk-plain` (76aa761) still has `--desktop plain|desk`, `--shell`, `--clean`; plain boxes stay
+    on `/next`.
+15. Dux Shell is still 2.0.0.
+16. Not re-taken; the shot stays.
+17. The hero clip stays 0.2.0's (recorded in a box, like docs/demo.sh).
+18. Done: none of the dropped words is on the pages, `build.mjs` or the twins.
+19. Run in a VM; `/install.md` says what it showed.
+20. Measured on Look H at 1080p on the RTX: 0–0.5% Chromium at rest on any section (hero scene
+    included), 9% while paging through the whole page non-stop.
+
+Also found: `/uses`' stock bar is 26 px (crop `-g "0,0 1920x26"`), `plugin add` needs no restart,
+and a box in a box works on 1.0.
+
+The list as it was written:
 
 1. **Which release holds what.** On `port-rust` the CHANGELOG has "Unreleased" above "1.0.1 —
    unreleased" above "1.0.0 — unreleased". Find out which of protect-ports, the Rust binary, the

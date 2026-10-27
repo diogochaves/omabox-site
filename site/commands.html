@@ -77,7 +77,7 @@
     <div class="head">
       <p class="tag">Commands</p>
       <h1>Every omabox command, <i>as the CLI prints it.</i></h1>
-      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">0.9.2</span></a> when this
+      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">1.0.0</span></a> when this
         site was built, so the options match the omabox you install. Built for agents to drive; every command is yours to type too.</p>
       <div class="pjump"><a class="more" href="#drive">An agent drives a box</a><a class="more" href="#contract">The contract</a><a class="more" href="#all">Every command</a></div>
     </div>
@@ -108,7 +108,6 @@
         </tbody></table></div></div></div>
     </section>
 
-    <!-- check: the contract against README "Stability" and `omabox help exit-codes` at the 1.0 tag -->
     <section class="grp contract" id="contract">
       <h2>What your scripts <i>can rely on.</i></h2>
       <p class="lead">omabox is mostly used by agents, which read its warnings; a script or CI reads exit codes and
@@ -128,7 +127,7 @@
             with <code>omabox: deprecated:</code> on stderr naming the new one. <code>OMABOX_STRICT=1</code> refuses it at once, for CI.</p>
           <pre class="code"><span class="p">$ </span>OMABOX_STRICT=1 omabox check run -- ./scenario.sh</pre></div></div>
         <div class="card k-carry"><div class="in"><h3><b>Carried</b>Saves and baselines</h3>
-          <p>A save or a <code>check</code> baseline made by a 1.x works with any later 1.x.</p></div></div>
+          <p>A save made by a 1.x starts with any later 1.x. A <code>check</code> baseline approved by a 1.x compares with any later 1.x, or is refused (“approve again”), never compared wrongly.</p></div></div>
         <div class="card k-not"><div class="in"><h3><b>Not covered</b>What can still move</h3>
           <p>Message wording, help text, defaults, and what Hyprland and other programs report through omabox.</p></div></div>
       </div>

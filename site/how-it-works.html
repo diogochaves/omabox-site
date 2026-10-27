@@ -200,8 +200,7 @@
     </section>
 
     <section class="grp" id="hardening">
-      <!-- check: COPY-1.0 re-check item 1: that the Rust binary and this hardening land in 1.0.0 (CHANGELOG on port-rust has them under Unreleased / 1.0.x, all unreleased) -->
-      <p class="tag">1.0</p>
+      <p class="tag">1.0.0</p>
       <h2>Rewritten in Rust, <i>and tighter for it.</i></h2>
       <p class="lead">1.0 is one binary built from Rust. The commands are the ones you know. Underneath, a box reaches less of
         yours and leaves less behind.</p>
@@ -211,8 +210,7 @@
         <div class="card"><div class="in"><h3>Nothing half-done</h3><p>Stop omabox at any step, with Ctrl-C or a signal, and it undoes that step: an interrupted <code>up</code> takes its box down, a recording keeps the video so far, a half-made monitor goes, temporary files go.</p></div></div>
         <div class="card"><div class="in"><h3>No crash notifications from a box</h3><p>The tools omabox runs against a box (grim, hyprctl, gdb) get the box's crash limits, so a crash in one doesn't reach your desktop's notifications.</p></div></div>
         <div class="card wide2"><div class="in">
-          <!-- check: COPY-1.0 re-check item 2: "about 24 ms" for run -- true (NOTES on port-rust: 24.2 ms after omabox's own entry); re-measure at the tag -->
-          <h3>Faster in</h3><p class="stat">~24<small> ms</small></p><p>omabox enters a box itself, without nsenter: <code>omabox run -- true</code> in about 24 ms.</p></div></div>
+          <h3>Faster in</h3><p class="stat">~3<small> ms</small></p><p>omabox enters a box itself, without nsenter: <code>omabox run -- true</code> in about 3 ms.</p></div></div>
       </div>
     </section>
 
@@ -241,7 +239,6 @@
     </section>
 
     <section class="grp" id="rules">
-      <!-- check: COPY-1.0 re-check item 11: SECURITY.md still has ten rules (S1-S10) with these titles at the release tag -->
       <h2>Ten rules, each with the code that holds it <i>and the test that proves it.</i></h2>
       <p class="lead">omabox promises one thing: a box never reaches your real desktop. SECURITY.md lists each rule behind that
         promise, from "Hyprland never gets your seat" to "a connected box reaches no protected port", where omabox enforces it,
@@ -268,7 +265,6 @@
         without changing your projects.</p>
       <div class="grid2">
         <div class="card"><div class="in"><h3>A skill they already load</h3>
-          <!-- check: COPY-1.0 re-check item 5: the skill's size at 1.0 (SKILL.md is 7,966 bytes on port-rust, ~2k tokens; 0.9.1's CHANGELOG: 8 kB where it was 14 kB, ~2k tokens fewer) -->
           <p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop. It is about 2k tokens fewer since 0.9: the core every task needs, the rest in a reference the agent reads by section.</p>
           <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
         <div class="card"><div class="in"><h3>Subagents get a brief</h3><p><code>omabox brief -b NAME</code> prints what a subagent needs: the box, its windows, each with a word that finds it, and the rules. It costs a quarter of the skill or less.</p>
@@ -301,8 +297,7 @@
       <p class="note">One thing they share: their servers reach you on your <code>127.0.0.1</code>, one box per port. A server
         on a port you or another box already use fails to start (address in use), and <code>omabox ports</code> says who has it. With
         <code>--net isolated</code> a box keeps its ports to itself.</p>
-      <!-- check: COPY-1.0 re-check item 3: "400 to 700 MB, up in 3 to 5 s" was measured on 0.5.2; re-measure on 1.0 (iGPU and NVIDIA, three starts each) -->
-      <p class="reqs">Each box: 400 to 700 MB, up in 3 to 5 s (it depends on the GPU), down when its agent exits or after 2 h idle.</p>
+      <p class="reqs">Each box: up in 3 to 5 s, about 400 to 600 MB (it depends on the GPU), down when its agent exits or after 2 h idle.</p>
     </section>
 
     <section class="grp" id="inside">

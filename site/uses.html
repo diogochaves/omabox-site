@@ -261,11 +261,10 @@
 <span class="p">$</span> for t in tokyo-night catppuccin gruvbox nord; do
     omabox run -- omarchy-theme-set $t
     omabox wait still
-    omabox shot -g "0,0 1920x40" -o bar-$t.png
+    omabox shot -g "0,0 1920x26" -o bar-$t.png
   done
 <span class="c"># a theme you're editing, live in the box</span>
 <span class="p">$</span> omabox up --theme-dir ./my-theme --theme my-theme</pre>
-          <!-- check: the bar's height in a stock 1920x1080 box (the -g crop of 40 px) -->
           <div class="watch"><p class="who">Watch out for</p>
             <ul>
               <li><b>Without <code>--stock-bar</code></b> the box copies your bar's layout, and <code>up</code> says so.</li>
@@ -289,7 +288,6 @@
           <figure><video src="media/clip.mp4" poster="media/clip-poster.webp" controls preload="none" playsinline width="1280" height="720"></video>
             <figcaption class="caption">The omabox 0.2.0 clip, 43 s: an agent testing an app on your desktop, then in a box.
               Recorded inside a box.</figcaption></figure>
-          <!-- check: the 0.2.0 clip came from docs/demo.sh's stage box (its header says so for the README demo); confirm the clip itself, and that a box inside a box still works in 1.0 -->
         </div>
         <div>
           <pre class="code"><span class="p">$</span> omabox up --stock-bar --theme tokyo-night --no-pointer
@@ -322,16 +320,16 @@
         Discord: the home page, opened in a box at 1200x630, frames taken while its live view moves, one picked.</p>
       <div class="u2">
         <div>
-          <figure><img src="media/og.png" alt="omabox.app's link card: the omabox mark, the headline and the hero's live view of a desktop beside three boxes" width="1200" height="630" loading="lazy">
+          <figure><img src="media/og.png" alt="omabox.app's link card: the omabox mark, the headline, and the hero's live scene: your desktop as the floor, four agents' boxes above it" width="1200" height="630" loading="lazy">
             <figcaption class="caption">The link card, 1200x630: a box exactly that size, a browser in kiosk mode, 14
-              frames half a second apart.</figcaption></figure>
+              frames 0.7 s apart.</figcaption></figure>
         </div>
         <div>
           <pre class="code"><span class="p">$</span> omabox up og-card --size 1200x630
 <span class="p">$</span> omabox -b og-card run -d --wait -- chromium --kiosk --no-first-run \
     --user-data-dir=/tmp/ogc --hide-scrollbars "file://$PWD/og/card.html"
 <span class="p">$</span> omabox -b og-card pointer -- move 1199 629   <span class="c"># the pointer out of the picture</span>
-<span class="p">$</span> omabox -b og-card shot --burst 14 --every 500ms
+<span class="p">$</span> omabox -b og-card shot --burst 14 --every 700ms --sheet
 <span class="p">$</span> omabox down og-card</pre>
           <div class="watch"><p class="who">Watch out for</p>
             <ul>
@@ -395,9 +393,8 @@ gone, with all of it</span><span class="lbl m" style="left:14px;bottom:16px">you
           <pre class="code"><span class="p">$</span> omabox up --stock-bar --no-seed extensions
 <span class="p">$</span> omabox run -- omarchy theme install https://github.com/someone/their-theme.git
 <span class="p">$</span> omabox run -- omarchy plugin add https://github.com/someone/their-plugin.git --enable --yes
-<span class="p">$</span> omabox restart-shell
+<span class="c"># its widget is in the box's bar a second later, no restart</span>
 <span class="p">$</span> omabox shot</pre>
-          <!-- check: omarchy theme install and omarchy plugin add run in a box (git clone into the box HOME, network on), and whether restart-shell is needed after plugin add -->
           <div class="watch"><p class="who">Watch out for</p>
             <ul>
               <li><b>omabox is not a security boundary.</b> A box shares your kernel, your GPU and, by default, your network,

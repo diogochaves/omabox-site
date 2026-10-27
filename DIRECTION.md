@@ -353,9 +353,9 @@ aijail.io's plain narrative and compare page as a reference.
 ## Facts to keep right
 
 - Every screenshot on the page was taken by omabox in a box (see `site/media/README.md`).
-- Command output shown must match the CLI: `bin/omabox` at the latest release tag (`v0.5.2` on
-  2026-10-09, <https://github.com/diogochaves/omabox/tree/v0.5.2>; the site reviewed against it on
-  2026-10-09, `reviewed-release`).
+- Command output shown must match the CLI at the latest release tag (`v1.0.0` on 2026-10-27,
+  <https://github.com/diogochaves/omabox/tree/v1.0.0>; the 1.0 site, branch `site-1.0`, reviewed
+  against it on 2026-10-27; `reviewed-release` moves to it when that branch merges).
   The install steps and README links on the page follow main. `omabox ls` columns: `NAME MODE SIZE STATE SHELL NET IDLE PLUGINS` (STATE 7 wide since 0.4.7, SHELL 14 since 0.5.0; NET is `connected` or `isolated`; SIZE is `N monitors` for a box with more than one). Default idle is 2h
   (`0m/2h`), and a session's box goes down when its agent exits.
 - The Drive terminal's output was captured from a real 0.2.0 box on 2026-09-28 (to re-capture
@@ -380,7 +380,15 @@ aijail.io's plain narrative and compare page as a reference.
   400–500 MB.) Both /compare recipes re-run on 2026-10-09 with ai-jail 2.8.1 and omabox 0.5.2 (the
   broker on for the run, then off): a jailed `claude -p` drove its own box (up, ls `isolated`, run -d,
   windows, shot -o into its project, down; host refused) with only ai-jail 2.8's default egress to
-  its API, and foot in a jail drew in a box and saw no `~/.ssh`. Both captions say 2.8.1 and 0.5.2.
+  its API, and foot in a jail drew in a box and saw no `~/.ssh`. Both captions said 2.8.1 and 0.5.2.
+- **For 1.0.0** (omabox#390, measured 2026-10-27 on the candidate f4f13bb; the tag changed no code
+  after it): entering a box (`run -- true`) about 3 ms, median of 40; default `up` on the AMD iGPU
+  5.0 s and 492 MB, on the RTX 3.1–3.2 s and 605 MB: the site says "up in 3 to 5 s, about 400 to
+  600 MB". Both /compare recipes pass with ai-jail 2.10.0 (boxes also ran inside 2.12.0); captions:
+  "Tested with ai-jail 2.10.0 and 2.12.0 and omabox 1.0 on Linux, and before that with ai-jail
+  2.2.1, 2.6.2 and 2.8.1." Omarchy's stock bar in a 1920x1080 box is 26 px. The home page's GPU cost
+  at 1080p on the RTX (2026-10-27, Look H): 0–0.5% Chromium at rest on any section, the hero's scene
+  included; 9% while paging through the whole page non-stop.
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open

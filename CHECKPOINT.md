@@ -1,4 +1,4 @@
-# Checkpoint: the 1.0 site, waiting for omabox 1.0
+# Checkpoint: the 1.0 site, ready for Diogo's last review
 
 Written 2026-10-27, at the end of the session that made it. Delete this file when the 1.0 site is
 live.
@@ -22,6 +22,19 @@ live.
 - **Settled with Diogo (2026-10-27):** Dux Shell stays named (it is what's coming, not a
   comparison); `/next` keeps its "on a branch, not released" flag lines; no other project but
   ai-jail is named anywhere.
+
+- **2026-10-27, omabox 1.0.0 is out** (tag v1.0.0). #3's work is done on this branch: the build
+  reads 1.0's help (`crates/omabox/src/help.txt`), every `<!-- check -->` is settled from #390, the
+  1.0 tab is dated, the link card is remade (`og/make.mjs` now dresses the whole home page), one
+  look and the GPU measure taken, the artifact republished. **Left, on Diogo's go:** merge into
+  `main` and push (it goes live), set `reviewed-release` to `v1.0.0` in that push (closes #2 and the
+  "Review the site for omabox v1.0.0" issue), then check omabox.app: `curl -H 'Accept: text/markdown'
+  https://omabox.app/install` and `https://omabox.app/llms.txt` (the agent side is untested on real
+  Pages), the old anchors (`/#compare`, `/#never`, `/#drive`), Search Console's sitemap, and mark
+  draft 5's artifact retired in AGENTS.md. Then delete this file.
+- **Until the merge, `main`'s daily deploy fails** (from 2026-10-28's run; 2026-10-27's ran before the tag): its `build.mjs` still reads `bin/omabox`, which
+  1.0 made a link, so omabox.app keeps its last deploy (0.9.2's pages). The fix is this branch's
+  first 1.0 commit; the merge brings it.
 
 To pick it up: "omabox 1.0 is out, finish the site" in a new session in this checkout, plus any
 pointers on what changed. Start from #3.

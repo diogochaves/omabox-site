@@ -440,7 +440,7 @@
         </div></div>
         <pre class="lg lg-ls" id="hls" aria-live="off"></pre>
         <div class="lg lg-you"><b>Your desktop</b><span><em>0</em> windows opened</span><span><em>0</em> focus taken</span><span><em>0</em> cursor moves</span></div>
-        <div class="lg lg-act"><p class="full" id="spawn-full" role="status" hidden>This drawing holds 7 boxes. omabox sets no limit: each box takes 400 to 700 MB.</p><span>Click a box to take it down.</span><button class="btn" type="button" id="spawn">Ask another agent</button></div>
+        <div class="lg lg-act"><p class="full" id="spawn-full" role="status" hidden>This drawing holds 7 boxes. omabox sets no limit: each box takes about 400 to 600 MB.</p><span>Click a box to take it down.</span><button class="btn" type="button" id="spawn">Ask another agent</button></div>
       </div>
     </div>
     <div class="agents"><span class="lbl">Works with</span><div><span>Claude Code</span><span>Codex</span><span>OpenCode</span><span>pi</span><span>Hermes</span></div></div>
@@ -572,7 +572,7 @@ your bar and theme left out</span></div>
       </div>
       <div class="ws news">
         <div class="rels" role="tablist" aria-label="Releases" aria-orientation="vertical">
-          <button role="tab" id="rt-10" aria-controls="rp-10" aria-selected="true" data-v="1.0"><b>1.0</b><span>a contract · Rust</span></button>
+          <button role="tab" id="rt-10" aria-controls="rp-10" aria-selected="true" data-v="1.0"><b>1.0</b><span>2026-10-27 · a contract</span></button>
           <button role="tab" id="rt-09" aria-controls="rp-09" aria-selected="false" tabindex="-1" data-v="0.9"><b>0.9</b><span>2026-10-20 · briefs</span></button>
           <button role="tab" id="rt-08" aria-controls="rp-08" aria-selected="false" tabindex="-1" data-v="0.8"><b>0.8</b><span>2026-10-20 · visual checks</span></button>
           <button role="tab" id="rt-07" aria-controls="rp-07" aria-selected="false" tabindex="-1" data-v="0.7"><b>0.7</b><span>2026-10-16 · held keys</span></button>
@@ -582,7 +582,7 @@ your bar and theme left out</span></div>
         </div>
         <div>
           <div class="rel" id="rp-10" role="tabpanel" aria-labelledby="rt-10" tabindex="0">
-            <p class="rmeta"><b>1.0.0</b> · everything from 0.6 to 1.0 you would notice · <a href="changelog.html#v1.0.0">changelog →</a></p>
+            <p class="rmeta"><b>1.0.0</b> · 2026-10-27 · everything from 0.6 to 1.0 you would notice · <a href="changelog.html#v1.0.0">changelog →</a></p>
             <ul class="hls">
               <li><h3>A contract your scripts can keep</h3><p>Within 1.x, exit codes and <code>--json</code> fields stay or only grow. A change warns for one release first; <code>OMABOX_STRICT=1</code> makes it an error, for CI.</p></li>
               <li><h3>One binary, in Rust</h3><p>Stopped mid-step, omabox undoes that step: an interrupted <code>up</code> takes its box down, a stopped recording keeps its video.</p></li>
@@ -642,7 +642,7 @@ your bar and theme left out</span></div>
     <section id="built" aria-labelledby="h-built">
       <div class="head"><span class="wsl"><b>6</b>built for agents</span><h2 id="h-built">Everything an agent needs to test its work, <i>and nothing of yours.</i></h2></div>
       <div class="cards">
-        <div class="gcard"><div><h3>One box per session</h3><p>Named after its worktree and session. 400 to 700 MB, up in 3 to 5 s, down when the agent exits. Subagents get a box and a brief each.</p><div class="viz">$ omabox brief -b app-5cc72cdc<br><span style="color:var(--muted)"># the lines a subagent needs, not the whole skill</span></div><a href="how-it-works.html">How it works →</a></div></div>
+        <div class="gcard"><div><h3>One box per session</h3><p>Named after its worktree and session. Up in 3 to 5 s, about 400 to 600 MB, down when the agent exits. Subagents get a box and a brief each.</p><div class="viz">$ omabox brief -b app-5cc72cdc<br><span style="color:var(--muted)"># the lines a subagent needs, not the whole skill</span></div><a href="how-it-works.html">How it works →</a></div></div>
         <div class="gcard"><div><h3>Answers in text</h3><p>After a click, omabox says what changed, or that nothing did. <code>tree</code> reads the app's controls, where a shot costs far more.</p><div class="viz bars"><div><span>tree --find</span><i style="transform:scaleX(.03)"></i><span>~17 tok</span></div><div class="shot"><span>a shot</span><i></i><span>~1.5k</span></div></div><a href="develop.html">Develop →</a></div></div>
         <div class="gcard"><div><h3>Checks and videos</h3><p><code>check</code> keeps what three runs agree on as the baseline, then names the button that moved. <code>record</code> films a take with captions and a contact sheet.</p><div class="viz diff"><div data-t="baseline"><span></span></div><div class="new" data-t="changed"><span></span><em></em></div></div><a href="develop.html">Develop →</a></div></div>
         <div class="gcard"><div><h3>A contract your scripts can keep</h3><p>In 1.x, exit codes and <code>--json</code> fields only grow, and a change warns for one release first. Rewritten in Rust for 1.0.</p><div class="viz"><table class="codes" aria-label="Exit codes"><tr><td>0</td><td>done</td></tr><tr><td>1</td><td>it ran and failed</td></tr><tr><td>2</td><td>called wrongly</td></tr><tr><td>124</td><td>not in time</td></tr></table></div><a href="commands.html#contract">The contract →</a></div></div>
@@ -676,7 +676,7 @@ your bar and theme left out</span></div>
           <div><h3>A jailed agent, driving boxes of its own</h3>
 <pre><span class="p">$ </span>omabox broker on   <span class="o"># the lines for ~/.ai-jail</span>
 <span class="p">$ </span>ai-jail claude</pre></div>
-          <p class="capt">Tested with ai-jail 2.8.1 and omabox 0.5.2. A jailed agent can't use <code>host</code>, <code>peek</code> or interactive boxes.</p>
+          <p class="capt">Tested with ai-jail 2.10.0 and 2.12.0 and omabox 1.0. A jailed agent can't use <code>host</code>, <code>peek</code> or interactive boxes.</p>
           <a class="more" href="compare.html">omabox and ai-jail →</a>
         </div>
       </div>
@@ -718,6 +718,7 @@ your bar and theme left out</span></div>
             <!-- contributors: build.mjs replaces this list with the omabox repo's, people only -->
             <li><a href="https://github.com/btsouth" title="btsouth"><img src="media/avatar-btsouth.jpg" alt="btsouth" width="38" height="38" loading="lazy"></a></li>
             <li><a href="https://github.com/diogochaves" title="diogochaves"><img src="media/avatar-diogochaves.jpg" alt="diogochaves" width="38" height="38" loading="lazy"></a></li>
+            <li><a href="https://github.com/overp0werj0int" title="overp0werj0int"><img src="media/avatar-overp0werj0int.jpg" alt="overp0werj0int" width="38" height="38" loading="lazy"></a></li>
             <!-- /contributors -->
             <li><span class="you2" title="you">+</span></li>
           </ul>
@@ -752,7 +753,7 @@ your bar and theme left out</span></div>
 
   <footer>
     <div class="fl"><a href="how-it-works.html">How it works</a><a href="uses.html">Uses</a><a href="omarchy.html">Omarchy</a><a href="commands.html">Commands</a><a href="develop.html">Develop</a><a href="compare.html">ai-jail</a><a href="next.html">Coming</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
-    <p>omabox <a href="changelog.html"><span class="ver">0.9.2</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
+    <p>omabox <a href="changelog.html"><span class="ver">1.0.0</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
   </footer>
   </div>
 </main>

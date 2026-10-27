@@ -115,15 +115,13 @@
 <span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
 <span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" \
     --env WAYLAND_DISPLAY -- ./build/app</pre>
-          <!-- check: re-run both on 1.0 -->
-          <p class="caption">Tested with ai-jail 2.8.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.2.1 and 2.6.2.</p></div></div>
+          <p class="caption">Tested with ai-jail 2.10.0 and 2.12.0 and omabox 1.0 on Linux, and before that with ai-jail 2.2.1, 2.6.2 and 2.8.1.</p></div></div>
         <div class="card recipe"><div class="in"><h3>A jailed agent, driving boxes of its own</h3>
           <p>A jail can't start a box itself (its seccomp filter refuses new namespaces), so its <code>omabox</code> hands each
             command to a broker outside. Turn it on once, add the lines it prints, then start your agent in ai-jail as usual.</p>
           <pre class="code"><span class="p">$ </span>omabox broker on   <span class="o"># prints the lines to add to ~/.ai-jail</span>
 <span class="p">$ </span>ai-jail claude</pre>
-          <!-- check: re-run both on 1.0 -->
-          <p class="caption">Tested with ai-jail 2.8.1 and omabox 0.5.2 on Linux, and before that with ai-jail 2.2.1 and 2.6.2.
+          <p class="caption">Tested with ai-jail 2.10.0 and 2.12.0 and omabox 1.0 on Linux, and before that with ai-jail 2.2.1, 2.6.2 and 2.8.1.
             <code>omabox broker off</code> turns it off.</p></div></div>
       </div>
     </section>

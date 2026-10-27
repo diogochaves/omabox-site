@@ -17,23 +17,12 @@
 .mons figure { margin: 0; }
 .mons .ways { display: grid; gap: 14px; }
 .ws figcaption { font: 400 12px/1.5 var(--mono); color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
-/* checks: a drawing of report.png, each change beside its baseline */
+/* checks: a real report.png, each change beside its baseline */
 .chk { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 980px) { .chk { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: start; } }
 .chk > * { min-width: 0; }
-.rep { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 16px; }
-.rep figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
-.rep figcaption { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.rep .new figcaption { color: var(--amber); }
-.mini { position: relative; aspect-ratio: 4 / 3; border-radius: 9px; border: 1px solid var(--line-2); background: #1a1b26; padding: 12px; display: grid; align-content: start; gap: 8px; overflow: hidden; }
-.mini i { display: block; height: 8px; border-radius: 4px; background: var(--s3); }
-.mini .btns { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; }
-.mini .btns span { font: 500 10px/1 var(--mono); padding: 6px 9px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--ink-2); }
-.mini .btns .sv { background: var(--blue); color: #0b0c13; border-color: transparent; }
-.new .mini .btns { right: 18px; }
-.new .mini .btns .sv { outline: 2px dashed var(--amber); outline-offset: 3px; }
-.rep .tagc { grid-column: 1 / -1; font: 400 12px/1.5 var(--mono); color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 10px; }
-.rep .tagc b { color: var(--amber); font-weight: 400; }
+.rep { padding: 16px; }
+.rep img { width: 100%; max-width: 476px; margin: 0 auto; border-radius: 8px; }
 .hl4 { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 760px) { .hl4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .hl4 li { border-radius: 12px; border: 1px solid var(--line); background: var(--s1); padding: 12px 14px; color: var(--ink-2); font-size: 14.5px; min-width: 0; }
@@ -101,7 +90,7 @@
     <p class="lead">Write a scenario: a script that drives the box and calls <code>omabox check point ID</code> where a shot
       should match. <code>check run --approve</code> runs it three times in a clean box and keeps what most runs agree on.
       From then on, <code>check run</code> says same or changed for each checkpoint. Each changed region is marked, and for an
-      app with an accessibility tree it names the element (<code>moved -6,+0 button "Save"</code>). One report image shows
+      app with an accessibility tree it names the element (<code>moved +0,+6 button "Save"</code>). One report image shows
       every change, the baseline beside the new shot.</p>
     <div class="chk">
       <div class="card"><div class="in">
@@ -113,15 +102,10 @@ omabox check point settings</pre>
         <pre class="code"><span class="p">$ </span>omabox check run --approve -- ./visual.sh   <span class="o"># the baseline, from three runs</span>
 <span class="p">$ </span>omabox check run -- ./visual.sh             <span class="o"># same or changed, each checkpoint</span>
 <span class="p">$ </span>omabox check run --json -- ./visual.sh      <span class="o"># for CI</span></pre></div></div>
-      <!-- check: COPY wants the real report.png here (the same new media as the home page's checks); this is a drawing until it is shot in a box -->
       <figure class="ws" style="margin:0">
-        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">report.png, drawn</span></div>
-        <div class="rep" aria-hidden="true">
-          <figure><figcaption>baseline</figcaption><div class="mini"><i style="width:55%"></i><i style="width:80%"></i><i style="width:40%"></i><div class="btns"><span>Cancel</span><span class="sv">Save</span></div></div></figure>
-          <figure class="new"><figcaption>new · changed</figcaption><div class="mini"><i style="width:55%"></i><i style="width:80%"></i><i style="width:40%"></i><div class="btns"><span>Cancel</span><span class="sv">Save</span></div></div></figure>
-          <p class="tagc">settings: <b>changed</b>, button "Save" moved 6 px left</p>
-        </div>
-        <figcaption>A drawing of the report's layout: each change cropped beside its baseline, the region marked.</figcaption>
+        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">report.png</span></div>
+        <div class="rep"><img src="media/check-report.webp" alt="A real omabox check report: 1 of 1 changed; the tree line says button &quot;Save&quot; moved +0,+6; the baseline crop beside this run's, the Save button lower in the second, the region in red brackets" width="476" height="310" loading="lazy"></div>
+        <figcaption>A real report, from a box: a GTK window whose Save button moved 6 px down, the baseline beside the new run.</figcaption>
       </figure>
     </div>
     <ul class="hl4">
@@ -143,7 +127,6 @@ omabox check point settings</pre>
           shell's panel.</p>
         <pre class="code"><span class="p">$ </span>omabox tree --window app
 <span class="p">$ </span>omabox tree --window app --find 'dark mode'</pre></div></div>
-      <!-- check: ~17 tokens against ~1.5k for a shot is 0.6.0's figure; which toolkits work; egui needs eframe 0.37+ on at-spi2-core 2.61+ (COPY re-check 6) -->
       <div class="tok">
         <div class="card"><div class="in"><span class="who">A shot</span><span class="n">~1.5k</span><p>tokens, to read whether
           dark mode is on</p></div></div>
