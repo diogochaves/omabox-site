@@ -1,0 +1,6 @@
+renders/
+.hyperframes/
+node_modules/
+# Media come from ../1.0 (its take.sh): kept out of git.
+assets/footage/
+assets/stills/
