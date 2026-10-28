@@ -16,6 +16,9 @@
 #   use-notify    a still: a notification on a desktop (its corner, 16:9).
 #   use-web       a still: omabox.app (built from this checkout into assets/site) in Chromium.
 #   use-interactive  a still: an interactive box on your desktop, the agent rebuilding in it.
+#   use-boxes     two stills for the README and post 2: your desktop with the agent's `omabox ls` and
+#                 the bar widget listing four agents' boxes (use-boxes.png), then the four boxes
+#                 live in peek windows on a workspace of their own (use-peeks.png).
 # Not take.sh: box/check/ (the check scenario, run with omabox check at 8K, README.md says how) and
 # the 28 omaseed screens (a copy of omaseed's .local/visual baseline, thumbnailed).
 #
@@ -61,7 +64,7 @@ n_foot() { ob windows --json | jq -e --argjson n "$1" '[.[] | select(.class == "
 stage_desk() {
   ob down >/dev/null 2>&1 || true
   omabox up "$STAGE" --size 3840x2160,scale=2 --theme tokyo-night --stock-bar --idle 0 \
-    --clean --keep animations,bar,wallpaper,pointer --ro-bind "$SEED" --ro-bind "$ROOT" >/dev/null
+    --clean --keep animations,bar,wallpaper,pointer --ro-bind "$SEED" --ro-bind "$ROOT" ${STAGE_PLUGIN:+--plugin "$ROOT/plugin"} >/dev/null
   H=$(ob path --home)
   mkdir -p "$H/.local/bin" "$H/notes"
   ln -sfn "$ROOT/bin/omabox" "$H/.local/bin/omabox"
@@ -215,6 +218,54 @@ take_interactive() {
   ob shot -o "$HERE/assets/stills/use-interactive.png" >/dev/null
 }
 
+# use-boxes: the agent's box and three more agents' boxes, each at work on omaseed; on your desktop
+# only the agent's `omabox ls` and the bar widget's list say so. Then each box in a peek window.
+take_boxes() {
+  STAGE_PLUGIN=1 stage_desk
+  stage_boxes
+  agent $'omabox up --ro-bind .\tomabox up --ro-bind . 2>&1 | grep -v -e "^omabox: note" -e "^omabox: up:"'
+  until_ok 30 agent_done
+  agent $'omabox run -d -- qbittorrent-nox   # a demo library\t'"/home/sbx/library.sh \$(omabox path --home) 8090 200 $BIGLIB && omabox run -d -- qbittorrent-nox --profile=/home/sbx/.local/share/qbt >/dev/null 2>&1 && omabox wait --timeout 60s until -- curl -sf http://127.0.0.1:8090/api/v2/app/version >/dev/null"
+  until_ok 60 agent_done
+  agent $'omabox run -d --wait -- ./build-release/omaseed\tomabox run -d --wait -- '"$BIN"' 2>&1 | grep "^satisfied" | sed "s/ (last change[^)]*)//"'
+  until_ok 30 agent_done
+  # The other agents at work: two themes (a light one, so the four peeks differ at a glance), the Add
+  # torrent sheet with a magnet typed, a row picked.
+  inner "${OTHERS[2]}" run -- omarchy-theme-set catppuccin-latte >/dev/null 2>&1 || true
+  inner "${OTHERS[1]}" run -- omarchy-theme-set gruvbox >/dev/null 2>&1 || true
+  inner "${OTHERS[0]}" keys --wait a >/dev/null
+  inner "${OTHERS[0]}" keys -t "magnet:?xt=urn:btih:7db27d6c0fcbc5c726bd" >/dev/null
+  inner "${OTHERS[1]}" keys j j j j j >/dev/null
+  agent 'omabox ls'
+  until_ok 20 agent_done
+  ob pointer hide >/dev/null
+  ob run -- omarchy-shell chaves.omabox open >/dev/null
+  ob wait --timeout 10s layer omarchy-panel >/dev/null 2>&1 || true
+  ob wait still --timeout 10s >/dev/null || true
+  ob shot -o "$HERE/assets/stills/use-boxes.png" >/dev/null
+  ob keys Escape >/dev/null
+  # The peeks, on workspace 2 of your desktop, the agent's box first.
+  local b
+  for b in "$AGENTBOX" "${OTHERS[@]}"; do
+    ob run -d -- env -u OMABOX_NAME omabox peek -b "$b" --workspace 2 >/dev/null
+  done
+  until_ok 30 ob wait --timeout 1s until -- sh -c "hyprctl -j clients | jq -e '[.[] | select(.workspace.id == 2)] | length == 4' >/dev/null"
+  # An even 2x2 of 16:9 windows (dwindle tiles them unevenly, with bars): 910x512 each, in the
+  # 1920x1054 under the bar.
+  local spec x y w e
+  for spec in "$AGENTBOX 45 36" "${OTHERS[2]} 965 36" "${OTHERS[0]} 45 558" "${OTHERS[1]} 965 558"; do
+    read -r b x y <<<"$spec"; w="title:omabox peek: $b"
+    for e in "hl.dsp.window.float({ action = \"enable\", window = \"$w\" })" \
+             "hl.dsp.window.resize({ x = 910, y = 512, window = \"$w\" })" \
+             "hl.dsp.window.move({ x = $x, y = $y, window = \"$w\" })"; do
+      ob hyprctl dispatch "$e" >/dev/null
+    done
+  done
+  ob hyprctl dispatch 'hl.dsp.focus({ workspace = 2 })' >/dev/null
+  ob wait still --timeout 10s >/dev/null || true
+  ob shot -o "$HERE/assets/stills/use-peeks.png" >/dev/null
+}
+
 # --- The takes -------------------------------------------------------------------------------------
 
 act_desk_problem() {
@@ -271,6 +322,7 @@ case $NAME in
   use-monitors) take_monitors; [ -n "${KEEP:-}" ] || ob down >/dev/null; exit 0 ;;
   use-notify | use-web) take_still "$NAME"; [ -n "${KEEP:-}" ] || ob down >/dev/null; exit 0 ;;
   use-interactive) take_interactive; exit 0 ;;
+  use-boxes) take_boxes; exit 0 ;;
   desk-problem) stage_desk ;;
   desk-boxed) stage_desk; stage_boxes ;;
   *) echo "take: no take named $NAME" >&2; exit 2 ;;

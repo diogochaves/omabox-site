@@ -26,9 +26,12 @@ The rest of `assets/stills/`, by hand:
 - `omaseed-visual/`: omaseed's visual-check baseline (`.local/visual/*.png`), 480 px wide.
 - `interactive.webp`: omabox.app's `site/media/interactive.webp`.
 
-The thread's stills (`renders/stills/`, 2560x1440): `./take.sh use-interactive` for post 5; posts 2-4
-are frames of the 4K render (`director render --4k`) at 19.0 s (four boxes), 43.5 s (more uses),
-33.0 s (the check card; 28.4 s, the wall of omaseed's screens, as the alternative), each
-`magick FRAME -resize 2560x1440 -strip`.
+The thread's pictures (`renders/stills/x/`) are real shots, not frames of the video (people who saw
+it would see them twice): `./take.sh use-boxes` (post 2: `use-boxes.png`, your desktop with
+`omabox ls` and the widget; `use-peeks.png`, the four boxes in peek windows), `use-monitors`,
+`use-web` and `use-notify` (post 3), `check-report@2x.png` (post 4), `use-interactive` (post 5);
+the 4K ones `magick SHOT -resize 2560x -strip`, the monitors one on `#1a1b26` (its gaps are
+transparent). The same shots, as WebPs, are in omabox's README (`docs/media/`). The earlier
+`renders/stills/post*.png` (frames of the 4K render) are not used.
 
 Fonts are OFL (`assets/fonts/OFL-*.txt`): Montserrat, JetBrains Mono, Chakra Petch, Anton.
