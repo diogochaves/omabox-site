@@ -11,6 +11,24 @@ live since 2026-10-27), published as a claude.ai artifact:
 <https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>). Older drafts are in `reference/`, to mine for
 parts (see `reference/README.md`).
 
+## Decisions (2026-11-25): the 1.5 site, rewritten around why
+
+Diogo: the site was a release behind (1.0.0; omabox was at 1.5.3) and didn't make clear what omabox
+is or why someone would want it. The copy is `COPY-1.5.md`; built on branch `site-1.5`.
+
+- **The promise stays the headline**: what only omabox does is leave your desktop alone while agents
+  work. One line before it says why an agent should open windows at all: it gets UI work right when
+  it can see it. Hero: "Let your agents see what they build. Your desktop stays yours." The
+  With/Without scene comes right after it, as the proof.
+- **Any Hyprland, today**: 1.3 shipped plain boxes and 1.4 your own desk, so `/next` and `/omarchy`
+  became `/desktops`, and every page's "What's coming" strip became "Tell us your setup" (an issue).
+- **Who it's for, by kind of work**: a desktop app, a web app or game, a shell/plugin/theme, your own
+  desktop. `/uses` is the "why" page, first in the nav.
+- **`/safety`** gathers what a box can touch, the guard, ports, the rules and ai-jail; `/compare`
+  goes there. `/omarchy`, `/next`, `/compare` redirect (`functions/_middleware.js`).
+- **"New in" off the home page again** (undoes 2026-10-27): one band for the latest release; the
+  tabs live on `/changelog`.
+
 ## Decisions (2026-10-26): the site for omabox 1.0
 
 omabox 1.0 is the Rust rewrite; it ships when Diogo has finished testing it, with no date promised.
@@ -392,6 +410,21 @@ aijail.io's plain narrative and compare page as a reference.
   2.2.1, 2.6.2 and 2.8.1." Omarchy's stock bar in a 1920x1080 box is 26 px. The home page's GPU cost
   at 1080p on the RTX (2026-10-27, Look H): 0–0.5% Chromium at rest on any section, the hero's scene
   included; 9% while paging through the whole page non-stop.
+- **For 1.5.3** (measured 2026-11-25 for the 1.5 site, three starts each, PSS of every process carrying
+  `OMABOX_BOX`, 5 s after `up`): an Omarchy box on the AMD iGPU 5.3–7.2 s (the first start cold) and
+  501–522 MB, on the RTX 3.3–3.6 s and 618–621 MB; a plain box (`--desktop plain`) 2.8–3.0 s and
+  164 MB on the iGPU, 1.0 s and 243 MB on the RTX. The site says "3 to 6 s, about 500 to 600 MB; a
+  plain box 1 to 3 s, under 250 MB". Both ai-jail recipes pass with ai-jail 3.3.0 and omabox 1.5.3
+  (a jailed foot drew in a box and saw no `~/.ssh`; through the broker, its maps given by `--map`, a
+  jailed session ran up, ls `isolated`, run -d, windows, shot -o into its project, down; host, peek
+  and `up --interactive` refused). A bare jail: project rw, `/usr` ro, a fresh home, the env cut, the
+  web refused; `ai-jail --dry-run claude` allows api.anthropic.com and the package registries.
+  `look page` on a page served from the host's 127.0.0.1 and `look plugin DIR --open` both work.
+  Wrong and fixed then: `up --desktop desk --autoreload` did not reload when the copy was edited
+  (`omabox reload` does), so `/uses` shows reload and `snapshot`/`diff`; `diff --seed` on a desk box
+  lists every copied plugin; Omarchy 4.5 has no shell-restart bind; Omarchy's `./test/shell` (the
+  2026-10-07 checkout) fails 16 to 19 of 321 files in a box, a different set each run, so no page
+  says its tests pass there.
 - omabox is not a security boundary: always say so where safety comes up.
 
 ## Open

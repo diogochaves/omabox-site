@@ -1,0 +1,364 @@
+<style>
+/* /safety: not a security boundary. What a box can touch, your seat, the guard, protected ports, the
+   rules (SECURITY.md), the hardening since 1.0, and ai-jail to fence the agent itself (was /compare). */
+
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; color: var(--ink-2); font-size: 15px; }
+.yes li::marker { color: var(--box); } .no li::marker { color: var(--warn); }
+.card .q { font: 500 11.5px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--box); }
+.card.aj { --fc: rgb(224 175 104 / .45); } .card.aj .q { color: var(--amber); }
+.card.ob { --fc: rgb(158 206 106 / .45); }
+.links { display: flex; gap: 8px 18px; flex-wrap: wrap; font: 500 13px/1.4 var(--mono); }
+.grp .ctas { margin-top: 24px; }
+
+/* protected ports: a connected box's tries, each reached or stopped at the wall */
+.ports { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; padding: 18px; align-items: center; }
+.ports > * { min-width: 0; }
+.ports .desk { height: 120px; }
+.ports .desk p { position: absolute; inset: 24px 10px 10px; display: grid; place-items: center; text-align: center; font: 400 11px/1.4 var(--mono); color: var(--ink-2); }
+.tries { display: grid; gap: 12px; }
+.try { display: grid; grid-template-columns: minmax(0, 15em) minmax(0, 1fr) 7.5em; gap: 14px; align-items: center; font: 400 12.5px/1.3 var(--mono); }
+.try .a { color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
+.try .a small { display: block; color: var(--muted); font-size: 11px; }
+.try .v { color: var(--box); text-align: right; }
+.try.no .v { color: var(--red); }
+.lane { position: relative; height: 14px; }
+.lane::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: repeating-linear-gradient(90deg, var(--line-2) 0 6px, transparent 6px 11px); }
+.lane .run { position: absolute; left: 0; top: 0; height: 14px; width: 100%; overflow: hidden; }
+.try.no .lane .run { width: 62%; }
+.try.no .lane::after { content: ""; position: absolute; left: 62%; top: -2px; width: 3px; height: 18px; border-radius: 2px; background: var(--red); box-shadow: 0 0 10px var(--red); }
+.pk { position: absolute; inset: 0; transform: translateX(-100%); animation: pk 2.4s linear infinite; }
+.pk::after { content: ""; position: absolute; right: 0; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--box); box-shadow: 0 0 10px var(--box-glow); }
+.try.no .pk::after { background: var(--red); box-shadow: 0 0 10px var(--red); }
+.try:nth-child(2) .pk { animation-delay: -.6s; } .try:nth-child(3) .pk { animation-delay: -1.2s; } .try:nth-child(4) .pk { animation-delay: -1.8s; }
+@keyframes pk { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (max-width: 700px) {
+  .ports { grid-template-columns: minmax(0, 1fr); }
+  .ports .desk { height: 90px; }
+  .try { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+  .try .lane { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* the rules */
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 860px) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rules li { display: grid; }
+.rules a { display: grid; grid-template-columns: 3.2em minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--s1); color: var(--ink); text-decoration: none; font-size: 15.5px; line-height: 1.4; transition: border-color .25s; }
+.rules a:hover { border-color: rgb(158 206 106 / .5); }
+.rules b { font: 600 13px/1 var(--mono); color: var(--box); }
+
+/* hardening */
+.grp > .tag { margin-bottom: 14px; }
+.card .stat { font: 600 44px/1 var(--display); color: var(--box); text-shadow: 0 0 24px var(--box-glow); }
+.card .stat small { font-size: 18px; color: var(--ink-2); text-shadow: none; }
+
+/* ai-jail: the fence around the agent, the box for its screen, the broker between them */
+.map { padding: 26px; display: grid; gap: 18px; }
+.mach { display: grid; grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 1fr) auto minmax(0, .85fr); gap: 14px; align-items: center; }
+.mach > * { min-width: 0; }
+.lbl { font: 500 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.jail { position: relative; border-radius: 14px; border: 1.5px dashed var(--amber); background: rgb(224 175 104 / .04); padding: 16px; display: grid; gap: 10px; }
+.jail .lbl { color: var(--amber); }
+.who { border-radius: 9px; border: 1px solid var(--line-2); background: var(--s2); padding: 10px 12px; font: 600 14px/1.2 var(--sans); }
+.who small { display: block; font: 400 11px/1.4 var(--mono); color: var(--muted); margin-top: 4px; font-weight: 400; }
+.can, .cant { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 400 11.5px/1.5 var(--mono); }
+.can { color: var(--ink-2); } .can li::before { content: "✓ "; color: var(--box); }
+.cant { color: var(--muted); } .cant li::before { content: "✕ "; color: var(--warn); }
+.link { display: grid; gap: 6px; justify-items: center; text-align: center; font: 400 10.5px/1.35 var(--mono); color: var(--muted); }
+.link.on { color: var(--box); }
+.link i { display: block; width: 56px; height: 2px; position: relative; overflow: hidden; background: var(--line-2); }
+.link.on i { background: linear-gradient(90deg, var(--amber), var(--box)); }
+.link.on i::after { content: ""; position: absolute; inset: 0; width: 14px; background: #fff; opacity: .85; animation: pulse 1.6s linear infinite; }
+@keyframes pulse { from { transform: translateX(-14px); } to { transform: translateX(56px); } }
+.link b { font: 500 18px/1 var(--mono); color: var(--warn); }
+.mach .desk { height: 170px; }
+.win { position: absolute; border-radius: 6px; border: 1.5px solid var(--amber); background: #151724; overflow: hidden; }
+.win .wt { font: 400 10px/1 var(--mono); color: var(--ink); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.win .wb { display: grid; gap: 6px; padding: 9px 8px; }
+.win .wb i { display: block; height: 5px; border-radius: 3px; background: rgb(255 255 255 / .1); }
+.mine { display: grid; gap: 8px; }
+.mine .desk { height: 170px; }
+.mine .ed { position: absolute; inset: 22px 8px 8px; border-radius: 6px; border: 1.5px solid #9aa0b8; background: #151724; padding: 8px; font: 400 10px/1.7 var(--mono); color: var(--muted); white-space: pre; overflow: hidden; }
+.mine .ed b { font-weight: 400; color: var(--violet); }
+.zero { font: 400 11px/1.5 var(--mono); color: var(--muted); }
+.zero em { font-style: normal; color: var(--box); }
+.motto { font: 600 clamp(17px, 1.6vw, 21px)/1.35 var(--display); color: var(--ink); }
+.motto i { font-style: normal; color: var(--box); }
+@media (max-width: 980px) {
+  .mach { grid-template-columns: minmax(0, 1fr); }
+  .link i { transform: rotate(90deg); margin: 22px 0; }
+}
+@media (max-width: 560px) { .map { padding: 16px; } }
+.recipe pre { white-space: pre; }
+.recipe .caption { margin-top: 0; }
+</style>
+<main class="wrap">
+  <section class="page">
+    <div class="head">
+      <p class="tag">Safety</p>
+      <h1>Not a security boundary. <i>Here's exactly what it holds.</i></h1>
+      <p class="lead">omabox keeps an agent's windows, input and prompts off your desktop. It does not fence the agent in:
+        a box shares your kernel, your GPU and, by default, your network, and what the agent runs on your host isn't boxed.
+        This page is what a box can touch, what it can't, and how to fence the agent too.</p>
+    </div>
+
+    <section class="grp" id="touch" data-rail="what it touches">
+      <h2>What a box <i>can touch.</i></h2>
+      <p class="lead">A box gets enough of your setup to look and behave like your desktop. Here is all of it.</p>
+      <div class="grid2">
+        <div class="card"><div class="in"><h3>Your files</h3>
+          <p>The repo you start it from, <b>read-only</b> at the same path (from a git worktree too, so git works there), and
+            the folders you <code>--ro-bind</code>. Also mise's toolchains, your fonts and git's name and email. Nothing else of
+            your HOME.</p>
+          <p>Refused whatever you pass: HOME itself, the secret stores (<code>~/.ssh</code>, <code>~/.gnupg</code>, keyrings,
+            <code>~/.aws</code>, <code>~/.kube</code>, <code>~/.docker</code>, <code>~/.git-credentials</code>…), the coding
+            agents' own config (<code>~/.claude</code>, <code>~/.codex</code>…), browser profiles, and anything of
+            <code>~/.config/omarchy</code> but its plugins and themes.</p></div></div>
+        <div class="card"><div class="in"><h3>Its HOME</h3>
+          <p>Fake: seeded with your theme and shell settings and nothing secret (no API keys, keyrings or tokens).
+            <code>omabox down</code> deletes it, with whatever a plugin or app changed there.</p>
+          <p>A link in it that leads into your HOME, to a file you can write, into your runtime dir or through
+            <code>/proc</code> is removed, in a restored save or seed too, and omabox never reads a box's files through a
+            link.</p></div></div>
+        <div class="card"><div class="in"><h3>Its session</h3>
+          <p>A private session bus, its own accessibility bus and a throwaway keyring that stores and reads secrets without
+            prompts. No system bus, no real input devices, no audio unless <code>--audio</code> (then its own PipeWire, never
+            yours).</p>
+          <p><code>/usr</code>, <code>/etc</code> and <code>/sys</code> are read-only, with no <code>sudo</code>, pacman or
+            polkit: nothing in a box installs packages, system config or rules. It can't see your host's processes.</p></div></div>
+        <div class="card"><div class="in"><h3>Its network</h3>
+          <p>Every box has one of its own. By default (<code>--net connected</code>) it reaches the internet, your LAN and your
+            host's servers. With <code>--net isolated</code> it has a loopback and the ports you <code>--allow</code>, nothing
+            else. <code>--net host</code>, only when you name it, is your host's network itself, for a tool that scans your
+            LAN; not for code you don't trust.</p>
+          <p>What reaches outside (API calls, uploads, changes to a server) is real, and <code>down</code> doesn't undo it.</p>
+          <pre class="code"><span class="p">$ </span>omabox up --net isolated --allow 8081</pre></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="seat" data-rail="your seat">
+      <h2>Your seat <i>stays yours.</i></h2>
+      <p class="lead">A box's Hyprland never gets what drives your screens and reads your hands. That is what keeps it off your
+        real displays.</p>
+      <div class="grid2">
+        <div class="card"><div class="in"><h3>Never in a box</h3>
+          <ul class="no"><li><code>/dev/dri/card*</code>: it gets a render node, never a display card</li>
+            <li><code>/dev/input</code>: your keyboard and mouse</li>
+            <li>seatd, and the system bus</li>
+            <li>Your <code>$XDG_RUNTIME_DIR</code>: its runtime dir is one of its own</li></ul></div></div>
+        <div class="card"><div class="in"><h3>An interactive box</h3>
+          <p>A box you drive as a window (<code>omabox up --interactive</code>) holds one already-open connection to your
+            compositor, never its socket, so nothing inside can open a window on your desktop. Keys go the other way: what you
+            type into its window, the box reads.</p></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="guard" data-rail="the guard">
+      <h2>The guard catches mistakes. <i>It is not a fence.</i></h2>
+      <p class="lead">The skill is advice: an agent that doesn't think of <code>./build/tests/tst_x</code> as GUI work still
+        opens its windows on your desktop, because its shell holds your real display. The guard (opt-in; Claude Code and Codex,
+        or any agent through <code>guard exec</code>) gives agents' shells a display that doesn't exist, so that fails
+        instead.</p>
+      <pre class="code"><span class="p">$ </span>omabox guard on              <span class="o"># every installed agent (or: on claude | on codex)</span>
+<span class="p">$ </span>omabox guard off             <span class="o"># each file back as it was</span>
+<span class="p">$ </span>omabox host -- CMD           <span class="o"># from a guarded shell: one command on your desktop, when you asked</span>
+<span class="p">$ </span>omabox guard exec -- AGENT   <span class="o"># any other agent, started under the guard</span></pre>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card ob"><div class="in"><p class="q">What it stops</p><h3>Accidents</h3>
+          <ul class="yes"><li>A stray window, <code>hyprctl</code> or <code>grim</code>: it fails with an error the skill explains</li>
+            <li>Omarchy's theme, wallpaper and font commands (<code>omarchy-theme-set</code> and the rest), refused by name</li>
+            <li>A link the agent opens: refused, with a note to give you the link, instead of landing in your browser</li>
+            <li><code>quickshell kill</code>, <code>qs ipc</code> and <code>hyprctl -i</code>, which reach your shell or your
+              Hyprland without a display</li>
+            <li>Work on your real desktop goes through <code>omabox host</code>, named on stderr, on the record</li></ul></div></div>
+        <div class="card aj"><div class="in"><p class="q">What it doesn't stop</p><h3>An agent that means it</h3>
+          <ul class="no"><li>An agent that sets the variables back, or runs <code>omabox host</code> unasked, on purpose</li>
+            <li>Processes it starts outside its shell: a headed browser MCP opens on your desktop</li>
+            <li>Writes to the files your shell watches (<code>shell.json</code>, <code>plugins/</code>): they change your real
+              bar at once</li>
+            <li>Omarchy's own <code>omarchy</code> command (<code>omarchy theme set</code>…), and anything over the session bus</li>
+            <li>Under Codex, the stand-ins above: it gets the variables only, unless you start it with
+              <code>omabox guard exec -- codex</code></li></ul></div></div>
+      </div>
+      <p class="note">Everything it sets for each agent, and the full list: <a href="https://github.com/diogochaves/omabox/blob/main/docs/guard.md">docs/guard.md</a>.
+        For a fence, run the agent in <a href="#ai-jail">ai-jail</a>.</p>
+    </section>
+
+    <section class="grp" id="ports" data-anim>
+      <h2>Name the ports <i>a box must not reach.</i></h2>
+      <p class="lead">A connected box reaches your network and your host's servers, like any app. If a database or an admin panel
+        listens on your machine, protect its port.</p>
+      <div class="ws">
+        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">protect-ports=5432,8080</span></div>
+        <div class="ports">
+          <div class="desk box" aria-hidden="true"><div class="dbar"><span>box</span><span>connected</span></div><p>a dev server, tests, an app</p></div>
+          <div class="tries" role="list" aria-label="What a connected box reaches on your host">
+            <div class="try" role="listitem"><span class="a">127.0.0.1:3000<small>your dev server</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">reached</span></div>
+            <div class="try no" role="listitem"><span class="a">127.0.0.1:5432<small>your database, on loopback</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
+            <div class="try no" role="listitem"><span class="a">5432 by a Docker bridge<small>the host's other addresses</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
+            <div class="try no" role="listitem"><span class="a">8080 by your VPN address<small>an admin panel, TCP or UDP</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card"><div class="in"><pre class="code"><span class="p">$ </span>omabox config protect-ports 5432,8080</pre>
+          <p>No connected box reaches those ports, on loopback or through any of your host's other addresses (a Docker bridge, a VPN), TCP or UDP. None are protected by default; it needs nftables.</p></div></div>
+        <div class="card"><div class="in"><p>An address your host gains after a box started is not covered, and a <code>--net host</code> box doesn't start while a port is protected. It's still not a security boundary: for a box with no network but the ports you choose, use <code>--net isolated --allow</code>.</p>
+          <pre class="code"><span class="p">$ </span>omabox up --net isolated --allow 8081</pre></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="rules" data-rail="the rules">
+      <h2>Ten rules, each with the code that holds it <i>and the test that proves it.</i></h2>
+      <p class="lead">omabox promises one thing: a box never reaches your real desktop. SECURITY.md lists each rule behind that
+        promise, from "Hyprland never gets your seat" to "a connected box reaches no protected port", where omabox enforces it,
+        and which test proves it. They keep a box from reaching your desktop by mistake or through an app that misbehaves. They
+        are not a defence against code written to escape: <b>a box is not a security boundary.</b></p>
+      <ol class="rules">
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S1</b><span>Hyprland never gets your seat.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S2</b><span>The box HOME is fake and holds no secrets.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S3</b><span>Secrets and live sockets are never mounted or copied in.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S4</b><span>Host code is read-only.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S5</b><span>Each box has its own namespaces and network.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S6</b><span>Teardown kills the box and nothing else.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S7</b><span>The tools that drive a box never follow it out.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S8</b><span>Input never reaches your desktop.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S9</b><span>An agent in ai-jail drives only its own boxes, and gets no more than its jail.</span></a></li>
+        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S10</b><span>A connected box reaches no protected port.</span></a></li>
+      </ol>
+      <div class="ctas"><a class="btn solid" href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">Read SECURITY.md</a><a class="btn" href="https://github.com/diogochaves/omabox/security/advisories/new">Report a way around one (privately)</a></div>
+    </section>
+
+    <section class="grp" id="hardening" data-rail="hardening">
+      <p class="tag">Since 1.0</p>
+      <h2>Rewritten in Rust, <i>and tighter for it.</i></h2>
+      <p class="lead">1.0 made omabox one Rust binary, and each release since has closed more ways for a box to reach what is
+        yours. A few of them:</p>
+      <div class="grid3">
+        <div class="card"><div class="in"><h3>Your terminal stays yours</h3><p>A command in a box runs in a session of its own, with no controlling terminal: it can't read what you type, write to your terminal or signal it. Ctrl-C still reaches it.</p></div></div>
+        <div class="card"><div class="in"><h3>Its display, and only its display</h3><p><code>omabox env</code> and <code>peek</code> name the box's Wayland socket through a hard link the box can't swap, so a host tool never lands on another display.</p></div></div>
+        <div class="card"><div class="in"><h3>No link leads out</h3><p>What a box writes in its HOME is read by a file omabox opened beneath it, never through a link; shots and recordings are written through none. A link, FIFO or <code>/dev/zero</code> planted in their place is refused (1.5.2).</p></div></div>
+        <div class="card"><div class="in"><h3>Nothing half-done</h3><p>Stop omabox at any step, with Ctrl-C or a signal, and it undoes that step: an interrupted <code>up</code> takes its box down, a recording keeps the video so far.</p></div></div>
+        <div class="card"><div class="in"><h3>No crash notifications from a box</h3><p>The tools omabox runs against a box (grim, hyprctl, gdb) get the box's crash limits, so a crash in one doesn't reach your desktop's notifications.</p></div></div>
+        <div class="card"><div class="in"><h3>Faster in</h3><p class="stat">~3<small> ms</small></p><p>omabox enters a box itself, without nsenter: <code>omabox run -- true</code> in about 3 ms (measured at 1.0).</p></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="ai-jail" data-rail="ai-jail">
+      <h2>ai-jail fences the agent in. <i>omabox keeps its windows out.</i></h2>
+      <p class="lead">To limit what the agent itself can read, write and reach, run it in <a href="https://aijail.io">ai-jail</a>.
+        The two stack: an agent inside ai-jail still drives boxes of its own.</p>
+      <div class="ws" id="pairmap" aria-label="An agent runs inside ai-jail; through omabox's broker it drives a box of its own, and nothing reaches your desktop">
+        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">your machine</span><span>one agent, jailed, testing in its own box</span></div>
+        <div class="map">
+          <div class="mach">
+            <div class="jail"><span class="lbl">ai-jail · the fence</span>
+              <div class="who">the agent<small>claude, codex, opencode…</small></div>
+              <ul class="can"><li>~/code/app, read-write</li><li>its model's API</li></ul>
+              <ul class="cant"><li>~/.ssh, ~/.aws, ~/.gnupg</li><li>your shell's tokens</li><li>your LAN</li></ul>
+            </div>
+            <div class="link on" aria-hidden="true"><span>omabox<br>broker</span><i></i><span>up · run · shot</span></div>
+            <div class="desk box"><div class="dbar"><span>its box</span><span>isolated</span></div>
+              <div class="win" style="left:9%;top:26%;width:82%;height:62%"><div class="wt">./build/app</div><div class="wb"><i style="width:70%"></i><i></i><i style="width:45%"></i></div></div></div>
+            <div class="link" aria-hidden="true"><b>✕</b><span>nothing<br>reaches</span></div>
+            <div class="mine"><div class="desk"><div class="dbar"><span>your desktop</span><span class="wsn"><i class="on">1</i> <i>2</i> <i>3</i></span></div>
+              <div class="ed"><b>fn</b> main() {
+    <b>let</b> draft = <b>…</b></div></div>
+              <p class="zero"><em>0</em> windows · <em>0</em> focus taken · <em>0</em> prompts</p></div>
+          </div>
+          <p class="motto">ai-jail decides what the agent can touch. <i>omabox decides where it draws.</i></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grp" id="pair" data-rail="two tools">
+      <h2>Two questions, <i>two tools.</i></h2>
+      <p class="lead"><a href="https://aijail.io">ai-jail</a>, by Fabio Akita (<a href="https://github.com/akitaonrails">AkitaOnRails</a>),
+        is the sandbox we point people to. It runs an agent inside bubblewrap, Landlock and seccomp on Linux, and
+        <code>sandbox-exec</code> on macOS. It does carefully the one thing omabox doesn't do: limit what the agent can read,
+        write and reach.</p>
+      <div class="grid2">
+        <div class="card aj"><div class="in"><p class="q">ai-jail answers: what can it touch?</p><h3>A fence around the agent</h3>
+          <ul><li>Your project read-write at its real path, <code>/usr</code> read-only</li>
+            <li>A fresh home: no <code>~/.ssh</code>, <code>~/.aws</code>, <code>~/.gnupg</code> or browser profiles</li>
+            <li>The environment cut to an allowlist, so your tokens stay in your shell</li>
+            <li>The network cut to what you allow: since ai-jail 2.8, a bare <code>ai-jail claude</code> reaches its model's
+              API, and in 3.x what the project's first run allowed (package registries, say)</li></ul>
+          <div class="links"><a href="https://aijail.io">aijail.io ↗</a><a href="https://github.com/akitaonrails/ai-jail">github.com/akitaonrails/ai-jail ↗</a></div></div></div>
+        <div class="card ob"><div class="in"><p class="q">omabox answers: where does it draw?</p><h3>A desktop of its own</h3>
+          <ul><li>Its own screen, pointer and keyboard</li>
+            <li>Its own session bus, tray, notifications and keyring</li>
+            <li>Your cursor, focus and workspaces untouched</li>
+            <li>Not a security boundary: that part is ai-jail's</li></ul>
+          <div class="links"><a href="how-it-works.html">How a box keeps off your desktop →</a></div></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="recipes" data-rail="two recipes">
+      <h2>Two recipes, <i>both tested.</i></h2>
+      <p class="lead">Neither needs a change to ai-jail.</p>
+      <div class="grid2">
+        <div class="card recipe"><div class="in"><h3>A jailed app, drawn in a box</h3>
+          <p>A contributor's branch, an app you just downloaded: run it in ai-jail, with the box's screen as its only display.
+            ai-jail keeps it out of your home, keys and network; its window opens in the box, where <code>omabox shot</code> and
+            <code>peek</code> see it.</p>
+          <pre class="code"><span class="p">$ </span>omabox up
+<span class="p">$ </span>eval "$(omabox env)"   <span class="o"># Wayland clients now draw in the box</span>
+<span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" \
+    --env WAYLAND_DISPLAY -- ./build/app</pre>
+          <p class="caption">Tested with ai-jail 3.3.0 and omabox 1.5.3 on Linux, and before that with ai-jail 2.2.1, 2.6.2, 2.8.1, 2.10.0 and 2.12.0.</p></div></div>
+        <div class="card recipe"><div class="in"><h3>A jailed agent, driving boxes of its own</h3>
+          <p>A jail can't start a box itself (its seccomp filter refuses new namespaces), so its <code>omabox</code> hands each
+            command to a broker outside. Turn it on once, add the <code>ro_maps</code> it prints to ai-jail's global config
+            (<code>~/.config/ai-jail/config.toml</code> since ai-jail 3.0), then start your agent in ai-jail as usual.</p>
+          <pre class="code"><span class="p">$ </span>omabox broker on   <span class="o"># prints the ro_maps to add</span>
+<span class="p">$ </span>ai-jail claude</pre>
+          <p class="caption">Tested with ai-jail 3.3.0 and omabox 1.5.3 on Linux, and before that with ai-jail 2.2.1, 2.6.2, 2.8.1, 2.10.0 and 2.12.0.
+            <code>omabox broker off</code> turns it off.</p>
+          <p>On Omarchy 4.5, <code>claude</code> and <code>codex</code> are mise wrappers, and ai-jail 3.3 maps mise's data
+            folder read-only, so the agent stops at <code>Read-only file system</code>. Until ai-jail lets mise take its lock,
+            give the jail a copy-on-write one:</p>
+          <pre class="code"><span class="p">$ </span>ai-jail --mise --overlay-map ~/.local/share/mise claude</pre></div></div>
+      </div>
+    </section>
+
+    <section class="grp" id="broker" data-rail="a jailed agent">
+      <h2>What a jailed agent <i>can and can't do.</i></h2>
+      <p class="lead">Driving a box is running code in it, so the broker is what keeps a box from being a way out of the jail.
+        It reads the jail's limits from the jail's own command line, which nothing inside can change, trusts only an ai-jail
+        running in its own namespaces (a binary named ai-jail inside a jail never counts), and gives each box no more than the
+        jail has.</p>
+      <div class="grid2">
+        <div class="card ob"><div class="in"><h3>In the jail, as outside</h3>
+          <ul class="yes"><li><code>up</code>, <code>run</code>, <code>shot</code>, <code>keys</code>, <code>click</code>, <code>wait</code> and the rest</li>
+            <li><code>record</code>: the video, its marks and captions land in the jail's project, written by the agent's own <code>omabox</code></li>
+            <li><code>ports</code>, for its own boxes: a port held by anything else is said to be taken, without naming who holds it</li>
+            <li>git in a box started from a worktree</li></ul></div></div>
+        <div class="card aj"><div class="in"><h3>Not from a jail</h3>
+          <ul class="no"><li><code>omabox host</code>, which runs on your real desktop</li>
+            <li><code>peek</code> and interactive boxes, which open on your screen</li>
+            <li><code>up --net host</code>, and a copy of your own desktop (<code>--desktop desk</code>)</li>
+            <li>The guard and <code>config</code> changes; which host ports you protect isn't shown to it</li>
+            <li>Boxes you or another jail started</li></ul></div></div>
+      </div>
+      <div class="cols">
+        <div><b>Its network</b><p>None when the jail has none: its boxes start <code>--net isolated</code>. With ai-jail's
+          default proxy, the agent reaches its model's API and its boxes still get no network.</p></div>
+        <div><b>Its project</b><p>Only the jail's own project goes into a box, and what the jail hides in it (its
+          <code>.ai-jail</code> included) stays hidden there too.</p></div>
+        <div><b>Its boxes</b><p>Only the boxes that jail started, and they go down when the jail exits.</p></div>
+      </div>
+      <p class="note">The rule for jailed agents and the test behind it are S9 in
+        <a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">SECURITY.md</a>; the details are in
+        <a href="https://github.com/diogochaves/omabox/blob/main/docs/ai-jail.md">docs/ai-jail.md</a>.</p>
+      <p class="note"><b>For code you don't trust at all, use a VM.</b> A box and a jail both share your kernel.</p>
+    </section>
+  </section>
+
+<script>
+(() => {
+  /* the ports scene and the broker's pulse run only while you can see them */
+  const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("paused", !e.isIntersecting)));
+  document.querySelectorAll("[data-anim], #pairmap").forEach(el => io.observe(el));
+})();
+</script>
+</main>

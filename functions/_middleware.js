@@ -39,12 +39,21 @@ export function twinOf(pathname) {
   return /^\/[\w-]+$/.test(p) ? `${p}.md` : null;
 }
 
+// Pages that were folded into others (2026-11, the 1.5 site): their old addresses, and their twins,
+// go to where their words live now. Anchors can't be seen here; the new pages keep the old ids.
+export const MOVED = {
+  "/omarchy": "/desktops#omarchy", "/next": "/desktops", "/compare": "/safety#ai-jail",
+  "/omarchy.md": "/desktops.md", "/next.md": "/desktops.md", "/compare.md": "/safety.md",
+};
+
 export const onRequest = async ({ request, next, env }) => {
   const url = new URL(request.url);
   if (url.hostname === "www.omabox.app") {
     url.hostname = "omabox.app";
     return Response.redirect(url.toString(), 301);
   }
+  const to = MOVED[url.pathname.replace(/\/+$/, "").replace(/\.html$/, "")];
+  if (to) return Response.redirect(new URL(to, url).toString(), 301);
   const twin = (request.method === "GET" || request.method === "HEAD") && twinOf(url.pathname);
   if (!twin) return next();
   if (prefersMarkdown(request.headers.get("accept"))) {

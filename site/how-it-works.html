@@ -1,6 +1,6 @@
 <style>
-/* /how-it-works: the four steps, what a box keeps off your desktop and how, what it gets, 1.0's
-   hardening, protected ports, the ten rules, agents on their own, one box per session, looking inside */
+/* /how-it-works: the four steps, what a box is, what it keeps off your desktop and how, what it gets,
+   agents on their own, one box per session, looking inside. Hardening, ports and the rules: /safety */
 
 /* the four steps: an agent's session beside its box, the step on screen lit below (12 s, 3 s a step) */
 .life { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 14px; padding: 14px; }
@@ -60,49 +60,6 @@
 .fence h3 { display: flex; gap: 10px; align-items: center; }
 .fence h3 small { font: 500 10.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 
-/* 1.0 holds tighter */
-.grp > .tag { margin-bottom: 14px; }
-@media (min-width: 860px) { .wide2 { grid-column: span 2; } }
-.card .stat { font: 600 44px/1 var(--display); color: var(--box); text-shadow: 0 0 24px var(--box-glow); }
-.card .stat small { font-size: 18px; color: var(--ink-2); text-shadow: none; }
-
-/* protected ports: a connected box's tries, each reached or stopped at the wall */
-.ports { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; padding: 18px; align-items: center; }
-.ports > * { min-width: 0; }
-.ports .desk { height: 120px; }
-.ports .desk p { position: absolute; inset: 24px 10px 10px; display: grid; place-items: center; text-align: center; font: 400 11px/1.4 var(--mono); color: var(--ink-2); }
-.tries { display: grid; gap: 12px; }
-.try { display: grid; grid-template-columns: minmax(0, 15em) minmax(0, 1fr) 7.5em; gap: 14px; align-items: center; font: 400 12.5px/1.3 var(--mono); }
-.try .a { color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
-.try .a small { display: block; color: var(--muted); font-size: 11px; }
-.try .v { color: var(--box); text-align: right; }
-.try.no .v { color: var(--red); }
-.lane { position: relative; height: 14px; }
-.lane::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: repeating-linear-gradient(90deg, var(--line-2) 0 6px, transparent 6px 11px); }
-.lane .run { position: absolute; left: 0; top: 0; height: 14px; width: 100%; overflow: hidden; }
-.try.no .lane .run { width: 62%; }
-.try.no .lane::after { content: ""; position: absolute; left: 62%; top: -2px; width: 3px; height: 18px; border-radius: 2px; background: var(--red); box-shadow: 0 0 10px var(--red); }
-.pk { position: absolute; inset: 0; transform: translateX(-100%); animation: pk 2.4s linear infinite; }
-.pk::after { content: ""; position: absolute; right: 0; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--box); box-shadow: 0 0 10px var(--box-glow); }
-.try.no .pk::after { background: var(--red); box-shadow: 0 0 10px var(--red); }
-.try:nth-child(2) .pk { animation-delay: -.6s; } .try:nth-child(3) .pk { animation-delay: -1.2s; } .try:nth-child(4) .pk { animation-delay: -1.8s; }
-@keyframes pk { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-@media (max-width: 700px) {
-  .ports { grid-template-columns: minmax(0, 1fr); }
-  .ports .desk { height: 90px; }
-  .try { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
-  .try .lane { grid-column: 1 / -1; grid-row: 2; }
-}
-
-/* the ten rules */
-.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 860px) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.rules li { display: grid; }
-.rules a { display: grid; grid-template-columns: 3.2em minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--s1); color: var(--ink); text-decoration: none; font-size: 15.5px; line-height: 1.4; transition: border-color .25s; }
-.rules a:hover { border-color: rgb(158 206 106 / .5); }
-.rules b { font: 600 13px/1 var(--mono); color: var(--box); }
-.grp .ctas { margin-top: 24px; }
-
 /* agents */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 12px/1 var(--mono); padding: 6px 10px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--ink); }
@@ -110,13 +67,15 @@
 .optin .tag { font-size: 10.5px; }
 .reqs { margin-top: 14px; font: 12px var(--mono); color: var(--muted); }
 
-/* watch: ask, peek, interactive; the widget itself is on /omarchy */
+/* watch: ask, peek, interactive; the widget itself is on /desktops */
 .watch { display: grid; gap: 22px; }
 @media (min-width: 860px) { .ways { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .watch > * { min-width: 0; }
 .ways { display: grid; gap: 14px; }
 .ask-card { --fc: rgb(158 206 106 / .4); --fb: radial-gradient(90% 120% at 0% 0%, rgb(158 206 106 / .08), transparent 60%), var(--s1); }
 .say { justify-self: start; max-width: 100%; padding: 10px 14px; border-radius: 14px 14px 14px 4px; background: var(--s3); color: var(--ink); font-size: 15px; }
+/* what a box is: three kinds */
+.kinds .code { font-size: 12px; }
 .shot { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); }
 </style>
 <main class="wrap">
@@ -125,7 +84,8 @@
       <p class="tag">How it works</p>
       <h1>A whole desktop for every agent, <i>none of it on yours.</i></h1>
       <p class="lead">A box is a real Hyprland desktop: its own compositor, its own session bus, on a screen only it can see.
-        On Omarchy it is Omarchy's, with your theme and bar. Here is what it keeps off your desktop, and how.</p>
+        On Omarchy it is Omarchy's, with your theme and bar. Here is how an agent uses one, and what it keeps off your
+        desktop.</p>
     </div>
 
     <section class="grp" id="steps" data-anim>
@@ -134,7 +94,7 @@
         <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">an agent's session · app-tray-5cc72cdc</span></div>
         <div class="life">
           <div><div class="lbl2"><span>The agent</span><span>its terminal</span></div>
-            <pre class="term"><span class="c l1"># a task touches the desktop</span><span class="l2"><span class="p">$ </span>omabox up</span><span class="l3"><span class="p">$ </span>omabox run -d -- ./build/app</span><span class="l4"><span class="p">$ </span>omabox click 600 300 --wait</span><span class="c l5"># the session exits; its box goes too</span></pre></div>
+            <pre class="term"><span class="c l1"># a task touches the desktop</span><span class="l2"><span class="p">$ </span>omabox up</span><span class="l3"><span class="p">$ </span>omabox look app -- ./build/app</span><span class="l4"><span class="p">$ </span>omabox click --find Settings --wait</span><span class="c l5"># the session exits; its box goes too</span></pre></div>
           <div><div class="lbl2"><span>Its box</span><span>only it can see</span></div>
             <div class="stage">
               <div class="gone">no box up<br>nothing of it on screen</div>
@@ -150,12 +110,27 @@
         <div class="card step"><div class="in"><span class="n">1</span><h3>It reaches for a box</h3><p>Whenever a task touches the desktop: a GUI app, a screenshot, a bar plugin, tests that need a tray or a keyring.</p></div></div>
         <div class="card step"><div class="in"><span class="n">2</span><h3>It starts one</h3><p>A whole desktop only it can see, on one screen or as many monitors as the test needs. Up in a few seconds.</p>
           <pre class="code"><span class="p">$ </span>omabox up</pre></div></div>
-        <div class="card step"><div class="in"><span class="n">3</span><h3>It works in it</h3><p>It launches, clicks, types and reads what changed. Your cursor, keyboard and focus are never touched.</p>
-          <pre class="code"><span class="p">$ </span>omabox run -d -- ./build/app
-<span class="p">$ </span>omabox click 600 300 --wait</pre></div></div>
+        <div class="card step"><div class="in"><span class="n">3</span><h3>It looks, fixes, and looks again</h3><p><code>look</code> shows its window and what went wrong, <code>tree</code> reads it as text, <code>wait</code> and <code>check</code> hold it to what should be there. Then it fixes, and looks again. Your cursor and focus are never touched.</p>
+          <pre class="code"><span class="p">$ </span>omabox look app -- ./build/app
+<span class="p">$ </span>omabox tree --find Save</pre></div></div>
         <div class="card step"><div class="in"><span class="n">4</span><h3>It goes with the agent</h3><p>When the agent's session exits, its box goes too, notifications and tray icons included.</p></div></div>
       </div>
-      <p class="caption">Every command and option: <a href="commands.html">/commands</a>. Several monitors in one box: <a href="develop.html#monitors">/develop</a>.</p>
+      <p class="caption">Every command and option: <a href="commands.html">/commands</a>. <code>look</code>, <code>tree</code>, <code>check</code> and the rest in depth, and several monitors in one box: <a href="develop.html">/develop</a>.</p>
+    </section>
+
+    <section class="grp" id="what" data-rail="a box">
+      <h2>What a box is</h2>
+      <p class="lead">A real Hyprland, not a mock: its own compositor on a private screen, its own session bus. It comes in three
+        kinds; omabox picks the first that fits, and you can ask for any.</p>
+      <div class="grid3 kinds">
+        <a class="card" href="desktops.html#omarchy"><div class="in"><h3>Omarchy's desktop</h3><p>Omarchy's own config and shell, with your theme, bar layout and terminal settings. On Omarchy.</p>
+          <pre class="code"><span class="p">$ </span>omabox up</pre></div></a>
+        <a class="card" href="desktops.html#plain"><div class="in"><h3>A plain one</h3><p>Hyprland with a small config of omabox's, and your shell as its bar if you want one. On any distro with Hyprland.</p>
+          <pre class="code"><span class="p">$ </span>omabox up --desktop plain</pre></div></a>
+        <a class="card" href="desktops.html#desk"><div class="in"><h3>A copy of yours</h3><p>Your Hyprland config, your shell and your wallpaper, copied into a box. Your session never knows.</p>
+          <pre class="code"><span class="p">$ </span>omabox up --desktop desk</pre></div></a>
+      </div>
+      <p class="caption">Where each runs, and what each has: <a href="desktops.html">/desktops</a>.</p>
     </section>
 
     <section class="grp" id="never" data-rail="kept off">
@@ -167,7 +142,7 @@
         <div class="card nv"><div class="in"><span class="what">Stolen focus</span><h3>Nothing opens on your session</h3><p>No focus changes, no workspace switches. When you peek, the window opens on workspace 9 without taking focus.</p></div></div>
         <div class="card nv"><div class="in"><span class="what">Password prompts</span><h3>No system bus, a throwaway keyring</h3><p>In a box, <code>pkexec</code> fails at once instead of asking for your password. Its keyring stores and reads secrets without prompting; yours is never asked.</p></div></div>
         <div class="card nv"><div class="in"><span class="what">Leftovers</span><h3>Its own bar</h3><p>Notifications and tray icons land in the box's bar, and go when the box goes.</p></div></div>
-        <div class="card nv"><div class="in"><span class="what">Accidents</span><h3>The guard, if you want it</h3><p>With <code>omabox guard on</code>, agents' shells get a display that doesn't exist, so a stray window fails instead of appearing. It catches mistakes; it is not a boundary.</p></div></div>
+        <div class="card nv"><div class="in"><span class="what">Accidents</span><h3>The guard, if you want it</h3><p>With <code>omabox guard on</code>, agents' shells get a display that doesn't exist, so a stray window fails instead of appearing. <a href="safety.html#guard">What it stops, and what it doesn't</a>.</p></div></div>
       </div>
     </section>
 
@@ -177,7 +152,7 @@
       <div class="grid3 fence">
         <div class="card in-box"><div class="in"><h3>In the box</h3><ul>
           <li>The repo you started it from, read-only, at the same path (from a git worktree too, so git works there)</li>
-          <li>Your theme, bar layout and terminal settings</li>
+          <li>On Omarchy, your theme, bar layout and terminal settings</li>
           <li>Your fonts, read-only, so a theme's or a plugin's faces draw as on your desktop</li>
           <li>mise's toolchains, so node, python and uv work as on the host</li>
           <li>Its own screen, session bus and throwaway keyring</li></ul></div></div>
@@ -187,6 +162,7 @@
           <li>Addresses of its own for an isolated box: <code>--addr</code>, documentation ranges only</li>
           <li>A systemd user manager: <code>--systemd</code></li>
           <li>X11 apps: <code>--xwayland</code></li>
+          <li>Your host's network itself, for a tool that scans your LAN: <code>--net host</code>, only by name</li>
           <li>Your real desktop, one command at a time: <code>omabox host</code></li></ul></div></div>
         <div class="card never"><div class="in"><h3>Never in a box</h3><ul>
           <li>Your agents' and browsers' own stores (<code>~/.claude</code>, <code>~/.codex</code>, browser profiles, <code>~/.pki</code>), whichever way you try to mount them</li>
@@ -195,68 +171,9 @@
           <li>Your keyrings, <code>~/.ssh</code>, <code>~/.gnupg</code> and the rest of your secret stores</li></ul></div></div>
       </div>
       <p class="note">A box keeps an agent's apps off your desktop and out of your config, and never gets your secrets or input
-        devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network (keep ports from it
-        <a href="#ports">below</a>). To fence the agent in, pair it with <a href="compare.html">ai-jail</a>.</p>
-    </section>
-
-    <section class="grp" id="hardening" data-rail="rust">
-      <p class="tag">1.0.0</p>
-      <h2>Rewritten in Rust, <i>and tighter for it.</i></h2>
-      <p class="lead">1.0 is one binary built from Rust. The commands are the ones you know. Underneath, a box reaches less of
-        yours and leaves less behind.</p>
-      <div class="grid3">
-        <div class="card"><div class="in"><h3>Your terminal stays yours</h3><p>A command in a box runs in a session of its own, with no controlling terminal. It can't read what you type, write to your terminal or signal it. Ctrl-C still reaches it.</p></div></div>
-        <div class="card"><div class="in"><h3>Its display, and only its display</h3><p><code>omabox env</code> points at the box's Wayland socket through a hard link the box can't swap, so a host tool never lands on another display.</p></div></div>
-        <div class="card"><div class="in"><h3>Nothing half-done</h3><p>Stop omabox at any step, with Ctrl-C or a signal, and it undoes that step: an interrupted <code>up</code> takes its box down, a recording keeps the video so far, a half-made monitor goes, temporary files go.</p></div></div>
-        <div class="card"><div class="in"><h3>No crash notifications from a box</h3><p>The tools omabox runs against a box (grim, hyprctl, gdb) get the box's crash limits, so a crash in one doesn't reach your desktop's notifications.</p></div></div>
-        <div class="card wide2"><div class="in">
-          <h3>Faster in</h3><p class="stat">~3<small> ms</small></p><p>omabox enters a box itself, without nsenter: <code>omabox run -- true</code> in about 3 ms.</p></div></div>
-      </div>
-    </section>
-
-    <section class="grp" id="ports" data-anim>
-      <h2>Name the ports <i>a box must not reach.</i></h2>
-      <p class="lead">A connected box reaches your network and your host's servers, like any app. If a database or an admin panel
-        listens on your machine, protect its port.</p>
-      <div class="ws">
-        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">protect-ports=5432,8080</span></div>
-        <div class="ports">
-          <div class="desk box" aria-hidden="true"><div class="dbar"><span>box</span><span>connected</span></div><p>a dev server, tests, an app</p></div>
-          <div class="tries" role="list" aria-label="What a connected box reaches on your host">
-            <div class="try" role="listitem"><span class="a">127.0.0.1:3000<small>your dev server</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">reached</span></div>
-            <div class="try no" role="listitem"><span class="a">127.0.0.1:5432<small>your database, on loopback</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
-            <div class="try no" role="listitem"><span class="a">5432 by a Docker bridge<small>the host's other addresses</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
-            <div class="try no" role="listitem"><span class="a">8080 by your VPN address<small>an admin panel, TCP or UDP</small></span><span class="lane" aria-hidden="true"><span class="run"><span class="pk"></span></span></span><span class="v">protected</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="grid2" style="margin-top:14px">
-        <div class="card"><div class="in"><pre class="code"><span class="p">$ </span>omabox config protect-ports 5432,8080</pre>
-          <p>No connected box reaches those ports, on loopback or through any of your host's other addresses (a Docker bridge, a VPN), TCP or UDP. None are protected by default; it needs nftables.</p></div></div>
-        <div class="card"><div class="in"><p>An address your host gains after a box started is not covered. It's still not a security boundary: for a box with no network but the ports you choose, use <code>--net isolated --allow</code>.</p>
-          <pre class="code"><span class="p">$ </span>omabox up --net isolated --allow 8081</pre></div></div>
-      </div>
-    </section>
-
-    <section class="grp" id="rules">
-      <h2>Ten rules, each with the code that holds it <i>and the test that proves it.</i></h2>
-      <p class="lead">omabox promises one thing: a box never reaches your real desktop. SECURITY.md lists each rule behind that
-        promise, from "Hyprland never gets your seat" to "a connected box reaches no protected port", where omabox enforces it,
-        and which test proves it. They keep a box from reaching your desktop by mistake or through an app that misbehaves. They
-        are not a defence against code written to escape: <b>a box is not a security boundary.</b></p>
-      <ol class="rules">
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S1</b><span>Hyprland never gets your seat.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S2</b><span>The box HOME is fake and holds no secrets.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S3</b><span>Secrets and live sockets are never mounted or copied in.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S4</b><span>Host code is read-only.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S5</b><span>Each box has its own namespaces and network.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S6</b><span>Teardown kills the box and nothing else.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S7</b><span>The tools that drive a box never follow it out.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S8</b><span>Input never reaches your desktop.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S9</b><span>An agent in ai-jail drives only its own boxes, and gets no more than its jail.</span></a></li>
-        <li><a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md#the-rules"><b>S10</b><span>A connected box reaches no protected port.</span></a></li>
-      </ol>
-      <div class="ctas"><a class="btn solid" href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">Read SECURITY.md</a><a class="btn" href="https://github.com/diogochaves/omabox/security/advisories/new">Report a way around one (privately)</a></div>
+        devices. It is not a security boundary: it shares your kernel, GPU and, by default, your network (<a href="safety.html#ports">keep
+        ports from it</a>). What it can touch, the rules behind it, and how to fence the agent in with ai-jail:
+        <a href="safety.html">/safety</a>.</p>
     </section>
 
     <section class="grp" id="agents">
@@ -265,7 +182,7 @@
         without changing your projects.</p>
       <div class="grid2">
         <div class="card"><div class="in"><h3>A skill they already load</h3>
-          <p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop. It is about 2k tokens fewer since 0.9: the core every task needs, the rest in a reference the agent reads by section.</p>
+          <p><code>omabox setup</code> (<code>install.sh</code> runs it) puts the <code>omabox</code> skill wherever Omarchy puts its own. Agents load it for GUI apps, screenshots, shell plugins and tests that touch the desktop. Since 1.5 its core is 3.6 KB and opens with the four looks (<code>look app</code>, <code>plugin</code>, <code>theme</code>, <code>page</code>); the rest is in reference pages the agent reads by task.</p>
           <div class="chips"><span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">OpenCode</span><span class="chip">pi</span><span class="chip">Hermes</span></div></div></div>
         <div class="card"><div class="in"><h3>Subagents get a brief</h3><p><code>omabox brief -b NAME</code> prints what a subagent needs: the box, its windows, each with a word that finds it, and the rules. It costs a quarter of the skill or less.</p>
           <pre class="code"><span class="p">$ </span>omabox brief -b app-menu-3b7a6c11</pre></div></div>
@@ -276,10 +193,11 @@
 <span class="p">$ </span>omabox pixel 40 12   <span class="o"># the colour there, as #rrggbb</span></pre></div></div>
         <div class="card"><div class="in"><h3>A server that died is said</h3><p>A <code>run -d</code> job that dies in its first 30 s is one warning on the box's next command, with its exit status and log.</p>
           <pre class="code"><span class="p">$ </span>omabox run -d -- npm run dev</pre></div></div>
-        <div class="card"><div class="in"><h3>The guard, for when advice isn't enough</h3><p>Opt in with <code>omabox guard on</code>: agents' shells lose your display, so a window they forget to box fails with an error the skill explains. When you ask for your real desktop, the agent uses <code>omabox host -- CMD</code>, on the record.</p></div></div>
         <div class="card"><div class="in"><h3>Sign in once, every box starts signed in</h3><p>An app that needs an account, a PIN or a library: set it up in a box once and <code>omabox save</code> it. Boxes started <code>--from</code> the save open with it already set up, keyring included.</p>
           <pre class="code"><span class="p">$ </span>omabox save signed-in
 <span class="p">$ </span>omabox up --from signed-in</pre></div></div>
+        <div class="card"><div class="in"><h3>It says who did what</h3><p>When several agents share a box, its command log says who clicked, typed or reloaded what: every omabox command run against it, by which session, jailed or not, and how it ended, after <code>down</code> too. Typed text and passwords are never in it. New in 1.5.</p>
+          <pre class="code"><span class="p">$ </span>omabox log commands</pre></div></div>
         <div class="card optin"><div class="in"><p class="tag">Opt-in</p><h3>Report what omabox got wrong</h3><p><code>omabox setup --feedback-skill</code> adds <code>/omabox-feedback</code>. Your agent looks back through the session for omabox failures, takes your paths, names and tokens out, and files them on your yes.</p>
           <pre class="code"><span class="p">$ </span>omabox setup --feedback-skill</pre></div></div>
       </div>
@@ -297,7 +215,7 @@
       <p class="note">One thing they share: their servers reach you on your <code>127.0.0.1</code>, one box per port. A server
         on a port you or another box already use fails to start (address in use), and <code>omabox ports</code> says who has it. With
         <code>--net isolated</code> a box keeps its ports to itself.</p>
-      <p class="reqs">Each box: up in 3 to 5 s, about 400 to 600 MB (it depends on the GPU), down when its agent exits or after 2 h idle.</p>
+      <p class="reqs">Each box: up in 3 to 6 s and about 500 to 600 MB for an Omarchy box, 1 to 3 s and under 250 MB for a plain one (it depends on the GPU), down when its agent exits or after 2 h idle.</p>
     </section>
 
     <section class="grp" id="inside">
@@ -312,8 +230,8 @@
           <div class="card"><div class="in"><h3>Peek</h3><p><code>omabox peek</code> opens a live, view-only window of any box on workspace 9, without taking your focus. It only copies frames out, so the agent never notices.</p></div></div>
           <div class="card"><div class="in"><h3>Interactive</h3><p><code>omabox up --interactive</code> makes a box a real window you drive with your own keyboard and mouse. <kbd>SUPER</kbd>+<kbd>ALT</kbd>+<kbd>ESC</kbd> sends SUPER keys into it once; with <code>omabox keys-to-box on</code> they follow focus and the pointer into it, and its border turns red while they do. <code>omabox clip</code> hands it your clipboard (a URL, a password), and <code>--from-box</code> brings the box's back.</p>
             <img class="shot" src="media/interactive.webp" alt="An interactive box: a whole Omarchy desktop as a window with the app menu open, next to the terminal that drives it" width="1280" height="720" loading="lazy"></div></div>
-          <div class="card"><div class="in"><h3>The bar widget</h3><p>On Omarchy, the omabox mark in your bar lists every box, with peek, screenshot and down for each. On <a href="omarchy.html#widget">/omarchy</a> a copy works: click a box, or focus the panel and use its keys.</p>
-            <a class="more" href="omarchy.html#widget">The widget on Omarchy</a></div></div>
+          <div class="card"><div class="in"><h3>The bar widget</h3><p>On Omarchy, the omabox mark in your bar lists every box, with peek, screenshot and down for each. On <a href="desktops.html#omarchy">/desktops</a> a copy works: click a box, or focus the panel and use its keys.</p>
+            <a class="more" href="desktops.html#omarchy">The widget on Omarchy</a></div></div>
         </div>
       </div>
     </section>

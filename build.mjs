@@ -37,43 +37,40 @@ const isPerson = c => c.type === "User" && !c.login.endsWith("[bot]") && !AGENT.
 
 const PAGES = [
   { src: "omabox.html", out: "index.html", path: "/", home: true,
-    title: "omabox: desktops of their own for your coding agents",
-    desc: "omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is. Yours stays untouched: no windows, no cursor moves, no stolen focus, no prompts.",
-    card: "A whole Hyprland desktop for every coding agent, invisible and in parallel. Yours stays untouched." },
+    title: "omabox: let your agents see what they build, off your desktop",
+    desc: "omabox gives each coding agent an invisible Hyprland desktop of its own, where it opens, clicks and screenshots its work. Your desktop stays yours: no windows popping up, no cursor jumps, no stolen focus, no prompts.",
+    card: "Let your agents see what they build. Your desktop stays yours." },
+  { src: "uses.html", out: "uses.html", path: "/uses", name: "Use cases",
+    title: "What agents use omabox for",
+    desc: "Desktop apps, web apps and games, shells, plugins and themes, your own Hyprland desktop, demos and screenshots, hard bugs: what you ask, what the agent does in its box, what you get." },
   { src: "how-it-works.html", out: "how-it-works.html", path: "/how-it-works", name: "How it works",
     title: "How omabox works: a desktop of its own for every agent",
-    desc: "The four steps, what a box keeps off your desktop and how, what a box gets, 1.0's hardening and the ten rules, and how agents use it on their own." },
-  { src: "uses.html", out: "uses.html", path: "/uses", name: "Uses",
-    title: "What people use omabox for",
-    desc: "Testing is where omabox started. Videos of what you made, shots at 2x or 4K, a clean setup that isn't yours, monitors you don't have, and more, in a box instead of on your desktop." },
-  { src: "omarchy.html", out: "omarchy.html", path: "/omarchy", name: "Omarchy",
-    title: "omabox on Omarchy",
-    desc: "omabox was born on Omarchy and is fullest there: Omarchy's own config and shell in every box, your theme and bar, your plugins, and a widget in your bar." },
+    desc: "The four steps, the loop an agent runs to check its work, what a box is, what it keeps off your desktop, what a box gets, how agents use it on their own, and how you look inside." },
+  { src: "desktops.html", out: "desktops.html", path: "/desktops", name: "Desktops",
+    title: "omabox desktops: Omarchy, plain Hyprland, or your own",
+    desc: "A box is Omarchy's desktop, a plain Hyprland with your shell if you want one, or a copy of your own desktop. Where each runs: Omarchy, Arch, Fedora, Debian, openSUSE." },
+  { src: "develop.html", out: "develop.html", path: "/develop", name: "Develop",
+    title: "Develop with omabox: script the loop, or test Hyprland itself",
+    desc: "look in one call, visual checks, an app's controls as text, what a program wrote, who did what, videos, several monitors, Hyprland builds, and the contract your scripts can keep." },
   { src: "commands.html", out: "commands.html", path: "/commands", name: "Commands",
     title: "omabox commands: every command and option",
-    desc: "Every omabox command, its options and examples, read from omabox help at the latest release, and the contract your scripts can keep." },
-  { src: "develop.html", out: "develop.html", path: "/develop", name: "Develop",
-    title: "Develop with omabox: apps, plugins, themes, Hyprland",
-    desc: "Test apps, shell plugins and themes, and changes to Hyprland itself, in a box instead of on your desktop: visual checks, accessibility trees, videos and sound." },
-  { src: "compare.html", out: "compare.html", path: "/compare", name: "ai-jail",
-    title: "omabox and ai-jail",
-    desc: "omabox is not a security boundary. ai-jail fences what an agent can read, write and reach; omabox decides where it draws. The two recipes that pair them." },
-  { src: "next.html", out: "next.html", path: "/next", name: "Coming",
-    title: "What's coming to omabox",
-    desc: "omabox beyond Omarchy: plain Hyprland boxes, your own shell, your own Hyprland desktop in a box. What has run so far, and what hasn't." },
+    desc: "Every omabox command, its options and examples, read from omabox help at the latest release." },
+  { src: "safety.html", out: "safety.html", path: "/safety", name: "Safety",
+    title: "omabox safety: not a security boundary, and what it holds",
+    desc: "What a box can and cannot touch, your seat, the agent guard, ports no box reaches, the rules with their tests, and ai-jail to fence the agent itself." },
   { src: "changelog.html", out: "changelog.html", path: "/changelog", name: "Changelog",
     title: "omabox changelog",
-    desc: "What each omabox release added, and every change." },
+    desc: "What each omabox release added that you would notice, and every change." },
   { src: "install.html", out: "install.html", path: "/install", name: "Install",
     title: "Install omabox",
-    desc: "What omabox needs, how to install and check it, upgrade to 1.0, update and remove it, and the questions people ask." },
+    desc: "Where omabox runs (Omarchy, Arch, Fedora, Debian, openSUSE), how to install and check it, update and remove it, and the questions people ask." },
 ];
 
 // What omabox is, in three lines, at the top of /llms.txt (the home page's words).
 const LLMS_SUMMARY = [
-  "omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is.",
-  "Your own desktop stays untouched: no windows, no cursor moves, no stolen focus, no prompts. Built for agents to drive; not a security boundary.",
-  "Today on Omarchy 4 with Hyprland 0.56 or later, on AMD, Intel or NVIDIA GPUs. MIT, every line.",
+  "omabox gives each coding agent an invisible Hyprland desktop of its own, where it opens, clicks and screenshots its work: one per agent, gone when the agent is.",
+  "Your own desktop stays yours: no windows popping up, no cursor jumps, no stolen focus, no prompts. Built for agents to drive; not a security boundary.",
+  "On any Hyprland 0.56 or later (Omarchy 4.5, Arch, Fedora, Debian, openSUSE), fullest on Omarchy; AMD, Intel or NVIDIA GPUs. MIT, every line.",
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -491,15 +488,15 @@ const header = cur => `<header class="top-bar sub">
     ${nav.replaceAll(`href="${cur.out}"`, `href="${cur.out}" aria-current="page"`)}
   </div>
 </header>`;
-// Every page ends the same way: the call to install (not on /install), then what's coming (not on /next).
+// Every page ends the same way: the call to install (not on /install), then a strip asking for your setup.
 const ending = cur => `${cur.out === "install.html" ? "" : `
   <div class="inst">
     <h2>Give every agent <i>a desktop of its own.</i></h2>
     <div class="icmd"><code>git clone https://github.com/${REPO} &amp;&amp; cd omabox &amp;&amp; ./install.sh</code></div>
-    <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT</p>
+    <p class="req">Any Hyprland 0.56+ · fullest on Omarchy · AMD, Intel or NVIDIA · MIT</p>
     <div class="ctas"><a class="btn solid" href="install.html">Install guide</a><a class="btn" href="https://github.com/${REPO}">${ghMark}GitHub</a></div>
-  </div>`}${cur.out === "next.html" ? "" : `
-  <a class="strip" href="next.html"><b>What's coming</b><span>Plain Hyprland boxes · Your own shell · Your own Hyprland desktop, in a box →</span></a>`}`;
+  </div>`}
+  <a class="strip" href="https://github.com/${REPO}/issues/new"><b>Tell us your setup</b><span>A shell, a distro or a job a box doesn't do yet: open an issue →</span></a>`;
 const footer = pick(/ {2}<footer>[^]*?<\/footer>/, "footer").replace(/\s*<pre>[^]*?<\/pre>/, "");
 // Landing on a linked section once the fonts are in (written once, in the home page, like the nav).
 const landing = pick(/<!-- landing[^>]*-->[^]*?<!-- \/landing -->/, "<!-- landing --> block").replace(/^<!--[^>]*-->\s*|\s*<!--[^>]*-->$/g, "");

@@ -1,5 +1,5 @@
 <style>
-/* /commands: an agent driving its box, the contract, then every command from omabox help at the
+/* /commands: an agent driving its box, then every command from omabox help at the
    latest release (build.mjs) with commands.json's lines */
 .pjump { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 4px; }
 /* the agent drives its box: a typed terminal beside the box's screen, as on the home page */
@@ -38,16 +38,6 @@
   .map td:last-child::before { content: "→ "; color: var(--box); font: 13px var(--mono); }
 }
 .stay { margin-top: 14px; }
-/* the contract */
-.contract h3 { display: flex; gap: 10px; align-items: center; }
-.contract h3 b { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; border: 1px solid currentColor; }
-.k-keep b { color: var(--box); } .k-warn b { color: var(--amber); } .k-carry b { color: var(--sky); } .k-not b { color: var(--muted); }
-.codes { width: 100%; border-collapse: collapse; font: 400 13px/1.5 var(--mono); color: var(--ink-2); }
-.codes td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.codes tr:last-child td { border-bottom: 0; }
-.codes td:first-child { width: 74px; padding-right: 12px; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.contract .code { white-space: pre-wrap; overflow-wrap: anywhere; }
-.cta-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-top: 18px; }
 /* every command */
 .jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; }
 .jump a { font: 500 12.5px/1 var(--mono); padding: 8px 11px; border-radius: 999px; background: var(--s2); border: 1px solid var(--line-2); color: var(--ink-2); text-decoration: none; transition: border-color .2s, color .2s; }
@@ -77,9 +67,9 @@
     <div class="head">
       <p class="tag">Commands</p>
       <h1>Every omabox command, <i>as the CLI prints it.</i></h1>
-      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">1.0.0</span></a> when this
+      <p class="lead">Read from <code>omabox help</code> at <a href="<!-- release-url -->">omabox <span class="ver">1.5.3</span></a> when this
         site was built, so the options match the omabox you install. Built for agents to drive; every command is yours to type too.</p>
-      <div class="pjump"><a class="more" href="#drive">An agent drives a box</a><a class="more" href="#contract">The contract</a><a class="more" href="#all">Every command</a></div>
+      <div class="pjump"><a class="more" href="#drive">An agent drives a box</a><a class="more" href="develop.html#contract">What your scripts can rely on</a><a class="more" href="#all">Every command</a></div>
     </div>
 
     <section class="grp" id="drive">
@@ -108,34 +98,10 @@
         </tbody></table></div></div></div>
     </section>
 
-    <section class="grp contract" id="contract">
-      <h2>What your scripts <i>can rely on.</i></h2>
-      <p class="lead">omabox is mostly used by agents, which read its warnings; a script or CI reads exit codes and
-        <code>--json</code>. From 1.0, within 1.x:</p>
-      <div class="grid2">
-        <div class="card k-keep"><div class="in"><h3><b>Kept</b>Or only added to</h3>
-          <p>Exit codes, and every <code>--json</code> field: its name, type and meaning. New fields may come, so read the ones you need by name.</p>
-          <table class="codes" aria-label="Exit codes">
-            <tr><td>0</td><td>done, or the condition held</td></tr>
-            <tr><td>1</td><td>it ran and failed, or the answer is no</td></tr>
-            <tr><td>2</td><td>called wrongly</td></tr>
-            <tr><td>124</td><td>not in time</td></tr>
-            <tr><td>125</td><td><code>run</code>: omabox's own failure, never the command's</td></tr>
-          </table></div></div>
-        <div class="card k-warn"><div class="in"><h3><b>Warned</b>Changed only after a warning</h3>
-          <p>Commands, options, config keys and <code>OMABOX_*</code> variables. The old form works for one more minor release,
-            with <code>omabox: deprecated:</code> on stderr naming the new one. <code>OMABOX_STRICT=1</code> refuses it at once, for CI.</p>
-          <pre class="code"><span class="p">$ </span>OMABOX_STRICT=1 omabox check run -- ./scenario.sh</pre></div></div>
-        <div class="card k-carry"><div class="in"><h3><b>Carried</b>Saves and baselines</h3>
-          <p>A save made by a 1.x starts with any later 1.x. A <code>check</code> baseline approved by a 1.x compares with any later 1.x, or is refused (“approve again”), never compared wrongly.</p></div></div>
-        <div class="card k-not"><div class="in"><h3><b>Not covered</b>What can still move</h3>
-          <p>Message wording, help text, defaults, and what Hyprland and other programs report through omabox.</p></div></div>
-      </div>
-      <div class="cta-row"><pre class="code"><span class="p">$ </span>omabox help exit-codes</pre><span class="caption" style="margin:0">Every code, what it means, in every command.</span></div>
-    </section>
-
     <section class="grp" id="all" data-rail="every command">
       <h2>Every command, <i>by what it's for.</i></h2>
+      <p class="lead">Exit codes and <code>--json</code> fields stay as they are within 1.x, or only grow:
+        <a href="develop.html#contract">the contract</a> says what your scripts can rely on.</p>
       <!-- commands -->
     </section>
   </section>

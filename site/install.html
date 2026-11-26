@@ -1,5 +1,5 @@
 <style>
-/* /install: what you need, install and check, upgrade to 1.0, update and remove, limits, questions
+/* /install: where it runs, install and check, your first ask, update and remove, limits, questions
    (following the omabox README on main) */
 .page > .head { grid-template-columns: minmax(0, 1fr); }
 .bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; justify-items: start; margin-top: 10px; min-width: 0; }
@@ -11,8 +11,18 @@
 .card ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); font-size: 15px; }
 .card ul b { color: var(--ink); font-weight: 600; }
 .card p { font-size: 15px; }
-.card.soon { --fc: rgb(125 207 255 / .35); border-style: dashed; }
-.card.soon h3 { color: var(--sky); }
+.card.not { --fc: rgb(125 207 255 / .3); border-style: dashed; }
+.card.not h3 { color: var(--sky); }
+.where { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .where { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.where > * { min-width: 0; }
+.where .card p.cmd { font: 400 12.5px/1.5 var(--mono); color: var(--muted); }
+.asks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .asks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.asks li { border-radius: 14px; border: 1px solid var(--line-2); background: var(--s1); padding: 16px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.asks .who { font: 500 11.5px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.asks q { color: var(--ink); font-size: 15.5px; quotes: "\201C" "\201D"; }
+.asks a { font-size: 14px; }
 .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 12px; max-width: 56em; }
 .steps li { counter-increment: s; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; align-items: start; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--s1); color: var(--ink-2); font-size: 15.5px; }
 .steps li::before { content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: rgb(158 206 106 / .1); border: 1px solid rgb(158 206 106 / .4); color: var(--box); font: 600 14px/1 var(--mono); }
@@ -26,9 +36,10 @@
   <section class="page">
     <div class="head">
       <p class="tag">Install</p>
-      <h1>Three minutes, then your agents <i>take it from there.</i></h1>
-      <p class="lead">omabox installs from its git repository, into your home. It asks for <code>sudo</code> only to install
-        packages it needs that you don't have yet.</p>
+      <h1>Three minutes, <i>then ask your agent.</i></h1>
+      <p class="lead">omabox installs from its git repository, into your home. On Arch it asks for <code>sudo</code> only to
+        install packages it needs that you don't have yet; on other distributions it prints the line that installs them and
+        stops.</p>
       <div class="bar">
         <div class="icmd"><code id="cmd">git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code><button type="button" id="copy">Copy</button></div>
         <p class="ask">Or ask your agent: <b>"Install omabox. The guide is at omabox.app/install.md."</b> It stops for you where
@@ -36,28 +47,40 @@
       </div>
     </div>
 
-    <section class="grp" id="need">
-      <h2>What you need</h2>
-      <div class="two">
-        <div class="card"><div class="in"><h3>Your machine</h3><ul>
-          <li><b>Omarchy 4</b> on Arch, with Hyprland 0.56 or later</li>
-          <li><b>A GPU:</b> AMD, Intel or NVIDIA</li>
-          <li><b>Rust:</b> omabox 1.0 is one binary, built by <code>./install.sh</code>. If there's no <code>cargo</code>, it
-            installs Arch's <code>rust</code>; the first build fetches its crates.</li>
+    <section class="grp" id="need" data-rail="where it runs">
+      <h2>Where it runs</h2>
+      <p class="lead">Linux with <b>Hyprland 0.56 or later</b> and its Lua config (0.56.2 and 0.57.1 are tested), and a
+        GPU: AMD and Intel iGPUs and NVIDIA RTX cards are tested.</p>
+      <div class="where">
+        <div class="card key"><div class="in"><h3>Omarchy 4.5</h3>
+          <p>Boxes are Omarchy's own desktop: its config, its shell, your theme. Omarchy 4.0 still works, deprecated: omabox drops
+            it in its first release after 2026-12-04. <code>omarchy update</code> brings 4.5.</p>
+          <p class="cmd"><a href="desktops.html#omarchy">Omarchy boxes →</a></p></div></div>
+        <div class="card"><div class="in"><h3>Arch, Fedora 45, Debian sid, openSUSE Tumbleweed</h3>
+          <p>Boxes are plain Hyprland, with your shell as their bar if you want one. Each is tested in a VM of its own,
+            <code>install.sh</code> through to real boxes; plain Arch runs the whole test suite. Fedora's Hyprland comes from a
+            COPR; on Debian sid, Hyprland 0.57.0 drops every GPU app in a box (fixed in 0.57.1: <code>omabox doctor</code>
+            warns).</p>
+          <p class="cmd"><a href="desktops.html#plain">Plain Hyprland →</a></p></div></div>
+        <div class="card not"><div class="in"><h3>Not yet</h3>
+          <p><b>NixOS:</b> a box looks for its programs in <code>/usr/bin</code>. <b>Ubuntu 26.04, Alpine and Void</b> ship no
+            Hyprland with the Lua config.</p>
+          <p class="cmd"><a href="https://github.com/diogochaves/omabox/issues/new">Tell us your distro →</a></p></div></div>
+      </div>
+      <div class="two" style="margin-top:14px">
+        <div class="card"><div class="in"><h3>Also</h3><ul>
+          <li><b>Rust:</b> omabox is one binary, built by <code>./install.sh</code>. With no <code>cargo</code>, it installs
+            Arch's <code>rust</code>, or names your distribution's; the first build fetches its crates.</li>
           <li><b>nftables</b> (<code>nft</code>), only if you set protected ports</li>
-          <li>For agents to reach for it on their own, one the skill is installed for: Claude Code, Codex, OpenCode, pi or Hermes</li></ul></div></div>
-        <div class="card"><div class="in"><h3>On NVIDIA</h3>
-          <p>Headless boxes on NVIDIA, and the confirm-close setting, need a fix to aquamarine (Hyprland's backend library) until
-            a release ships <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a>. <code>install.sh</code> builds it
-            privately inside the clone; your system's copy isn't touched. The same build carries omabox's own fixes for boxes you
-            drive (a held key, your pointer across a box's monitor windows), so it is built even when your system's copy has
-            the fix.</p>
-          <p>With several GPUs, <code>omabox config gpu</code> (or the bar widget's Settings) picks the one headless boxes render
-            on, and <code>omabox gpu release</code> takes down the boxes on one before you hand it to a VM. An interactive box
-            renders on the GPU your desktop renders on.</p></div></div>
-        <a class="card soon span2" href="next.html"><div class="in"><h3>Not on another distro yet</h3>
-          <p>A box runs your host's own Omarchy today. Plain Hyprland boxes are coming, aimed at any distro with Hyprland 0.56 or
-            later. <span class="more">What's coming →</span></p></div></a>
+          <li>For agents to reach for it on their own, one the skill is installed for: Claude Code, Codex, OpenCode, pi or
+            Hermes</li></ul></div></div>
+        <div class="card"><div class="in"><h3>aquamarine, and NVIDIA</h3>
+          <p><code>install.sh</code> builds a private copy of aquamarine (Hyprland's backend library) inside the clone; your
+            system's isn't touched. Headless boxes on NVIDIA need its fix until a system aquamarine has
+            <a href="https://github.com/hyprwm/aquamarine/pull/415">PR #415</a> (0.16.0 does), and it carries omabox's own fixes for
+            boxes you drive (a held key, your pointer across a box's monitor windows), which no system copy has.</p>
+          <p>With several GPUs, <code>omabox config gpu</code> picks the one headless boxes render on, and
+            <code>omabox gpu release</code> takes down the boxes on one before you hand it to a VM.</p></div></div>
       </div>
     </section>
 
@@ -66,33 +89,64 @@
       <div class="two">
         <div class="card"><div class="in"><h3>Install</h3>
           <pre class="code"><span class="p">$ </span>git clone https://github.com/diogochaves/omabox && cd omabox
-<span class="p">$ </span>./install.sh           <span class="o"># asks about the bar widget and the guard</span>
+<span class="p">$ </span>./install.sh           <span class="o"># packages, omabox, links; asks about the bar widget and the guard</span>
 <span class="p">$ </span>./install.sh --check   <span class="o"># then starts a box, screenshots it, takes it down</span></pre>
-          <p><code>install.sh</code> installs any missing packages, builds omabox and the aquamarine fix, then runs
+          <p><code>install.sh</code> checks your distribution's packages under their own names. <b>On Arch</b> (with or without
+            Omarchy) it installs what is missing, with <code>sudo</code>. <b>On Debian, Fedora and openSUSE</b> it prints the
+            command that does (<code>sudo apt install …</code>, <code>sudo dnf install …</code>, <code>sudo zypper install
+            …</code>) and stops: run it, then <code>./install.sh</code> again. Then it builds omabox and aquamarine and runs
             <code>omabox setup</code>.</p></div></div>
         <div class="card"><div class="in"><h3>What setup does</h3><ul>
           <li>Links <code>~/.local/bin/omabox</code></li>
           <li>Puts the agent skill wherever Omarchy puts its own skills (<code>~/.agents</code>, <code>~/.claude</code>,
             <code>~/.codex</code>, <code>~/.pi/agent</code>, <code>~/.hermes</code>)</li>
-          <li>Links the bar widget, and asks whether to put it in your bar</li>
-          <li>Asks whether to turn on the <a href="how-it-works.html#agents">agent guard</a></li></ul>
+          <li>On Omarchy, links the bar widget and asks whether to put it in your bar</li>
+          <li>Asks whether to turn on the <a href="safety.html#guard">agent guard</a></li></ul>
           <p>Later, by hand: <code>omarchy plugin enable chaves.omabox</code>, <code>omabox guard on</code>.</p></div></div>
+        <div class="card span2"><div class="in"><h3>A box that won't start: <code>omabox doctor</code></h3>
+          <p>It checks what a box needs (Hyprland and its config, bubblewrap, pasta, user namespaces, the render nodes, the
+            programs a box runs) and, for each one that fails, prints the line that installs it for your distribution. It
+            changes nothing. <code>--smoke</code> also starts a box, takes a shot and takes it down; <code>--json</code> for a
+            script.</p>
+          <pre class="code"><span class="p">$ </span>omabox doctor
+<span class="o">ok    hyprland       Hyprland 0.57.2 (Lua config)
+ok    bwrap          bubblewrap 0.13.1
+ok    userns         unprivileged user namespaces: unshare and bwrap make them
+ok    tun            /dev/net/tun, a connected box's network
+...</span>
+<span class="p">$ </span>omabox doctor --smoke</pre>
+          <p class="caption" style="margin:0">An excerpt, on Omarchy.</p></div></div>
       </div>
     </section>
 
-    <section class="grp" id="upgrade">
-      <h2>From 0.x <i>to 1.0.</i></h2>
-      <p class="lead">omabox 1.0 is a Rust rewrite with the same commands. The move takes one pull and one build.</p>
+    <section class="grp" id="first" data-rail="your first ask">
+      <h2>Your first ask</h2>
+      <p class="lead">Once it's installed you rarely type omabox yourself. Ask your agent, in your project:</p>
+      <ul class="asks">
+        <li><span class="who">A desktop app</span><q>Change the settings page, then look at it in a box and fix what's off.</q>
+          <a href="uses.html">Use cases →</a></li>
+        <li><span class="who">A web app</span><q>Open the dev server in a box, click through sign-up and show me a shot of each step.</q>
+          <a href="uses.html">Use cases →</a></li>
+        <li><span class="who">A shell, plugin or theme</span><q>Put my plugin in a box's bar, open its panel and tell me what it logs.</q>
+          <a href="desktops.html">Desktops →</a></li>
+      </ul>
+    </section>
+
+    <section class="grp" id="upgrade" data-rail="from 0.x">
+      <h2>From 0.x <i>to 1.x.</i></h2>
+      <p class="lead">Take your boxes down, then <code>git pull &amp;&amp; ./install.sh</code> in one go, and restart agents running in
+        ai-jail. <a href="changelog.html#v1.0.0">The 1.0 changelog</a> lists each form that changed.</p>
+      <details class="card" style="margin-top:14px"><summary style="padding:16px 22px;cursor:pointer;font:500 13px var(--mono);color:var(--sky)">Step by step</summary><div class="in" style="padding-top:0">
       <ol class="steps">
         <li><div><b>Take your boxes down first.</b><pre class="code"><span class="p">$ </span>omabox down --all</pre></div></li>
         <li><div><b>Pull and build in one go.</b> Until <code>install.sh</code> has run, <code>omabox</code> is missing, new agent
           sessions start without the guard, and agents in ai-jail don't start.<pre class="code"><span class="p">$ </span>git pull && ./install.sh</pre></div></li>
         <li><div><b>Restart agents running in ai-jail.</b> A jail started before the upgrade keeps its old relay.</div></li>
-        <li><div><b>Scripts on an old form are told what to write.</b> A form 0.9 warned about is now refused, with a line naming what to write
-          instead. The <a href="changelog.html">changelog</a> lists each one.</div></li>
+        <li><div><b>Scripts on an old form are told what to write.</b> A form 0.9 warned about is refused, with a line naming what to write
+          instead.</div></li>
         <li><div><b>Nothing to move.</b> Every path in your home stays where it was: the <code>omabox</code> link, ai-jail's maps,
           the broker's unit, the guard's hook.</div></li>
-      </ol>
+      </ol></div></details>
     </section>
 
     <section class="grp" id="update">
@@ -120,6 +174,8 @@
       <h2>What a box can't do</h2>
       <p class="lead">Worth knowing before you hand it a task.</p>
       <ul class="lim">
+        <li><b>A plain box has no bar</b> unless you give it a shell: no launcher, tray host or notification server, so an app
+          that waits for a tray or notifies finds nobody there.</li>
         <li><b>No system bus.</b> Apps that need system services (disks, NetworkManager, bluetooth, power) open with errors or
           not at all: a box has none, by design.</li>
         <li><b>No real hardware.</b> A box's monitors are virtual (as many as you like), so real ones (their modes, HDR and VRR,
@@ -127,17 +183,17 @@
           <code>--audio</code> it gets a speaker nobody hears, never your sound card. For the installer, system services or a
           reboot, a VM is the tool.</li>
         <li><b>No wgpu apps on NVIDIA.</b> Apps drawn with wgpu (eframe's default renderer, iced, Bevy) don't start in a box on
-          NVIDIA: give them a GL renderer, or a box on an AMD or Intel GPU. <a href="develop.html">Develop</a> has the
+          NVIDIA: give them a GL renderer, or a box on an AMD or Intel GPU. <a href="develop.html#limits">Develop</a> has the
           details.</li>
         <li><b>Not a security boundary.</b> A box shares your kernel, your GPU and, by default, your network. For a fence around
-          the agent, use <a href="compare.html">ai-jail</a> with it. What a box does keep out, and the test for each rule:
-          <a href="https://github.com/diogochaves/omabox/blob/main/SECURITY.md">SECURITY.md</a>.</li>
+          the agent, use <a href="safety.html#ai-jail">ai-jail</a> with it. What a box does keep out, and the test for each
+          rule: <a href="safety.html">Safety</a>.</li>
         <li>Of the agents the skill is installed for, Claude Code and OpenCode were checked end to end; Codex, pi and Hermes find
           the skill.</li>
       </ul>
-      <p class="note">Something didn't work on your machine? Run <code>./install.sh --check</code> and
-        <a href="https://github.com/diogochaves/omabox/issues/new">tell us what happened</a>. Another GPU, several monitors or
-        a config nothing like ours is the test we don't have.</p>
+      <p class="note">Something didn't work on your machine? Run <code>omabox doctor</code> and
+        <a href="https://github.com/diogochaves/omabox/issues/new">tell us what happened</a>. Another GPU, another distro or a
+        config nothing like ours is the test we don't have.</p>
     </section>
 
     <section class="grp" id="faq">
@@ -146,17 +202,18 @@
         <details><summary>Do I type omabox commands myself?</summary><p>You can, but you'll rarely need to. Ask your agent:
           "start a box with the app running so I can try it" gets you a window you drive, and the agent keeps changing the app
           in it while you test.</p></details>
-        <details><summary>Does it work without Omarchy?</summary><p>Not yet. A 1.0 box runs your host's own Omarchy: its
-          Hyprland config, its shell and your theme. Plain Hyprland boxes are coming, aimed at any distro with Hyprland 0.56 or
-          later (the Lua config). <a href="next.html">What's coming →</a></p></details>
-        <details><summary>Does it run my own shell or dotfiles?</summary><p>Not yet. Your own shell and your own Hyprland config
-          in a box are coming, one shell at a time, Dux Shell first. <a href="next.html">What's coming →</a></p></details>
+        <details><summary>Do I need Omarchy?</summary><p>No. On Omarchy 4.5 a box is Omarchy's desktop; on Arch without
+          Omarchy, Fedora 45, Debian sid and openSUSE Tumbleweed it is a plain Hyprland, with your shell as its bar if you want
+          one. Any distro needs Hyprland 0.56 or later with its Lua config. <a href="#need">Where it runs →</a></p></details>
+        <details><summary>Does it work with my shell?</summary><p>Yes, one at a time: DMS, Noctalia, Caelestia, Waybar or a
+          Quickshell config, as a plain box's bar (<code>up --desktop plain --shell CMD</code>) or with your whole desktop
+          copied into a box (<code>up --desktop desk</code>). <a href="desktops.html">Desktops →</a></p></details>
         <details><summary>Is omabox part of Omarchy?</summary><p>No. omabox is an independent community project and is not
           made or endorsed by the Omarchy project. Report problems on
           <a href="https://github.com/diogochaves/omabox/issues">omabox's GitHub</a>, not to Omarchy.</p></details>
-        <details><summary>Will 1.0 break my scripts?</summary><p>Exit codes and <code>--json</code> fields keep their meaning
+        <details><summary>Will an update break my scripts?</summary><p>Exit codes and <code>--json</code> fields keep their meaning
           within 1.x, and only grow. 1.0 itself removed the forms 0.9 warned about, each refused with a line naming what to
-          write. <a href="commands.html#contract">The contract →</a></p></details>
+          write. <a href="develop.html#contract">The contract →</a></p></details>
         <details><summary>Why Rust?</summary><p>One binary, built by <code>./install.sh</code>. It leaves nothing half-done when
           you stop it, enters a box without <code>nsenter</code>, and keeps a box's commands off your terminal. The commands are
           the same.</p></details>
@@ -164,10 +221,10 @@
           box, named after its repo or worktree and its session. Subagents take a box each, with <code>omabox brief</code>.</p></details>
         <details><summary>Is it a sandbox?</summary><p>No, it is not a security boundary. It keeps apps off your desktop and
           never gets your secrets, input devices or seat, but it shares your kernel, GPU and, unless you pass
-          <code>--net isolated</code>, your network. For a fence around the agent, use <a href="compare.html">ai-jail</a>; for
-          hostile code, a VM.</p></details>
+          <code>--net isolated</code>, your network. For a fence around the agent, use <a href="safety.html#ai-jail">ai-jail</a>; for
+          hostile code, a VM. <a href="safety.html">Safety →</a></p></details>
         <details><summary>Which GPUs does it work on?</summary><p>AMD, Intel and NVIDIA. On NVIDIA, headless boxes need a fix to
-          aquamarine that <code>install.sh</code> builds for you; <a href="#need">What you need</a> has the details.</p></details>
+          aquamarine that <code>install.sh</code> builds for you; <a href="#need">Where it runs</a> has the details.</p></details>
         <details><summary>Does peeking slow the agent down?</summary><p>No. Peek only copies frames out of the box.</p></details>
       </div>
     </section>

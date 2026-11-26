@@ -9,14 +9,14 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
 - `site/omabox.html`: the home page, as an **artifact source**: no `<!doctype>`, `<html>`, `<head>`
   or `<body>` (the artifact platform wraps it). `<title>`, its links and `<style>` come first.
 - `site/base.css`: what every page shares (tokens, type, header with the big mark, buttons, labels,
-  panels and cards, code, the install band, the "what's coming" strip, footer, motion). Each page's
+  panels and cards, code, the install band, the strip under it, footer, motion). Each page's
   `<style>` has only what it uses. Since the 1.0 look (branch `site-1.0`, Look H in `DIRECTION.md`)
   everything is rounded: `.cut`/`.in` are kept as names for a card, with no cut corners.
-- `site/how-it-works.html`, `site/uses.html`, `site/omarchy.html`, `site/commands.html`,
-  `site/develop.html`, `site/compare.html` (omabox and ai-jail), `site/next.html`,
-  `site/changelog.html`, `site/install.html`: the other pages, as a `<style>` and a `<main>` only (a
+- `site/uses.html` (use cases), `site/how-it-works.html`, `site/desktops.html` (Omarchy, plain and
+  desk boxes), `site/develop.html`, `site/commands.html`, `site/safety.html` (what a box can touch,
+  the guard, ai-jail), `site/changelog.html`, `site/install.html`: the other pages, as a `<style>` and a `<main>` only (a
   page's `<script>` goes inside its `<main>`); the build adds the head, header, an install band (not
-  on /install), the "what's coming" strip (not on /next) and footer, and fills their
+  on /install), the "Tell us your setup" strip and footer, and fills their
   `<!-- markers -->`. The nav (between `<!-- nav -->` markers), the footer and the script that lands
   a link on its section once the fonts are in (between `<!-- landing -->` markers) are written once,
   in the home page, and copied from it. So is the script of the side rail (`<!-- rail -->`); each
@@ -54,7 +54,8 @@ far and why the old drafts were dropped. Diogo (the owner) will say what to chan
   guide first. Each page's head links its twin (`<link rel="alternate" type="text/markdown">`;
   `/install`'s links the guide). None of it is in the sitemap: the same words as the pages, for agents.
 - The home page sends links to sections that moved to pages (`/#compare`, `/#jail`, `/#never`...)
-  on to them, so old links keep working (the omabox README links `/#compare`).
+  on to them, so old links keep working (the omabox README links `/#compare`). Pages folded into
+  others (`/omarchy`, `/next`, `/compare`, 2026-11-25) redirect in `functions/_middleware.js`.
 
 ## Publishing
 
@@ -65,11 +66,11 @@ the single page before it (<https://claude.ai/artifact/TvfdLN5NpYnTR6VoLxc17d>),
 longer updated. To update it from a new session: read it first
 (Artifact `action: "read"` with its `url`), then publish with the same `url` and `file_path:
 site/omabox.html`. The other pages and the shared CSS go in `files`: run `node build.mjs --preview`,
-then pass `{"base.css": "site/base.css", "how-it-works.html": "preview/how-it-works.html",
-"uses.html": "preview/uses.html", "omarchy.html": "preview/omarchy.html", "commands.html":
-"preview/commands.html", "develop.html": "preview/develop.html", "compare.html":
-"preview/compare.html", "next.html": "preview/next.html", "changelog.html":
-"preview/changelog.html", "install.html": "preview/install.html"}` (the ones that changed). Pass media only when new or changed
+then pass `{"base.css": "site/base.css", "uses.html": "preview/uses.html", "how-it-works.html":
+"preview/how-it-works.html", "desktops.html": "preview/desktops.html", "develop.html":
+"preview/develop.html", "commands.html": "preview/commands.html", "safety.html":
+"preview/safety.html", "changelog.html": "preview/changelog.html", "install.html":
+"preview/install.html"}` (the ones that changed). Pass media only when new or changed
 (`{"media/x.webp": "site/media/x.webp"}`); files left out are kept. Don't publish without `url`
 (that makes a separate artifact) unless Diogo asks for a new draft, as he did for draft 4.
 
@@ -116,7 +117,7 @@ L=$(mktemp -d); cp -r site/media site/base.css preview/*.html $L/
 { echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>'; cat site/omabox.html; echo '</body></html>'; } > $L/index.html
 omabox up -b look --ro-bind $L
 omabox run -b look -d -- chromium --user-data-dir=/tmp/chr --no-first-run --no-default-browser-check --ozone-platform=wayland --app=file://$L/index.html
-# another page: omabox run -b look -- pkill -x chromium, then the same with $L/compare.html
+# another page: omabox run -b look -- pkill -x chromium, then the same with $L/safety.html
 omabox shot -b look                      # Page_Down with: omabox keys -b look Page_Down
 omabox mode -b look 412x915              # phone width
 omabox gpu -b look 5                     # GPU cost (draft 4: 0% idle and scrolling at 1080p)

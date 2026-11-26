@@ -212,58 +212,18 @@
 
 
 /* uses: what people do with a box, each with a small picture of it */
-.uses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.use { border-radius: 18px; border: 1px solid var(--line); background: var(--s1); padding: 20px; display: grid; gap: 10px; align-content: start; min-width: 0; transition: border-color .25s; }
-.use:hover { border-color: rgb(158 206 106 / .4); }
-.use h3 { font: 600 19px/1.2 var(--display); letter-spacing: -.02em; }
-.use p { color: var(--ink-2); font-size: 14.5px; }
-.use pre { margin: 4px 0 0; padding: 10px 12px; border-radius: 9px; background: #060607; border: 1px solid var(--line); font: 400 11.5px/1.7 var(--mono); color: var(--ink-2); overflow-x: auto; }
-.use pre .p { color: var(--box); }
-.pic { position: relative; height: 128px; border-radius: 10px; border: 1px solid var(--line); background: #0b0b0e; overflow: hidden; margin-bottom: 6px; }
-.pic .bx2 { position: absolute; border-radius: 6px; border: 1.5px solid rgb(158 206 106 / .7); background: radial-gradient(120% 90% at 20% 0%, #15240f, #090c08 70%); }
-.pic .tl { position: absolute; left: 12px; right: 12px; bottom: 14px; height: 30px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-.pic .tl i { border-radius: 3px; background: #1a2614; border: 1px solid rgb(158 206 106 / .3); }
-.pic .mk { position: absolute; bottom: 48px; font: 500 9.5px/1 var(--mono); color: #000; background: var(--ink); border-radius: 3px; padding: 3px 5px; }
-.pic .head2 { position: absolute; left: 0; top: 0; bottom: 48px; width: 2px; background: var(--warn); animation: play 6s linear infinite; }
 @keyframes play { from { transform: translateX(14px); } to { transform: translateX(300px); } }
-.pic .rc2 { position: absolute; right: 10px; top: 10px; font: 500 10px/1 var(--mono); color: var(--warn); }
-.pic .sz { position: absolute; font: 500 10.5px/1 var(--mono); color: var(--box); }
-.pic .glyph { position: absolute; font: 600 30px/1 var(--display); color: var(--ink); letter-spacing: -.03em; }
-.pic .glyph.lo { filter: blur(.9px); opacity: .6; }
-.pic .mon { position: absolute; border-radius: 4px; border: 1.5px solid rgb(158 206 106 / .7); background: #0f170c; }
-.pic .mon::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: rgb(158 206 106 / .3); }
-.pic .clk { position: absolute; top: 6px; right: 10px; font: 500 10px/1 var(--mono); color: var(--muted); }
-.pic .page { position: absolute; left: 14%; right: 14%; top: 22px; bottom: -40px; border-radius: 6px 6px 0 0; background: #15151a; border: 1px solid var(--line-2); overflow: hidden; }
-.pic .page i { display: block; height: 7px; margin: 10px 12px 0; border-radius: 3px; background: rgb(255 255 255 / .09); }
-.pic .page .scroll { animation: pagedown 5s steps(3) infinite; }
 @keyframes pagedown { to { transform: translateY(-60px); } }
-.pic .bt2 { position: absolute; left: 12px; right: 12px; top: 12px; font: 400 10.5px/1.6 var(--mono); color: var(--ink-2); white-space: pre; }
-.pic .bt2 .w { color: var(--warn); }
 .usemore { margin-top: 22px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; color: var(--ink-2); }
-@media (max-width: 960px) { .uses { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 620px) { .uses { grid-template-columns: minmax(0, 1fr); } }
 
 /* new in: one tab per release with something to show, the newest open */
-.news { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
-.news > * { min-width: 0; }
-.rels { border-right: 1px solid var(--line); padding: 10px; display: grid; gap: 2px; align-content: start; }
-.rels button { border: 0; background: none; text-align: left; border-radius: 10px; padding: 10px 12px; display: grid; gap: 3px; color: var(--muted); transition: background .2s, color .2s; }
-.rels button b { font: 600 16px/1.1 var(--display); color: var(--ink-2); letter-spacing: -.01em; }
-.rels button span { font: 400 11.5px/1.3 var(--mono); }
-.rels button[aria-selected="true"] { background: rgb(255 255 255 / .06); }
-.rels button[aria-selected="true"] b { color: var(--box); }
-.rels a { padding: 10px 12px; font-size: 13.5px; color: var(--ink-2); }
-.rel { padding: 24px; display: grid; gap: 18px; align-content: start; }
-.rmeta { font: 400 12.5px/1.5 var(--mono); color: var(--muted); }
-.rmeta b { color: var(--ink); font-weight: 500; }
-.rmeta a { color: var(--box); }
 .hls { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .hls li { border-radius: 14px; border: 1px solid var(--line); background: rgb(255 255 255 / .015); padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
 .hls h3 { font-size: 15.5px; }
 .hls p { color: var(--ink-2); font-size: 14.5px; }
 .hls pre { margin: 2px 0 0; padding: 8px 10px; border-radius: 8px; background: #060607; border: 1px solid var(--line); font: 400 11.5px/1.6 var(--mono); color: var(--ink-2); overflow-x: auto; }
 .hls pre .p { color: var(--box); }
-@media (max-width: 860px) { .news { grid-template-columns: minmax(0, 1fr); } .rels { border-right: 0; border-bottom: 1px solid var(--line); grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; } .hls { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 860px) { .hls { grid-template-columns: minmax(0, 1fr); } }
 
 /* built for agents: glow cards, each with a small working piece */
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
@@ -271,7 +231,6 @@
 .gcard > div { height: 100%; border-radius: 17px; background: radial-gradient(500px circle at var(--x) var(--y), rgb(158 206 106 / .05), transparent 50%), var(--s1); padding: 26px; display: grid; gap: 12px; align-content: start; }
 .gcard h3 { display: flex; gap: 10px; align-items: center; font: 500 21px/1.2 var(--display); letter-spacing: -.02em; }
 .gcard p { color: var(--ink-2); font-size: 15px; }
-.viz { margin-top: 6px; border-radius: 10px; border: 1px solid var(--line); background: #060607; padding: 14px; font: 400 11.5px/1.7 var(--mono); color: var(--ink-2); overflow-x: auto; }
 .bars { display: grid; gap: 8px; }
 .bars div { display: grid; grid-template-columns: 90px minmax(0, 1fr) 56px; gap: 10px; align-items: center; }
 .bars i { display: block; height: 8px; border-radius: 4px; background: var(--box); transform-origin: left; }
@@ -282,9 +241,6 @@
 .diff span { position: absolute; left: 14px; bottom: 12px; width: 56px; height: 18px; border-radius: 4px; background: rgb(255 255 255 / .12); }
 .diff .new span { transform: translateX(-6px); }
 .diff .new em { position: absolute; left: 4px; bottom: 6px; width: 70px; height: 30px; border: 1.5px solid var(--warn); border-radius: 4px; }
-.codes { width: 100%; border-collapse: collapse; }
-.codes td { padding: 3px 0; border-bottom: 1px solid var(--line); }
-.codes td:first-child { width: 46px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .gcard a { font: 500 13.5px/1 var(--sans); color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 3px; justify-self: start; }
 @media (max-width: 760px) { .cards { grid-template-columns: minmax(0, 1fr); } }
 
@@ -311,23 +267,15 @@
 .mach .desk .win { left: 10%; top: 26%; width: 80%; height: 62%; }
 .recipes { padding: 22px; display: grid; gap: 18px; align-content: start; }
 .recipes h3 { font-size: 14.5px; }
-.recipes pre { margin: 6px 0 0; border-radius: 10px; border: 1px solid var(--line); background: #060607; padding: 12px 14px; font: 400 12px/1.8 var(--mono); color: var(--ink-2); overflow-x: auto; }
-.recipes pre .p { color: var(--box); } .recipes pre .o { color: var(--muted); }
 .recipes .capt { font-size: 13px; color: var(--muted); }
 @media (max-width: 900px) { .pair { grid-template-columns: minmax(0, 1fr); } .map { border-right: 0; border-bottom: 1px solid var(--line); } }
 @media (max-width: 560px) { .mach { grid-template-columns: minmax(0, 1fr); } .wire i { transform: rotate(90deg); margin: 18px 0; } }
 
 /* omarchy: the pixel mark that breaks, beside a box running Omarchy */
-.oma { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; align-items: center; padding: 36px; }
 .pix { position: relative; width: 165px; height: 165px; border: 0; background: none; padding: 0; }
 .pix i { position: absolute; width: 11px; height: 11px; background: var(--box); box-shadow: 0 0 10px var(--box-glow); }
-.oma > div { display: grid; gap: 14px; justify-items: start; min-width: 0; }
-.oma p { color: var(--ink-2); }
-.oma .hint2 { font: 400 12px/1 var(--mono); color: var(--muted); }
 .shotbox { align-self: center; border-radius: 10px; overflow: hidden; border: 1px solid rgb(158 206 106 / .55); box-shadow: 0 0 30px rgb(158 206 106 / .08); }
 .shotbox .dbar { background: #0b120a; }
-@media (max-width: 900px) { .oma { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 600px) { .oma { grid-template-columns: minmax(0, 1fr); padding: 24px 18px; } }
 
 /* open: MIT, forks, the people */
 .open { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
@@ -346,33 +294,13 @@
 @media (max-width: 900px) { .open { grid-template-columns: minmax(0, 1fr); } .graph { border-right: 0; border-bottom: 1px solid var(--line); } }
 
 /* coming */
-.soon { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 14px; align-items: stretch; }
-.soon > * { min-width: 0; }
-.sooncards { display: grid; gap: 10px; }
-.sooncards article { padding: 20px 20px; border-radius: 16px; border: 1px dashed rgb(255 255 255 / .22); background: rgb(255 255 255 / .015); display: grid; gap: 6px; }
-.sooncards h3 { display: flex; gap: 10px; align-items: center; font: 500 19px/1.2 var(--display); letter-spacing: -.02em; }
-.sooncards p { color: var(--ink-2); font-size: 15px; }
-.soon .ws { display: grid; grid-template-rows: auto 1fr; }
-.soon .ws img { width: 100%; height: 100%; object-fit: cover; object-position: right top; }
-.soon figcaption { font: 400 12px/1.5 var(--mono); color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
-@media (max-width: 900px) { .soon { grid-template-columns: minmax(0, 1fr); } }
 
 /* omarchy: their logo, our mark */
-.omastage { position: relative; border-radius: 18px; border: 1px solid var(--line-2); background: radial-gradient(70% 90% at 50% 40%, rgb(158 206 106 / .10), transparent 70%), #10111a; padding: 44px 36px 26px; display: grid; gap: 22px; justify-items: center; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .8); }
-.omastage .pair2 { display: flex; align-items: center; gap: 14px; font: 500 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--sky); }
-.omastage .omm { width: 34px; height: 34px; color: var(--box); filter: drop-shadow(0 0 12px var(--box-glow)); }
-.omastage .omlogo { width: min(420px, 100%); height: auto; color: var(--ink); filter: drop-shadow(0 0 22px rgb(214 220 255 / .18)); }
-.omastage figcaption { font: 400 12.5px/1.5 var(--mono); color: var(--muted); text-align: center; }
 
 /* panels and labels only this page has, in Tokyo Night */
 .agents span, .rels button b { font-family: var(--display); font-weight: 600; letter-spacing: .01em; }
-.use h3, .gcard h3, .sooncards h3, .hls h3, .cols h3, .recipes h3 { font-family: var(--display); font-weight: 600; letter-spacing: .01em; }
 .gcard a { font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); border-bottom-color: rgb(125 207 255 / .35); }
-.use, .hls li, .gcard { box-shadow: 0 24px 50px -28px rgb(0 0 0 / .8); }
 .scene { border-color: var(--line-2); background: radial-gradient(60% 70% at 50% 30%, rgb(158 206 106 / .07), transparent 70%), linear-gradient(180deg, #10111a, #0b0c13); }
-.use, .hls li, .sooncards article { background: var(--s1); border-color: var(--line-2); }
-.sooncards article { border-style: solid; }
-.viz, .use pre, .hls pre, .recipes pre, .licp, .pic, .ls { background: var(--well); }
 .floor { background: #10111a; } .fbar { background: #0b0c13; } .fw { background: #151724; }
 .pill { background: rgb(158 206 106 / .07); border-color: rgb(158 206 106 / .4); font-family: var(--mono); font-size: 12.5px; }
 .tabs button[aria-selected="true"], .rels button[aria-selected="true"] { background: rgb(158 206 106 / .1); }
@@ -380,6 +308,50 @@
 .ppl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
 .ppl a { display: block; border-radius: 50%; }
 .ppl img { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-2); }
+
+.gcard h3, .hls h3, .cols h3, .recipes h3 { font-family: var(--display); font-weight: 600; letter-spacing: .01em; }
+.hls li, .gcard { box-shadow: 0 24px 50px -28px rgb(0 0 0 / .8); }
+.hls li { background: var(--s1); border-color: var(--line-2); }
+.hls pre, .licp, .ls { background: var(--well); }
+/* who it's for: four doors to /uses */
+.fors .gcard { color: inherit; text-decoration: none; }
+.fors .gcard > div { display: grid; gap: 10px; align-content: start; padding: 22px; }
+.fors .q { font: 400 13px/1.5 var(--mono); color: var(--ink); }
+.fors .go { margin-top: auto; font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); }
+.usemore { margin-top: 22px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; color: var(--ink-2); }
+/* the loop: the agent's terminal beside the shot it reads */
+.loopws { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.loopws > * { min-width: 0; }
+.loopws .term { min-height: 430px; font-size: 12.3px; }
+.term .w { color: var(--warn); } .term .k { color: var(--box); }
+.lshot { padding: 20px; display: grid; gap: 10px; align-content: start; }
+.lshot .desk { height: 260px; }
+.pref { position: absolute; left: 8%; top: 22%; width: 84%; border-radius: 8px; background: #2b2b2e; border: 1px solid rgb(255 255 255 / .1); padding-bottom: 12px; }
+.pref .wt { font: 500 10px/1 var(--mono); color: var(--ink-2); padding: 8px 10px; border-bottom: 1px solid rgb(255 255 255 / .07); margin-bottom: 8px; }
+.pref .row { display: flex; align-items: center; gap: 10px; padding: 7px 14px; font: 400 12px/1.2 var(--sans); color: #e8e8e8; }
+.pref .lb { width: 46%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pref .tg { position: relative; flex: none; width: 30px; height: 16px; border-radius: 9px; background: #444; transition: transform .4s; }
+.pref .tg::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ddd; }
+.pref .tg.on { background: #2d6fd6; } .pref .tg.on::after { left: 16px; }
+.pref.bad .r1 .lb { overflow: visible; width: 32%; }
+.pref.bad .r1 .tg { transform: translateX(-34px); }
+.pref .oops { position: absolute; left: 2%; top: 37px; width: 44%; height: 30px; border-radius: 8px; border: 2px solid var(--warn); opacity: 0; transform: scale(1.15); transition: opacity .3s, transform .3s; }
+.pref.bad .oops { opacity: 1; transform: none; }
+.pref.fixed { outline: 2px solid rgb(158 206 106 / .6); outline-offset: 3px; }
+@media (max-width: 900px) { .loopws { grid-template-columns: minmax(0, 1fr); } .loopws .term { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); } }
+/* install: where it runs */
+.where { list-style: none; margin: 6px auto 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; max-width: 980px; text-align: left; }
+.where li { border-radius: 12px; border: 1px solid var(--line-2); background: var(--s1); padding: 12px 14px; display: grid; gap: 4px; }
+.where b { font: 600 14px/1.3 var(--display); color: var(--ink); }
+.where span { font-size: 13px; color: var(--muted); }
+@media (max-width: 900px) { .where { grid-template-columns: minmax(0, 1fr); } }
+/* new in: the latest release only */
+#new .hls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#new .rmeta { font: 400 12.5px/1.5 var(--mono); color: var(--muted); }
+#new .rmeta b { color: var(--ink); font-weight: 500; }
+@media (max-width: 1100px) { #new .hls { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { #new .hls { grid-template-columns: minmax(0, 1fr); } }
+#home-strip, main > .wrap > .strip { margin-top: 40px; }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -390,24 +362,24 @@
   <div class="wrap">
     <a class="brand" href="#top" id="brand" aria-label="omabox, back to the top"><span class="bm boot" id="mark"><svg viewBox="0 0 15 15" shape-rendering="crispEdges" aria-hidden="true" id="marksvg"></svg></span><span class="bw" aria-hidden="true">omabox</span></a>
     <!-- nav: build.mjs puts this in every other page's header -->
-    <nav class="nav" aria-label="Pages"><a href="how-it-works.html">How it works</a><a href="uses.html">Uses</a><a href="omarchy.html">Omarchy</a><a href="commands.html">Commands</a><a href="develop.html">Develop</a><a href="compare.html">ai-jail</a><a href="next.html">Coming</a></nav>
+    <nav class="nav" aria-label="Pages"><a href="uses.html">Use cases</a><a href="how-it-works.html">How it works</a><a href="desktops.html">Desktops</a><a href="develop.html">Develop</a><a href="commands.html">Commands</a><a href="safety.html">Safety</a></nav>
     <a class="ghost" href="https://github.com/diogochaves/omabox"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>GitHub</a><a class="btn solid sm" href="install.html">Install</a>
-    <details class="menu"><summary>Menu</summary><div><a href="index.html">Overview</a><a href="how-it-works.html">How it works</a><a href="uses.html">Uses</a><a href="omarchy.html">Omarchy</a><a href="commands.html">Commands</a><a href="develop.html">Develop</a><a href="compare.html">ai-jail</a><a href="next.html">Coming</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a></div></details>
+    <details class="menu"><summary>Menu</summary><div><a href="index.html">Overview</a><a href="uses.html">Use cases</a><a href="how-it-works.html">How it works</a><a href="desktops.html">Desktops</a><a href="develop.html">Develop</a><a href="commands.html">Commands</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a></div></details>
     <!-- /nav -->
   </div>
 </header>
 
-<nav class="rail" aria-label="Sections, as workspaces"><a href="#top" class="on"><b>1</b><span>desk</span></a><a href="#parallel"><b>2</b><span>parallel</span></a><a href="#ask"><b>3</b><span>ask</span></a><a href="#uses"><b>4</b><span>uses</span></a><a href="#new"><b>5</b><span>new in</span></a><a href="#built"><b>6</b><span>agents</span></a><a href="#jail"><b>7</b><span>ai-jail</span></a><a href="#omarchy"><b>8</b><span>omarchy</span></a><a href="#open"><b>9</b><span>mit</span></a><a href="#coming"><b>10</b><span>coming</span></a></nav>
+<nav class="rail" aria-label="Sections, as workspaces"><a href="#top" class="on"><b>1</b><span>desk</span></a><a href="#parallel"><b>2</b><span>difference</span></a><a href="#for"><b>3</b><span>for</span></a><a href="#loop"><b>4</b><span>loop</span></a><a href="#ask"><b>5</b><span>ask</span></a><a href="#safe"><b>6</b><span>safety</span></a><a href="#open"><b>7</b><span>mit</span></a><a href="#install"><b>8</b><span>install</span></a><a href="#new"><b>9</b><span>new in</span></a></nav>
 
 <main id="top">
   <div class="wrap">
     <div class="hero">
-      <div class="hero-h"><a class="pill" href="#new"><b>1.0</b>New: a contract your scripts can keep →</a>
-        <h1>Your agents get desktops of their own. <i>Yours stays untouched.</i></h1></div>
+      <div class="hero-h"><a class="pill" href="#new"><b>1.5</b>New: omabox look, did it come out right, in one call →</a>
+        <h1>Let your agents see what they build. <i>Your desktop stays yours.</i></h1></div>
       <div class="hero-b">
-        <div><p class="lead">omabox gives every coding agent a whole Hyprland desktop to test its work in: invisible, one per agent, gone when the agent is.</p>
-          <div class="ctas"><a class="btn solid" href="#parallel">See them work</a><a class="btn" href="how-it-works.html">How it works</a></div>
-          <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT · <a href="next.html">Plain Hyprland is coming →</a></p></div>
+        <div><p class="lead">omabox gives each coding agent an invisible Hyprland desktop of its own, where it opens, clicks and screenshots its work: one per agent, gone when the agent is.</p>
+          <div class="ctas"><a class="btn solid" href="#parallel">See the difference</a><a class="btn" href="how-it-works.html">How it works</a></div>
+          <p class="req">Any Hyprland 0.56+ · <a href="desktops.html">fullest on Omarchy</a> · AMD, Intel or NVIDIA · MIT</p></div>
         <ul class="topics">
           <li><span class="tic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 8.5h18M9.5 12l5 5M14.5 12l-5 5"/></svg></span><span><b>No windows</b> popping up, no cursor jumps</span></li>
           <li><span class="tic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5l12 6.2-5.2 1.6-1.7 5.2z"/><path d="M14 17.5h6M17 14.5v6" transform="rotate(45 17 17.5)"/></svg></span><span><b>No stolen focus</b>, no password prompts</span></li>
@@ -428,19 +400,19 @@
         </div></div>
         <pre class="lg lg-ls" id="hls" aria-live="off"></pre>
         <div class="lg lg-you"><b>Your desktop</b><span><em>0</em> windows opened</span><span><em>0</em> focus taken</span><span><em>0</em> cursor moves</span></div>
-        <div class="lg lg-act"><p class="full" id="spawn-full" role="status" hidden>This drawing holds 7 boxes. omabox sets no limit: each box takes about 400 to 600 MB.</p><span>Click a box to take it down.</span><button class="btn" type="button" id="spawn">Ask another agent</button></div>
+        <div class="lg lg-act"><p class="full" id="spawn-full" role="status" hidden>This drawing holds 7 boxes. omabox sets no limit: an Omarchy box takes about 500 to 600 MB, a plain one under 250 MB.</p><span>Click a box to take it down.</span><button class="btn" type="button" id="spawn">Ask another agent</button></div>
       </div>
     </div>
     <div class="agents"><span class="lbl">Works with</span><div><span>Claude Code</span><span>Codex</span><span>OpenCode</span><span>pi</span><span>Hermes</span></div></div>
 
     <section id="parallel" aria-labelledby="h-par">
       <div class="head split">
-        <div><span class="wsl"><b>2</b>parallel boxes</span><h2 id="h-par">Every agent gets a desktop. <i>None of them is yours.</i></h2></div>
-        <div><p class="lead">Without omabox, an agent testing a desktop app tests it on your desktop. With it, each agent takes a box of its own: four agents, four apps, four test runs, <b>all at once</b>, while you keep typing.</p></div>
+        <div><span class="wsl"><b>2</b>the difference</span><h2 id="h-par">Without omabox, an agent checking its work <i>checks it on your desktop.</i></h2></div>
+        <div><p class="lead">Its app opens on top of your editor and takes your next keystrokes. The cursor jumps, the workspace switches, a password prompt waits for you. With omabox each agent takes a box of its own: four agents, four apps, four test runs, <b>all at once</b>, on screens nobody sees, while you keep typing.</p></div>
       </div>
       <div class="ws" data-anim>
         <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t" id="fleet-title">omabox ls · 4 boxes up</span>
-          <span class="seg" role="group" aria-label="Show"><button type="button" id="m-with" aria-pressed="true">With omabox</button><button type="button" id="m-without" aria-pressed="false">Without</button></span></div>
+          <span class="seg" role="group" aria-label="Show"><button type="button" id="m-without" aria-pressed="false">Without</button><button type="button" id="m-with" aria-pressed="true">With omabox</button></span></div>
         <div class="fleet" id="fleet">
           <div class="you">
             <div class="lbl2"><span>Your desktop</span><span id="you-state">you, typing</span></div>
@@ -482,15 +454,69 @@
       </div>
       <div class="cols">
         <div><h3>On their own</h3><p>Agents take a box when a task needs a desktop, wait until a window has settled instead of sleeping, and put it down when they exit. <b>No prompt stops them</b>: in a box, <code>pkexec</code> just says no.</p></div>
-        <div><h3>Checks side by side</h3><p>Tests, visual checks and videos run in parallel, each on its own screen and session bus. <b>None sees another's windows</b>, and none sees yours.</p></div>
+        <div><h3>One per agent, side by side</h3><p>Each session's box is named after its repo or worktree, up in 3 to 6 s and about 500 to 600 MB (a plain box: 1 to 3 s, under 250 MB), gone when the agent exits. <b>None sees another's windows</b>, and none sees yours.</p></div>
         <div><h3>Handed on</h3><p>A lead agent gives each subagent a box and <code>omabox brief</code>: about 15 lines with its windows and the rules, <b>not the whole skill</b>.</p></div>
       </div>
     </section>
 
+    <section id="for" aria-labelledby="h-for">
+      <div class="head split">
+        <div><span class="wsl"><b>3</b>for</span><h2 id="h-for">If your agent builds something with a screen, <i>it needs one.</i></h2></div>
+        <div><p class="lead">An agent that can see what it built gets UI work right. One that can't says "done" when it compiled. These are the four kinds of work agents take a box for.</p></div>
+      </div>
+      <div class="cards fors">
+        <a class="gcard" href="uses.html#apps"><div><h3>A desktop app</h3><p>GTK, Qt, Tauri, Electron, a TUI. Your agent launches the build, clicks through the change, and runs the tests that need a session: tray, notifications, keyring.</p><p class="q">“Add a dark-mode toggle and show me it works.”</p><span class="go">Desktop apps →</span></div></a>
+        <a class="gcard" href="uses.html#web"><div><h3>A web app or a game</h3><p>It opens the page in a real Chromium in the box, with real frames, and reads the page's errors. No browser window lands on your screen.</p><p class="q">“The canvas flickers when I resize. Find out why.”</p><span class="go">Web apps and games →</span></div></a>
+        <a class="gcard" href="uses.html#shells"><div><h3>A shell, a plugin, a theme</h3><p>A Quickshell or Waybar config, an Omarchy bar plugin, a theme. It loads it in a bar that isn't yours and checks the panel and the contrast first.</p><p class="q">“Check my theme. Is every label readable?”</p><span class="go">Shells, plugins, themes →</span></div></a>
+        <a class="gcard" href="uses.html#desk"><div><h3>Your own desktop</h3><p>Your Hyprland config and your shell, copied into a box. The agent tries a keybind, a layout, a rice change there and shows you, while you keep working in yours.</p><p class="q">“Try the new bar layout on my setup first.”</p><span class="go">Your own desktop →</span></div></a>
+      </div>
+      <p class="usemore">And more than building: demos with sound nobody hears, shots at 4K, monitors you don't own. <a class="more" href="uses.html">Every use case →</a></p>
+    </section>
+
+    <section id="loop" aria-labelledby="h-loop">
+      <div class="head split">
+        <div><span class="wsl"><b>4</b>the loop</span><h2 id="h-loop">Without a screen, "done" means <i>it compiled.</i></h2></div>
+        <div><p class="lead">With a box, the agent checks what it did. One call opens the app in a box, shoots it, and collects the errors it logged. The agent reads that, fixes, and looks again. <b>You get the last shot, not the first bug.</b></p></div>
+      </div>
+      <div class="ws" data-anim>
+        <div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">claude · ~/code/app</span><button class="btn sm" type="button" id="loop-again">Play again</button></div>
+        <div class="loopws">
+<pre class="term" id="lterm"><span class="p">$</span> omabox look app -- ./build/app
+<span class="o">screenshot: /tmp/omabox-look-5cc72-221804.png
+window: app "Preferences" 640x480 (floating)</span>
+<span class="w">problems:
+  qrc:/Settings.qml:8: TypeError: Cannot read property 'checked' of null</span>
+<span class="o">exit 1</span>
+<span class="y">claude › The label runs under the switch, and Settings.qml:8 reads a row
+         that isn't there. Fixing both.</span>
+<span class="p">$</span> omabox look app -- ./build/app
+<span class="o">screenshot: /tmp/omabox-look-5cc72-221839.png
+window: app "Preferences" 640x480 (floating)</span>
+<span class="k">problems: none</span>
+<span class="o">exit 0</span>
+<span class="y">claude › Done: dark mode works, and here is the dialog.</span></pre>
+          <div class="lshot" aria-hidden="true">
+            <div class="desk box"><div class="dbar"><span class="wsn"><i class="on">1</i></span><span id="lname">box · look-5cc72</span><span>22:18</span></div>
+              <div class="pref" id="pref"><div class="wt">app · Preferences</div>
+                <div class="row r1"><span class="lb">Dark mode for every window</span><i class="tg on"></i></div>
+                <div class="row"><span class="lb">Compact rows</span><i class="tg"></i></div>
+                <span class="oops"></span></div></div>
+            <p class="cap2" id="lcap">The shot the agent reads. You never see it unless you ask.</p>
+          </div>
+        </div>
+      </div>
+      <div class="cols">
+        <div><h3>Text, when text will do</h3><p><code>tree</code> reads the app's controls as text, about 17 tokens where a shot costs about 1.5k, so the loop <b>doesn't eat the context</b>.</p></div>
+        <div><h3>The same check, every build</h3><p><code>check</code> keeps what three runs agree on as the baseline, then <b>names the button that moved</b>, and by how many pixels.</p></div>
+        <div><h3>It knows when to stop waiting</h3><p>It waits until a window has settled, never sleeps, and a crash says it crashed, so an agent <b>never waits on a window that won't come</b>.</p></div>
+      </div>
+      <p class="usemore"><a class="more" href="how-it-works.html">How it works →</a></p>
+    </section>
+
     <section id="ask" aria-labelledby="h-ask">
       <div class="head split">
-        <div><span class="wsl"><b>3</b>ask your agent</span><h2 id="h-ask">You ask. <i>Your agent takes a box.</i></h2></div>
-        <div><p class="lead">Install once. A skill your agent already loads tells it when a task needs a desktop. You don't change your projects or your prompts.</p></div>
+        <div><span class="wsl"><b>5</b>ask your agent</span><h2 id="h-ask">You ask. <i>Your agent takes a box.</i></h2></div>
+        <div><p class="lead">Install once. A skill your agent already loads tells it when a task needs a screen. Your projects and prompts don't change. To see for yourself, ask for a box you can drive, or peek at any box live; the agent never notices.</p></div>
       </div>
       <div class="ws">
         <div class="tabs" role="tablist" aria-label="Three things to ask">
@@ -518,129 +544,10 @@
     </section>
 
 
-    <section id="uses" aria-labelledby="h-uses">
+    <section id="safe" aria-labelledby="h-jail">
       <div class="head split">
-        <div><span class="wsl"><b>4</b>uses</span><h2 id="h-uses">A desktop to spare, <i>for whatever you're making.</i></h2></div>
-        <div><p class="lead">Testing is where omabox started. Any job that needs a screen and shouldn't touch yours fits in a box too: these are a few we use it for.</p></div>
-      </div>
-      <div class="uses" data-anim>
-        <article class="use"><div class="pic" aria-hidden="true"><span class="rc2">● REC</span><span class="mk" style="left:22%">open the panel</span><span class="mk" style="left:58%">scene 2</span><span class="head2"></span><div class="tl"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-          <h3>Film what you made</h3><p>A demo of your app, plugin or feature, filmed in a box while you keep working. Your marks become captions; clicks and keys are drawn in.</p>
-          <pre><span class="p">$</span> omabox record start -o demo.mp4
-<span class="p">$</span> omabox record mark "scene 2"
-<span class="p">$</span> omabox record stop --show-input --captions</pre></article>
-        <article class="use"><div class="pic" aria-hidden="true"><span class="glyph lo" style="left:22px;top:38px">Aa</span><span class="sz" style="left:22px;top:84px">1x</span><span class="bx2" style="left:44%;top:14px;width:50%;height:98px"></span><span class="glyph" style="left:52%;top:38px">Aa</span><span class="sz" style="left:52%;top:84px">3840x2160 · 2x</span></div>
-          <h3>Shots at 2x, or 4K</h3><p>A box is whatever size and scale you ask for, whatever your monitor is. Crisp shots and videos for a README, a store page or a talk.</p>
-          <pre><span class="p">$</span> omabox up --size 3840x2160,scale=2
-<span class="p">$</span> omabox shot --window app</pre></article>
-        <article class="use"><div class="pic" aria-hidden="true"><span class="bx2" style="left:12px;right:12px;top:12px;bottom:12px"></span><span class="clk">12:00 · always</span><span class="bt2" style="top:40px;left:26px;color:var(--box)">a stock Omarchy
-your bar and theme left out</span></div>
-          <h3>A clean setup, not yours</h3><p>A stock bar and theme, a clock that never moves, nothing on screen but what you show. Keep a terminal out of the shot: its prompt still has your user and host names.</p>
-          <pre><span class="p">$</span> omabox up --clean --stock-bar --theme tokyo-night</pre></article>
-        <article class="use"><div class="pic" aria-hidden="true"><span class="mon" style="left:16%;top:16px;width:38%;height:52px"></span><span class="mon" style="left:57%;top:16px;width:15%;height:96px"></span><span class="mon" style="left:16%;top:74px;width:38%;height:42px"></span><span class="sz" style="left:75%;top:20px">portrait</span><span class="sz" style="left:75%;top:96px">scale 1.6</span></div>
-          <h3>Monitors you don't have</h3><p>Portrait, scaled, side by side or below. Plug and unplug them while the box runs, and see what your shell does.</p>
-          <pre><span class="p">$</span> omabox up --monitor 1080x1920 --monitor 2560x1440,scale=1.6,below</pre></article>
-        <article class="use"><div class="pic" aria-hidden="true"><div class="page"><div class="scroll"><i style="width:60%"></i><i></i><i style="width:80%"></i><i style="width:50%"></i><i></i><i style="width:70%"></i><i style="width:40%"></i><i></i><i style="width:65%"></i><i></i></div></div></div>
-          <h3>Look at a web page, off your screen</h3><p>Your agent opens a site in the box's browser, pages down and reads the shots. No browser window lands on your desktop.</p>
-          <pre><span class="p">$</span> omabox run -d --wait -- chromium --app=URL
-<span class="p">$</span> omabox keys Page_Down</pre></article>
-        <article class="use"><div class="pic" aria-hidden="true"><span class="mon" style="left:14px;top:22px;width:56px;height:36px"></span><span class="mon" style="left:84px;top:22px;width:56px;height:36px;opacity:.25"></span><span class="mon" style="left:154px;top:22px;width:56px;height:36px"></span><span class="mon" style="left:224px;top:22px;width:56px;height:36px;opacity:.25"></span><span class="bt2" style="top:72px">a monitor gone and back, over and over
-<span class="w">until something falls over</span></span></div>
-          <h3>Find the crash first</h3><p>Unplug a monitor again and again until your shell or plugin falls over, then read the backtrace. Your session never notices.</p>
-          <pre><span class="p">$</span> omabox output drop --cycles 50
-<span class="p">$</span> omabox gdb --shell</pre></article>
-      </div>
-      <p class="usemore">Every screenshot on this site was taken in a box, too. <a class="more" href="uses.html">More uses →</a></p>
-    </section>
-
-    <section id="new" aria-labelledby="h-new">
-      <div class="head split">
-        <div><span class="wsl"><b>5</b>new in</span><h2 id="h-new">New in <span id="newv">1.0</span>. <i>And before it.</i></h2></div>
-        <div><p class="lead">What each release added that you would notice, newest first. Every fix is in the <a href="changelog.html">changelog</a>.</p></div>
-      </div>
-      <div class="ws news">
-        <div class="rels" role="tablist" aria-label="Releases" aria-orientation="vertical">
-          <button role="tab" id="rt-10" aria-controls="rp-10" aria-selected="true" data-v="1.0"><b>1.0</b><span>2026-10-27 · a contract</span></button>
-          <button role="tab" id="rt-09" aria-controls="rp-09" aria-selected="false" tabindex="-1" data-v="0.9"><b>0.9</b><span>2026-10-20 · briefs</span></button>
-          <button role="tab" id="rt-08" aria-controls="rp-08" aria-selected="false" tabindex="-1" data-v="0.8"><b>0.8</b><span>2026-10-20 · visual checks</span></button>
-          <button role="tab" id="rt-07" aria-controls="rp-07" aria-selected="false" tabindex="-1" data-v="0.7"><b>0.7</b><span>2026-10-16 · held keys</span></button>
-          <button role="tab" id="rt-06" aria-controls="rp-06" aria-selected="false" tabindex="-1" data-v="0.6"><b>0.6</b><span>2026-10-14 · the app as text</span></button>
-          <button role="tab" id="rt-05" aria-controls="rp-05" aria-selected="false" tabindex="-1" data-v="0.5"><b>0.5</b><span>2026-10-09 · several monitors</span></button>
-          <a href="changelog.html#new-0.4.3">0.4 and earlier →</a>
-        </div>
-        <div>
-          <div class="rel" id="rp-10" role="tabpanel" aria-labelledby="rt-10" tabindex="0">
-            <p class="rmeta"><b>1.0.0</b> · 2026-10-27 · everything from 0.6 to 1.0 you would notice · <a href="changelog.html#v1.0.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>A contract your scripts can keep</h3><p>Within 1.x, exit codes and <code>--json</code> fields stay or only grow. A change warns for one release first; <code>OMABOX_STRICT=1</code> makes it an error, for CI.</p></li>
-              <li><h3>One binary, in Rust</h3><p>Stopped mid-step, omabox undoes that step: an interrupted <code>up</code> takes its box down, a stopped recording keeps its video.</p></li>
-              <li><h3>Ports no box reaches</h3><p>Your database stays out of every box, on loopback or any of your host's addresses.</p><pre><span class="p">$</span> omabox config protect-ports 5432,8080</pre></li>
-              <li><h3>The app answers in text</h3><p><code>tree</code>, <code>check</code>, <code>record</code> and <code>audio</code>: an agent asks the app, compares it with a baseline, films it and hears it.</p></li>
-            </ul>
-          </div>
-          <div class="rel" id="rp-09" role="tabpanel" aria-labelledby="rt-09" tabindex="0" hidden>
-            <p class="rmeta"><b>0.9.0</b> · 2026-10-20 · the last release before 1.0 · <a href="changelog.html#v0.9.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>A brief for a subagent</h3><p>About 15 lines a lead agent pastes into a subagent's prompt in place of the whole skill.</p><pre><span class="p">$</span> omabox brief -b app-menu</pre></li>
-              <li><h3>Help that fits</h3><p><code>omabox help CMD</code> is the command's lines and options; <code>--long</code> has the prose.</p></li>
-              <li><h3>Exit codes that mean one thing</h3><p>Called wrong is exit 2, with the nearest option or command named, in every command.</p><pre><span class="p">$</span> omabox help exit-codes</pre></li>
-              <li><h3>Holds in a video</h3><p><code>record hold</code> pauses a take on the video's own clock; <code>record --for</code> films something that moves by itself.</p></li>
-            </ul>
-          </div>
-          <div class="rel" id="rp-08" role="tabpanel" aria-labelledby="rt-08" tabindex="0" hidden>
-            <p class="rmeta"><b>0.8.0</b> · 2026-10-20 · visual checks · <a href="changelog.html#v0.8.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>Visual checks</h3><p><code>check</code> compares an app's or a plugin's look with a baseline, in a box where only what is tested moves.</p><pre><span class="p">$</span> omabox check run -- ./visual.sh</pre></li>
-              <li><h3>Your own Quickshell</h3><p>Run the box's shell on a Quickshell build of yours.</p><pre><span class="p">$</span> omabox up --quickshell ~/src/quickshell/build</pre></li>
-              <li><h3>Your fonts, in every box</h3><p>Read-only, so an app draws in a box the way it draws for you.</p></li>
-              <li><h3>Says what's in the way</h3><p><code>click --window</code> says when a toast or another layer covers the point it aims at.</p></li>
-            </ul>
-          </div>
-          <div class="rel" id="rp-07" role="tabpanel" aria-labelledby="rt-07" tabindex="0" hidden>
-            <p class="rmeta"><b>0.7.0</b> · 2026-10-16 · held keys, your binds · <a href="changelog.html#v0.7.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>Hold a key across commands</h3><p>Hold Shift, click three things, let go.</p><pre><span class="p">$</span> omabox keys down:shift</pre></li>
-              <li><h3>Your binds, in the box</h3><p>A box loads your Hyprland bindings and input settings.</p></li>
-              <li><h3>A journal in every box, CPU per thread</h3><p>Logs of what ran, and where the time went.</p></li>
-              <li><h3>A crash says it crashed</h3><p>With the signal, so an agent doesn't wait on a window that will never come.</p></li>
-            </ul>
-          </div>
-          <div class="rel" id="rp-06" role="tabpanel" aria-labelledby="rt-06" tabindex="0" hidden>
-            <p class="rmeta"><b>0.6.0</b> · 2026-10-14 · the app as text · <a href="changelog.html#v0.6.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>A window as text</h3><p>An app's controls as compact text, for a fraction of a shot's tokens.</p><pre><span class="p">$</span> omabox tree --find 'dark mode'</pre></li>
-              <li><h3>Videos with sound and marks</h3><p><code>up --audio</code>, <code>record mark</code>, and every monitor in one video.</p></li>
-              <li><h3>Your whole shell in a box</h3><p>Every plugin and your <code>shell.json</code>, without touching your bar.</p><pre><span class="p">$</span> omabox up --desk-shell</pre></li>
-              <li><h3>Boxes nobody will take down</h3><p><code>ls</code> names them; <code>down --orphans</code> clears them.</p></li>
-            </ul>
-          </div>
-          <div class="rel" id="rp-05" role="tabpanel" aria-labelledby="rt-05" tabindex="0" hidden>
-            <p class="rmeta"><b>0.5.0</b> · 2026-10-09 · several monitors in one box · <a href="changelog.html#v0.5.0">changelog →</a></p>
-            <ul class="hls">
-              <li><h3>Several monitors in one box</h3><p>As many as a test needs, any size, scale and place, a bar on each.</p><pre><span class="p">$</span> omabox up --monitor 1080x1920</pre></li>
-              <li><h3>A monitor that drops off and comes back</h3><p><code>output drop --cycles</code>, until your shell crashes; <code>gdb</code> gives the backtrace.</p></li>
-              <li><h3>Your theme, live</h3><p><code>--theme-dir</code> puts the theme you are editing in the box, every save with it.</p></li>
-              <li><h3>Only what changed</h3><p><code>shot --changed</code> sends only what an action changed: a menu opening is about 65 image tokens instead of 1.5k.</p></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="built" aria-labelledby="h-built">
-      <div class="head"><span class="wsl"><b>6</b>built for agents</span><h2 id="h-built">Everything an agent needs to test its work, <i>and nothing of yours.</i></h2></div>
-      <div class="cards">
-        <div class="gcard"><div><h3>One box per session</h3><p>Named after its worktree and session. Up in 3 to 5 s, about 400 to 600 MB, down when the agent exits. Subagents get a box and a brief each.</p><div class="viz">$ omabox brief -b app-5cc72cdc<br><span style="color:var(--muted)"># the lines a subagent needs, not the whole skill</span></div><a href="how-it-works.html">How it works →</a></div></div>
-        <div class="gcard"><div><h3>Answers in text</h3><p>After a click, omabox says what changed, or that nothing did. <code>tree</code> reads the app's controls, where a shot costs far more.</p><div class="viz bars"><div><span>tree --find</span><i style="transform:scaleX(.03)"></i><span>~17 tok</span></div><div class="shot"><span>a shot</span><i></i><span>~1.5k</span></div></div><a href="develop.html">Develop →</a></div></div>
-        <div class="gcard"><div><h3>Checks and videos</h3><p><code>check</code> keeps what three runs agree on as the baseline, then names the button that moved. <code>record</code> films a take with captions and a contact sheet.</p><div class="viz diff"><div data-t="baseline"><span></span></div><div class="new" data-t="changed"><span></span><em></em></div></div><a href="develop.html">Develop →</a></div></div>
-        <div class="gcard"><div><h3>A contract your scripts can keep</h3><p>In 1.x, exit codes and <code>--json</code> fields only grow, and a change warns for one release first. Rewritten in Rust for 1.0.</p><div class="viz"><table class="codes" aria-label="Exit codes"><tr><td>0</td><td>done</td></tr><tr><td>1</td><td>it ran and failed</td></tr><tr><td>2</td><td>called wrongly</td></tr><tr><td>124</td><td>not in time</td></tr></table></div><a href="commands.html#contract">The contract →</a></div></div>
-      </div>
-    </section>
-
-    <section id="jail" aria-labelledby="h-jail">
-      <div class="head split">
-        <div><span class="wsl"><b>7</b>ai-jail</span><h2 id="h-jail">Not a sandbox. <i>Pair it with ai-jail.</i></h2></div>
-        <div><p class="lead">omabox keeps an agent's windows off your desktop, but it is <b>not a security boundary</b>: a box shares your kernel, GPU and network. <a href="https://aijail.io">ai-jail</a>, by Fabio Akita, fences what the agent itself can read, write and reach. Together, a jailed agent tests in boxes of its own.</p></div>
+        <div><span class="wsl"><b>6</b>safety</span><h2 id="h-jail">It keeps windows out. <i>It doesn't fence the agent in.</i></h2></div>
+        <div><p class="lead">omabox is <b>not a security boundary</b>: a box shares your kernel, your GPU and, by default, your network. Your secret stores are never mounted in a box, and an opt-in guard makes a stray window fail instead of landing on your screen. To limit what the agent itself can read and reach, pair it with <a href="https://aijail.io">ai-jail</a>, by Fabio Akita: a jailed agent drives boxes of its own.</p></div>
       </div>
       <div class="ws pair" data-anim>
         <div class="map">
@@ -656,32 +563,17 @@ your bar and theme left out</span></div>
           <p class="req">ai-jail decides what the agent can touch. omabox decides where it draws.</p>
         </div>
         <div class="recipes">
-          <div><h3>A jailed app, drawn in a box</h3>
-<pre><span class="p">$ </span>omabox up
-<span class="p">$ </span>eval "$(omabox env)"
-<span class="p">$ </span>ai-jail --gpu --rw-map "$WAYLAND_DISPLAY" \
-    --env WAYLAND_DISPLAY -- ./build/app</pre></div>
-          <div><h3>A jailed agent, driving boxes of its own</h3>
-<pre><span class="p">$ </span>omabox broker on   <span class="o"># the lines for ~/.ai-jail</span>
-<span class="p">$ </span>ai-jail claude</pre></div>
-          <p class="capt">Tested with ai-jail 2.10.0 and 2.12.0 and omabox 1.0. A jailed agent can't use <code>host</code>, <code>peek</code> or interactive boxes.</p>
-          <a class="more" href="compare.html">omabox and ai-jail →</a>
+          <div><h3>Never in a box</h3><p class="capt">Your <code>~/.ssh</code>, keyrings, cloud and agent credentials, browser profiles, and your HOME itself, whatever you pass. A box's HOME is fake, and goes with it.</p></div>
+          <div><h3>The guard, if you want it</h3><p class="capt">Agents' shells get a display that doesn't exist, so a window, <code>hyprctl</code> or <code>grim</code> outside a box fails with an error that says "use a box".</p></div>
+          <div class="ctas"><a class="btn" href="safety.html">What a box can touch</a><a class="more" href="safety.html#ai-jail">With ai-jail →</a></div>
         </div>
-      </div>
-    </section>
-
-    <section id="omarchy" aria-labelledby="h-oma">
-      <div class="ws oma">
-        <div><span class="wsl"><b>8</b>omarchy</span><h2 id="h-oma">Fullest <i>on Omarchy.</i></h2><p>On Omarchy a box is your desktop: Omarchy's own config and shell, your theme and bar, your plugins with <code>--desk-shell</code>, and a widget in your bar that lists every box.</p><a class="more" href="omarchy.html">omabox on Omarchy →</a></div>
-        <figure class="omastage" style="margin:0"><div class="pair2"><svg class="omm" viewBox="0 0 15 15" aria-label="omabox"><use href="#m"/></svg><span class="on">on</span></div><svg fill="none" class="omlogo" role="img" aria-label="Omarchy" viewBox="0 0 1215 285" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path clip-rule="evenodd" d="m720 120h-15v15h-14.998v14.999l-60.002.001v15.002l90-.002v.002h.002l-.002 89.998h-15v15h-13v15h-17v-89.998h-45v90l-45-.002v-89.998h-14.998v-30h14.998v-15.002h-14.998v-30.001h14.998v-75h15v-14.997h15v-15.002h105.002zm-90-.001h45v-74.997h-45z" fill-rule="evenodd"/><path clip-rule="evenodd" d="m105 30.002h15v14.997h15v180.001h-15v15h-15v15.002h-75v-15.002h-15v-15h-15v-180.001h15v-14.997h15v-15.002h75zm-60 194.998h45v-179.998h-45z" fill-rule="evenodd"/><path d="m300 15h60v15h15v14.999h15v180.001h-15v15h-15v15h-15l-.004-209.998h-44.994v-.002h-.002v210.002h-45v-210h-44.998v179.997h-.002v30.003h-15v-15.002h-15v-15h-14.998v-180.001h14.998v-14.999h15v-15h60v-15h45z"/><path clip-rule="evenodd" d="m555 225h-15v15h-15v15h-15v-105.001l-44.998.001v105.002h-45.002v-105.002h-15v-30.001h15v-75h15.002v-14.997h15v-15.002h105zm-89.998-105.001h44.998v-74.997h-44.998z" fill-rule="evenodd"/><path d="m885 75h-15v15h-15v15h-15v-59.998h-45v179.998h45v-59.998h15v14.997h15v15.001h15v30h-15v15h-15v15.002l-105-.002v-210.001h14.998v-14.997h15.002v-15.002h105z"/><path d="m960 119.999h45v-104.999h15v15h15v14.999h15v75.001h15v15h-15v90h-15v15h-15v15h-15v-105h-45v105.002l-45-.002v-105h-30v-15h15v-15.001h15v-75h15v-14.997h15v-15.002h15z"/><path d="m1125 119.999h45v-104.999h15v15h15v15h15v180h-15v15h-15v15.002l-75-.002v-15h-15v-15h-15v-45.001h15v-14.997-.002h30v60h45v-75h-90v-105.001h15v-14.997h15v-15.002h15z"/></g></svg>
-<figcaption>omabox runs Omarchy's own config and shell in every box.</figcaption></figure>
       </div>
     </section>
 
     <section id="open" aria-labelledby="h-open">
       <div class="head split">
-        <div><span class="wsl"><b>9</b>mit</span><h2 id="h-open">MIT, every line. <i>It's your computer.</i></h2></div>
-        <div><p class="lead">omabox is built by builders, to make other builders' lives easier. All of it is MIT: read it, fork it, bend it to your machine, ship your own. Every fix someone sends makes it better for the next person. That's why it won't stay on Omarchy alone: <b>the builders on Hyprland are who it's for.</b></p></div>
+        <div><span class="wsl"><b>7</b>mit</span><h2 id="h-open">MIT, every line. <i>It's your computer.</i></h2></div>
+        <div><p class="lead">omabox is built by builders, to make other builders' lives easier. All of it is MIT: read it, fork it, bend it to your machine, ship your own. Every fix someone sends makes it better for the next person. That's why it grew past Omarchy: <b>the builders on Hyprland are who it's for.</b></p></div>
       </div>
       <div class="ws open" data-anim>
         <div class="graph" id="graph">
@@ -717,31 +609,37 @@ your bar and theme left out</span></div>
     </section>
 
     <div class="inst" id="install">
-      <h2>Give every agent <i>a desktop of its own.</i></h2>
+      <h2>Three minutes. <i>Then ask your agent.</i></h2>
       <div class="icmd"><code>git clone https://github.com/diogochaves/omabox &amp;&amp; cd omabox &amp;&amp; ./install.sh</code><button type="button" data-copy>Copy</button></div>
-      <p class="req">Today on Omarchy 4 · Hyprland 0.56+ · AMD, Intel or NVIDIA · MIT</p>
-      <div class="ctas" style="justify-content:center"><a class="btn solid" href="install.html">Install guide</a><a class="btn" href="https://github.com/diogochaves/omabox">GitHub</a></div>
+      <ul class="where">
+        <li><b>Omarchy 4.5</b><span>boxes are Omarchy's desktop</span></li>
+        <li><b>Arch, Fedora 45, Debian sid, openSUSE Tumbleweed</b><span>plain boxes, your shell if you want one</span></li>
+        <li><b>Hyprland 0.56+</b><span>with its Lua config</span></li>
+        <li><b>AMD, Intel or NVIDIA</b><span>a GPU render node</span></li>
+      </ul>
+      <p class="req"><code>./install.sh --check</code> starts a box, shoots it and takes it down. Then ask your agent to check something it built.</p>
+      <div class="ctas" style="justify-content:center"><a class="btn solid" href="install.html">Install guide</a><a class="btn" href="desktops.html">Where it runs</a><a class="btn" href="https://github.com/diogochaves/omabox">GitHub</a></div>
     </div>
 
-    <section id="coming" aria-labelledby="h-coming">
+    <section id="new" aria-labelledby="h-new">
       <div class="head split">
-        <div><span class="wsl"><b>10</b>coming</span><h2 id="h-coming">omabox <i>beyond Omarchy.</i></h2></div>
-        <div><p class="lead">omabox was born on Omarchy, but it can help many more people, so it's growing. Here's what's coming next.</p></div>
+        <div><span class="wsl"><b>9</b>new in</span><h2 id="h-new">New in 1.5. <i>Looks in one call.</i></h2></div>
+        <div><p class="lead"><span class="rmeta"><b>1.5.0</b> · 2026-11-20 ·</span> What each release added that you would notice is on the <a href="changelog.html">changelog</a>, every release back to 0.1.</p></div>
       </div>
-      <div class="soon">
-        <div class="sooncards">
-          <article><h3>Plain Hyprland boxes</h3><p>Aimed at any distro with Hyprland 0.56+ (Lua config). For Hyprland plugin and compositor developers.</p></article>
-          <article><h3>Your own shell</h3><p>One shell at a time, Dux Shell first.</p></article>
-          <article><h3>Your own Hyprland desktop, in a box</h3><p>Your config, your binds, your shell: your agent tries a change to your desktop in a box first.</p></article>
-          <div class="ctas" style="margin-top:8px"><a class="btn solid" href="https://github.com/diogochaves/omabox/issues/321">Tell us your shell</a><a class="more" href="next.html">What has run, and what hasn't →</a></div>
-        </div>
-        <figure class="ws" style="margin:0"><div class="ws-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">box · plain Hyprland · Dux Shell 2.0</span></div><img src="media/dux2-control-center.webp" alt="Dux Shell 2.0 in a plain box, its control center open: user at omabox, network not connected, no Bluetooth adapters, no output device" loading="lazy" width="1280" height="720"><figcaption>A spike, not a release: Dux Shell 2.0 in a plain box. No system bus, so network and sound read "Not connected" and the shell keeps running.</figcaption></figure>
-      </div>
+      <ul class="hls">
+        <li><h3>Did it come out right?</h3><p>One call opens it, shoots it, and says what it logged: an app, a web page or game, a bar plugin, a theme.</p><pre><span class="p">$</span> omabox look page game.html</pre></li>
+        <li><h3>Themes, checked</h3><p>Text too faint to read, a key with no fallback, a background too bright for a dark theme: what a person would notice.</p><pre><span class="p">$</span> omabox look theme ./my-theme</pre></li>
+        <li><h3>What it wrote</h3><p><code>snapshot</code>, then install and use a plugin or an app, and <code>diff</code> lists what it added: autostart, units, mimeapps, config.</p><pre><span class="p">$</span> omabox diff before</pre></li>
+        <li><h3>Who did what</h3><p>Every command run against a box, with who ran it and how it ended. Typed text and passwords never in it.</p><pre><span class="p">$</span> omabox log commands</pre></li>
+      </ul>
+      <p class="usemore"><a class="more" href="changelog.html">1.4: your own desktop in a box · 1.3: any Hyprland · every release →</a></p>
     </section>
 
+    <a class="strip" href="https://github.com/diogochaves/omabox/issues/new"><b>Tell us your setup</b><span>A shell, a distro or a job a box doesn't do yet: open an issue →</span></a>
+
   <footer>
-    <div class="fl"><a href="how-it-works.html">How it works</a><a href="uses.html">Uses</a><a href="omarchy.html">Omarchy</a><a href="commands.html">Commands</a><a href="develop.html">Develop</a><a href="compare.html">ai-jail</a><a href="next.html">Coming</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
-    <p>omabox <a href="changelog.html"><span class="ver">1.0.0</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
+    <div class="fl"><a href="uses.html">Use cases</a><a href="how-it-works.html">How it works</a><a href="desktops.html">Desktops</a><a href="develop.html">Develop</a><a href="commands.html">Commands</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
+    <p>omabox <a href="changelog.html"><span class="ver">1.5.3</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
   </footer>
   </div>
 </main>
@@ -1067,6 +965,7 @@ your bar and theme left out</span></div>
     on(".p2"); tallyB("w"); tallyB("f"); tallyB("p"); log("pi", "pkexec make install", "a password prompt, on your screen", true);
     await sleep(700); if (me !== gen) return;
     tallyB("c"); $("#you-state").textContent = "you, waiting for it to finish";
+    return true;
   }
   function setMode(m) {
     mode = m; const me = ++gen;
@@ -1074,14 +973,22 @@ your bar and theme left out</span></div>
     fleet.classList.toggle("chaos", m !== "with"); feed.innerHTML = "";
     $("#fleet-title").textContent = m === "with" ? "omabox ls · 4 boxes up" : "no omabox · 4 agents on your desktop";
     if (m === "with") { calm(); $("#you-state").textContent = "you, typing"; withLoop(me); typing(me); }
-    else { resetBoxes(); chaos(me); }
+    else { resetBoxes(); return chaos(me); }
   }
+  let told = false;   /* the first time it is seen: Without plays, then With, by itself */
   $("#m-with").addEventListener("click", () => setMode("with"));
   $("#m-without").addEventListener("click", () => setMode("without"));
   editor.innerHTML = code.slice(0, 4).map(c => c[0]).join("\n") + '<span class="cur"></span>';
   ["b1", "b2", "b3", "b4"].forEach(id => $("#" + id).querySelector(".win").classList.remove("hid"));
   log("lead", "omabox up", "box 'app-sidebar-5cc72cdc' up"); log("codex", "omabox up --monitor 2560x1440", "3 monitors"); log("pi", "omabox up", "box 'app-docs-e4d29b07' up");
-  ws.addEventListener("shown", () => { if (mode === "with") setMode("with"); });
+  ws.addEventListener("shown", async () => {
+    if (!told && motion) {
+      told = true; const done = await setMode("without"); const me = gen;
+      await sleep(1800); if (done && me === gen && mode !== "with") setMode("with");
+      return;
+    }
+    if (mode === "with") setMode("with");
+  });
   ws.addEventListener("hidden", () => { if (mode === "with") gen++; });
 
   /* ask your agent: a typed terminal and the box's screen */
@@ -1164,19 +1071,32 @@ your bar and theme left out</span></div>
 
   /* links from before the split (the omabox README links /#compare): the sections that moved to pages */
   const moved = { never: "how-it-works.html#never", agents: "how-it-works.html#agents", watch: "how-it-works.html#inside",
-    drive: "commands.html#drive", compare: "compare.html", fixes: "#parallel" }[location.hash.slice(1)];
+    drive: "commands.html#drive", compare: "safety.html#ai-jail", jail: "safety.html#ai-jail", fixes: "#parallel",
+    uses: "uses.html", built: "how-it-works.html", omarchy: "desktops.html#omarchy", coming: "desktops.html" }[location.hash.slice(1)];
   if (moved) location.replace(moved);
 
-  /* new in: release tabs (arrow keys move between them) */
-  const rtabs = $$(".rels [role=tab]");
-  const showRel = (t, focus) => {
-    rtabs.forEach(b => { const on = b === t; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; $("#" + b.getAttribute("aria-controls")).hidden = !on; });
-    $("#newv").textContent = t.dataset.v; if (focus) t.focus();
-  };
-  rtabs.forEach(t => {
-    t.addEventListener("click", () => showRel(t));
-    t.addEventListener("keydown", e => { const d = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : ["ArrowUp", "ArrowLeft"].includes(e.key) ? -1 : 0; if (d) { e.preventDefault(); showRel(rtabs[(rtabs.indexOf(t) + d + rtabs.length) % rtabs.length], true); } });
-  });
+  /* the loop: look, a problem, a fix, look again; typed once when scrolled to, and on Play again */
+  const lterm = $("#lterm"), pref = $("#pref"), lcap = $("#lcap"), lname = $("#lname");
+  const lines = lterm.innerHTML.split("\n"), fixAt = lines.findIndex(l => l.includes("Fixing both"));
+  const goodAt = lines.findIndex(l => l.includes("problems: none"));
+  let lgen = 0;
+  async function loop() {
+    const me = ++lgen; pref.classList.remove("bad", "fixed"); lcap.textContent = "The shot the agent reads. You never see it unless you ask.";
+    lname.textContent = "box · look-5cc72";
+    for (let i = 0; i < lines.length; i++) {
+      lterm.innerHTML = lines.slice(0, i + 1).join("\n") + '<span class="cur"></span>';
+      if (lines[i].includes("problems:") && i < fixAt) { pref.classList.add("bad"); lcap.textContent = "The label runs under the switch: the agent sees it in the shot."; }
+      if (i === fixAt) { await sleep(900); if (me !== lgen) return; pref.classList.remove("bad"); }
+      if (i === goodAt) { pref.classList.add("fixed"); lcap.textContent = "Fixed, looked at again, problems: none."; lname.textContent = "box · look-5cc72"; }
+      await sleep(lines[i].startsWith('<span class="p">') ? 700 : 260); if (me !== lgen) return;
+    }
+    lterm.innerHTML = lines.join("\n");
+  }
+  if (motion) {
+    lterm.innerHTML = "";
+    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); loop(); } }, { threshold: .35 }).observe(lterm);
+  } else pref.classList.add("fixed");
+  $("#loop-again").addEventListener("click", loop);
 
   /* glow cards follow the pointer */
   $$(".gcard").forEach(c => c.addEventListener("pointermove", e => { const r = c.getBoundingClientRect(); c.style.setProperty("--x", `${e.clientX - r.left}px`); c.style.setProperty("--y", `${e.clientY - r.top}px`); }));
