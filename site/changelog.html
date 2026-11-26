@@ -55,11 +55,12 @@
     </div>
 
     <section class="grp" id="new" data-rail="new in" aria-labelledby="h-new" style="padding-top:56px">
-      <h2 id="h-new">New in <span id="newv">1.5</span>.</h2>
+      <h2 id="h-new">New in <span id="newv">1.6</span>.</h2>
       <div class="ws news">
         <div class="rels" role="tablist" aria-label="Releases">
           <span class="era" aria-hidden="true">1.x</span>
-          <button type="button" role="tab" id="nt-15" aria-controls="new-1.5" aria-selected="true" data-v="1.5"><b>1.5</b><span>looks in one call</span></button>
+          <button type="button" role="tab" id="nt-16" aria-controls="new-1.6" aria-selected="true" data-v="1.6"><b>1.6</b><span>a desk in one command</span></button>
+          <button type="button" role="tab" id="nt-15" aria-controls="new-1.5" aria-selected="false" tabindex="-1" data-v="1.5"><b>1.5</b><span>looks in one call</span></button>
           <button type="button" role="tab" id="nt-14" aria-controls="new-1.4" aria-selected="false" tabindex="-1" data-v="1.4"><b>1.4</b><span>your desktop in a box</span></button>
           <button type="button" role="tab" id="nt-13" aria-controls="new-1.3" aria-selected="false" tabindex="-1" data-v="1.3"><b>1.3</b><span>any Hyprland</span></button>
           <button type="button" role="tab" id="nt-11" aria-controls="new-1.1" aria-selected="false" tabindex="-1" data-v="1.1"><b>1.1</b><span>waits on the tree</span></button>
@@ -79,6 +80,15 @@
           <button type="button" role="tab" id="nt-010" aria-controls="new-0.1.0" aria-selected="false" tabindex="-1" data-v="0.1.0"><b>0.1.0</b><span>the first</span></button>
         </div>
         <div>
+          <div class="rel" id="new-1.6" role="tabpanel" aria-labelledby="nt-16" tabindex="0">
+            <p class="rmeta"><b>1.6.0</b> · 2026-11-26 · a desk in one command · <a href="#v1.6.0">changelog →</a></p>
+            <ul class="hls">
+              <li><h3>A known desk in one command</h3><p>A JSON file lists the windows: the command, the workspace, floating, sized or pinned. <code>scene</code> opens each and returns when every one is where it was asked; applied again, it opens nothing twice. For testing an overview, a workspace list or a window switcher.</p><pre><span class="p">$ </span>omabox up --scene desk.json</pre></li>
+              <li><h3>How the screen ran</h3><p><code>frames</code> times the compositor's frames over a stretch or around an action: the median, the worst cases and how many came late. A number to choose an animation by, on each GPU.</p><pre><span class="p">$ </span>omabox frames -- keys super+Tab</pre></li>
+              <li><h3>A recording that counts its frames</h3><p><code>record --frames-log</code> says which captured frame each frame of the video holds, and which it repeated or skipped. A lag read from a video is then a count, not an estimate.</p><pre><span class="p">$ </span>omabox record --fps 60 --frames-log pan.tsv -- keys super+Tab</pre></li>
+              <li><h3>One layer of several</h3><p>A frame drawn as one layer per screen edge shares a namespace. <code>--layer NAME:top</code>, <code>:bottom</code>, <code>:left</code> or <code>:right</code> picks one, so a script needs no address that changes at every restart.</p><pre><span class="p">$ </span>omabox tree --layer myframe:top --find Wi-Fi</pre></li>
+            </ul>
+          </div>
           <div class="rel" id="new-1.5" role="tabpanel" aria-labelledby="nt-15" tabindex="0">
             <p class="rmeta"><b>1.5.0</b> · 2026-11-20 · looks in one call · <a href="#v1.5.0">changelog →</a></p>
             <ul class="hls">
@@ -232,7 +242,7 @@
 
     <section class="grp" id="log" data-rail="every change" aria-labelledby="h-log">
       <h2 id="h-log">Every change, <i>release by release.</i></h2>
-      <p class="lead">omabox's <a href="<!-- changelog-url -->">CHANGELOG.md</a> at omabox <span class="ver">1.5.3</span>, the latest
+      <p class="lead">omabox's <a href="<!-- changelog-url -->">CHANGELOG.md</a> at omabox <span class="ver">1.6.1</span>, the latest
         release when this site was built. Update with <code>git pull &amp;&amp; ./install.sh</code>.</p>
       <div class="log" style="margin-top:12px">
         <!-- changelog -->

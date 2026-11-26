@@ -190,7 +190,7 @@
             <li class="box"><p class="who">In the box</p><p><code>up --desktop desk</code> copies your
               <code>~/.config/hypr</code>, your shell's config and the images they name. Never a secret store or anything
               that looks like a key, and none of your files but the repo you start from. Your config runs there, minus
-              idle and lock daemons. The agent edits the copy, reloads the box's Hyprland and takes the shot.</p></li>
+              idle and lock daemons. The agent edits the copy, the box reloads it, and it takes the shot.</p></li>
             <li><p class="who">You get</p><p>The change, tried on your own setup, and the list of files it changed in the
               copy, for you to carry over yourself.</p></li>
           </ol>
@@ -199,9 +199,8 @@
         </div>
         <div>
           <div class="pic" aria-hidden="true" data-anim><span class="dk" style="left:14px;width:calc(50% - 21px)"><span class="tb"></span><span class="wn" style="left:6%;right:52%;top:20%;bottom:8%"></span><span class="wn" style="left:52%;right:6%;top:20%;bottom:8%"></span></span><span class="dk bx2" style="right:14px;width:calc(50% - 21px)"><span class="tb"></span><span class="sb"></span><span class="wn" style="left:20%;right:42%;top:12%;bottom:8%"></span><span class="wn" style="left:62%;right:4%;top:12%;bottom:8%"></span></span><span class="lbl m" style="left:14px;bottom:14px">your desk: as it is</span><span class="lbl" style="right:14px;bottom:14px">the copy: bar on the left</span></div>
-          <pre class="code"><span class="p">$</span> omabox up --desktop desk
-<span class="p">$</span> omabox snapshot before
-<span class="p">$</span> omabox reload            <span class="c"># after each edit of the copy</span>
+          <pre class="code"><span class="p">$</span> omabox up --desktop desk --autoreload
+<span class="p">$</span> omabox snapshot before   <span class="c"># then edit the copy: it reloads</span>
 <span class="p">$</span> omabox shot
 <span class="p">$</span> omabox diff before       <span class="c"># every file the agent changed</span></pre>
           <p class="caption">More on boxes of your own desk, and the shells it finds: <a href="desktops.html#desk">Your own

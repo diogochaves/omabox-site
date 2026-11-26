@@ -426,6 +426,12 @@ aijail.io's plain narrative and compare page as a reference.
   2026-10-07 checkout) fails 16 to 19 of 321 files in a box, a different set each run, so no page
   says its tests pass there.
 - omabox is not a security boundary: always say so where safety comes up.
+- **For 1.6.1** (reviewed 2026-11-26, nothing measured again): the site gained `scene` and `frames` on
+  /commands, a 1.6 tab in "New in" on /changelog, and /uses' desk example went back to
+  `up --desktop desk --autoreload` (omabox#482 fixed; the `reload` line was its workaround). The
+  `snapshot`/`diff before` examples stay: `diff --seed` on a desk box still lists what the desk's own
+  plugins write once its shell runs. The new examples' arguments were checked against 1.6.1 in a box;
+  /safety's "Tested with ai-jail 3.3.0 and omabox 1.5.3" captions stay, the recipes were not run again.
 
 ## Open
 

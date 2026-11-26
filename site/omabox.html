@@ -374,7 +374,7 @@
 <main id="top">
   <div class="wrap">
     <div class="hero">
-      <div class="hero-h"><a class="pill" href="#new"><b>1.5</b>New: omabox look, did it come out right, in one call →</a>
+      <div class="hero-h"><a class="pill" href="#new"><b>1.6</b>New: omabox scene, a known desk in one command →</a>
         <h1>Let your agents see what they build. <i>Your desktop stays yours.</i></h1></div>
       <div class="hero-b">
         <div><p class="lead">omabox gives each coding agent an invisible Hyprland desktop of its own, where it opens, clicks and screenshots its work: one per agent, gone when the agent is.</p>
@@ -623,23 +623,23 @@ window: app "Preferences" 640x480 (floating)</span>
 
     <section id="new" aria-labelledby="h-new">
       <div class="head split">
-        <div><span class="wsl"><b>9</b>new in</span><h2 id="h-new">New in 1.5. <i>Looks in one call.</i></h2></div>
-        <div><p class="lead"><span class="rmeta"><b>1.5.0</b> · 2026-11-20 ·</span> What each release added that you would notice is on the <a href="changelog.html">changelog</a>, every release back to 0.1.</p></div>
+        <div><span class="wsl"><b>9</b>new in</span><h2 id="h-new">New in 1.6. <i>A desk in one command.</i></h2></div>
+        <div><p class="lead"><span class="rmeta"><b>1.6.0</b> · 2026-11-26 ·</span> What each release added that you would notice is on the <a href="changelog.html">changelog</a>, every release back to 0.1.</p></div>
       </div>
       <ul class="hls">
-        <li><h3>Did it come out right?</h3><p>One call opens it, shoots it, and says what it logged: an app, a web page or game, a bar plugin, a theme.</p><pre><span class="p">$</span> omabox look page game.html</pre></li>
-        <li><h3>Themes, checked</h3><p>Text too faint to read, a key with no fallback, a background too bright for a dark theme: what a person would notice.</p><pre><span class="p">$</span> omabox look theme ./my-theme</pre></li>
-        <li><h3>What it wrote</h3><p><code>snapshot</code>, then install and use a plugin or an app, and <code>diff</code> lists what it added: autostart, units, mimeapps, config.</p><pre><span class="p">$</span> omabox diff before</pre></li>
-        <li><h3>Who did what</h3><p>Every command run against a box, with who ran it and how it ended. Typed text and passwords never in it.</p><pre><span class="p">$</span> omabox log commands</pre></li>
+        <li><h3>A known desk</h3><p>A JSON file lists the windows and their workspaces; <code>scene</code> opens each and returns when every one is in place. For testing an overview or a window switcher.</p><pre><span class="p">$</span> omabox up --scene desk.json</pre></li>
+        <li><h3>How the screen ran</h3><p>The time of each frame around an action: the median, the worst cases, how many came late. A number to choose an animation by.</p><pre><span class="p">$</span> omabox frames 3s</pre></li>
+        <li><h3>A video that counts</h3><p><code>record --frames-log</code> says which frame each frame of the video holds, repeated or skipped: a lag read from it is a count.</p><pre>96 new, 0 repeated, 5 skipped</pre></li>
+        <li><h3>One layer of several</h3><p>A frame drawn as a layer per screen edge: <code>--layer NAME:top</code> picks one, with no address that changes at each restart.</p><pre><span class="p">$</span> omabox tree --layer bar:top</pre></li>
       </ul>
-      <p class="usemore"><a class="more" href="changelog.html">1.4: your own desktop in a box · 1.3: any Hyprland · every release →</a></p>
+      <p class="usemore"><a class="more" href="changelog.html">1.5: looks in one call · 1.4: your own desktop in a box · every release →</a></p>
     </section>
 
     <a class="strip" href="https://github.com/diogochaves/omabox/issues/new"><b>Tell us your setup</b><span>A shell, a distro or a job a box doesn't do yet: open an issue →</span></a>
 
   <footer>
     <div class="fl"><a href="uses.html">Use cases</a><a href="how-it-works.html">How it works</a><a href="desktops.html">Desktops</a><a href="develop.html">Develop</a><a href="commands.html">Commands</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a><a href="install.html">Install</a><a href="https://github.com/diogochaves/omabox">GitHub</a><a href="https://github.com/diogochaves/omabox/blob/main/LICENSE">MIT license</a></div>
-    <p>omabox <a href="changelog.html"><span class="ver">1.5.3</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
+    <p>omabox <a href="changelog.html"><span class="ver">1.6.1</span></a>, MIT license, all of it. An independent community project, not affiliated with or endorsed by Omarchy or Hyprland. Every screenshot here was taken by omabox, in a box.</p>
   </footer>
   </div>
 </main>
